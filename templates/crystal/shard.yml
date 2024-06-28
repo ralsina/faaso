@@ -1,0 +1,15 @@
+name: function
+version: 0.1.0
+
+targets:
+  function:
+    main: main.cr
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+
+# development_dependencies:
+#   webmock:
+#     github: manastech/webmock.cr
+

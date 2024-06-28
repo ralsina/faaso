@@ -1,4 +1,6 @@
 require "commander"
+require "file_utils"
+require "uuid"
 
 # TODO: Write documentation for `Faaso`
 module Faaso
@@ -19,7 +21,15 @@ module Faaso
           puts "Building function... #{arg}"
           # A function is a folder with stuff in it
           # TODO: decide template based on file extensions or other metadata
+          template = "templates/crystal"
           # TODO: copy template and add function files to it
+          tmp_dir = "tmp/#{UUID.random}"
+          Dir.mkdir_p("tmp") unless File.exists? "tmp"
+          FileUtils.cp_r(template, tmp_dir)
+          Dir.glob(arg + "/**/*").each do |file|
+            FileUtils.cp(file, tmp_dir)
+          end
+
           # TODO: build Docker image
           # TODO: push Docker image to registry
           # TODO: return image name for testing

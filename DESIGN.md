@@ -32,7 +32,7 @@ It should:
 * Start/reload/configure the proxy as needed
 * Periodically check the functions are still running
 
-Intentionally: No HA yet, no multiple instances of functions, no 
+Intentionally: No HA yet, no multiple instances of functions, no
 up/downscaling, no multiple versions routed by header.
 
 # Implementation Ideas

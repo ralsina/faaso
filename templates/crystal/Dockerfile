@@ -1,10 +1,6 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} ghcr.io/openfaas/of-watchdog:0.9.10 as watchdog
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as build
-ARG ADDITIONAL_PACKAGE
 
-COPY --from=watchdog /fwatchdog /usr/bin/fwatchdog
-
-RUN apk update && apk upgrade && apk add crystal shards openssl-dev ${ADDITIONAL_PACKAGE} && apk cache clean
+RUN apk update && apk upgrade && apk add crystal shards openssl-dev && apk cache clean
 
 WORKDIR /home/app
 
