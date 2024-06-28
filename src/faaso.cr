@@ -1,4 +1,6 @@
 require "commander"
+require "docr"
+require "docr/utils.cr"
 require "file_utils"
 require "uuid"
 
@@ -29,8 +31,9 @@ module Faaso
           Dir.glob(arg + "/**/*").each do |file|
             FileUtils.cp(file, tmp_dir)
           end
-
           # TODO: build Docker image
+          docker_api = Docr::API.new(Docr::Client.new)
+          docker_api.images.build(context: tmp_dir, tags: ["func"]) { }
           # TODO: push Docker image to registry
           # TODO: return image name for testing
         end

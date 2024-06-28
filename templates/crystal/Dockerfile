@@ -4,7 +4,7 @@ RUN apk update && apk upgrade && apk add crystal shards openssl-dev zlib-dev && 
 
 WORKDIR /home/app
 
-COPY shard.yml *.cr .
+COPY shard.yml *.cr ./
 RUN shards install
 RUN shards build
 
