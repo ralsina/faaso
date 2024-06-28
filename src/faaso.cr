@@ -64,9 +64,9 @@ module Faaso
           containers = docker_api.containers.list(all: true)
           pp! containers
           # If it's running, do nothing
-          if (containers.any? { |c|
+          if containers.any? { |c|
                c.@image == tag && c.@state == "running"
-             })
+             }
             puts "#{arg} is already running"
             return 0
           end
@@ -75,7 +75,7 @@ module Faaso
           paused = containers.select { |c|
             c.@image == tag && c.@state == "paused"
           }
-          if (paused.size > 0)
+          if paused.size > 0
             puts "Resuming existing paused container"
             docker_api.containers.unpause(paused[0].@id)
             return 0
@@ -87,7 +87,7 @@ module Faaso
           }
 
           puts "Starting function #{arg}"
-          if (existing.size > 0)
+          if existing.size > 0
             puts "Restarting existing exited container"
             docker_api.containers.start(existing[0].@id)
             return 0
