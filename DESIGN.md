@@ -35,8 +35,38 @@ It should:
 Intentionally: No HA yet, no multiple instances of functions, no
 up/downscaling, no multiple versions routed by header.
 
+# Function structure
+
+Example using crystal, but it could be anything. Any function has
+an associated runtime, for example "crystal" or "python".
+
+That runtime has a template (see `templates/crystal` for example).
+
+To build the function image, the builder will:
+
+* Create a tmp directory
+* Copy the template files to the tmp directory
+* Overlay the function files on top of the template
+* Build using the template Dockerfile
+
+For docker that implies:
+
+* Use an alpine builder, install crystal, shards, whatever
+* Run "shards isntall" to get the dependencies
+* Run "shards build" to build the function
+* Copy the function binary to ~app
+
+When running, it will just run that binary and map a port to port 3000.
+
+Template metadata:
+
+Probably some `metadata.yml` that is *not* in the template.
+
+* Additional packages to install in the alpine builder
+* Files that should be copied along the function
+* Whatever
+
 # Implementation Ideas
 
 * caddy for proxy? It's simple, fast, API-configurable.
 * Local docker registry for images? See https://www.docker.com/blog/how-to-use-your-own-registry-2/
-* Maybe grip for crystal template? Maybe kemal?
