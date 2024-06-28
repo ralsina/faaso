@@ -71,6 +71,16 @@ module Faaso
             return 0
           end
 
+          # If it is paused, unpause it
+          paused = containers.select { |c|
+            c.@image == tag && c.@state == "paused"
+          }
+          if (paused.size > 0)
+            puts "Resuming existing paused container"
+            docker_api.containers.unpause(paused[0].@id)
+            return 0
+          end
+
           # If it is exited, start it
           existing = containers.select { |c|
             c.@image == tag && c.@state == "exited"
@@ -80,20 +90,23 @@ module Faaso
           if (existing.size > 0)
             puts "Restarting existing exited container"
             docker_api.containers.start(existing[0].@id)
-          else
-            conf = Docr::Types::CreateContainerConfig.new(
-              image: tag,
-              hostname: "foo",
-              host_config: Docr::Types::HostConfig.new
-            )
-            # FIXME: name should be unique
-            response = docker_api.containers.create(name: "fungus", config: conf)
-            docker_api.containers.start(response.@id)
+            return 0
           end
-          # TODO: Run test for healthcheck
-          # TODO: Map route in reverse proxy to function
-          # TODO: Return function URL for testing
+
+          # Creating from scratch
+          puts "Creating new container"
+          conf = Docr::Types::CreateContainerConfig.new(
+            image: tag,
+            hostname: "foo",
+            host_config: Docr::Types::HostConfig.new
+          )
+          # FIXME: name should be unique
+          response = docker_api.containers.create(name: "fungus", config: conf)
+          docker_api.containers.start(response.@id)
         end
+        # TODO: Run test for healthcheck
+        # TODO: Map route in reverse proxy to function
+        # TODO: Return function URL for testing
       end
     end
 
