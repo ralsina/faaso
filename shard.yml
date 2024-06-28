@@ -6,8 +6,15 @@ authors:
 
 targets:
   faaso:
-    main: src/faaso.cr
+    main: src/main.cr
 
 crystal: '>= 1.12.2'
 
 license: MIT
+
+
+dependencies:
+  docr:
+    github: marghidanu/docr
+  commander:
+    github: mrrooijen/commander
