@@ -1,3 +1,3 @@
 get "/" do
-  "Hello World!"
+  "Hello World from Crystal!"
 end

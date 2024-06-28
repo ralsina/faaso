@@ -20,22 +20,23 @@ module Faaso
 
       def run
         @arguments.each do |arg|
-          puts "Building function... #{arg}"
           # A function is a folder with stuff in it
           # TODO: decide template based on file extensions or other metadata
           template = "templates/crystal"
-          # TODO: copy template and add function files to it
           tmp_dir = "tmp/#{UUID.random}"
+          slug = arg.gsub("/","_").strip("_")
+          repo = "localhost:5000"
+          tag = "#{repo}/#{slug}:latest"
+          puts "Building function... #{arg} in #{tmp_dir}"
           Dir.mkdir_p("tmp") unless File.exists? "tmp"
           FileUtils.cp_r(template, tmp_dir)
           Dir.glob(arg + "/**/*").each do |file|
             FileUtils.cp(file, tmp_dir)
           end
-          # TODO: build Docker image
           docker_api = Docr::API.new(Docr::Client.new)
-          docker_api.images.build(context: tmp_dir, tags: ["func"]) { }
-          # TODO: push Docker image to registry
-          # TODO: return image name for testing
+          docker_api.images.build(context: tmp_dir, tags: [tag, "#{slug}:latest"]) { }
+          puts "Pushing to repo as #{tag}"
+          docker_api.images.tag(repo: repo, name: slug, tag: "latest")
         end
       end
     end
