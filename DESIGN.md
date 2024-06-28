@@ -39,3 +39,4 @@ up/downscaling, no multiple versions routed by header.
 
 * caddy for proxy? It's simple, fast, API-configurable.
 * Local docker registry for images? See https://www.docker.com/blog/how-to-use-your-own-registry-2/
+* Maybe grip for crystal template? Maybe kemal?
