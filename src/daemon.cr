@@ -24,9 +24,10 @@ ReverseMagic Yes
 ReversePath "/admin/" "http://127.0.0.1:3000/"
 ) + funkos.map { |funko| %(ReversePath "/faaso/#{funko}/" "http://#{funko}:3000/") }.join("\n")
 
-  File.open("/etc/tinyproxy/tinyproxy.conf", "w") do |file|
+  File.open("tinyproxy.conf", "w") do |file|
     file << proxy_config
-    end
+  end
+  proxy_config
 end
 
 Kemal.run
