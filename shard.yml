@@ -15,6 +15,6 @@ license: MIT
 
 dependencies:
   docr:
-    github: marghidanu/docr
+    github: ralsina/docr
   commander:
     github: mrrooijen/commander
