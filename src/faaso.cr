@@ -87,9 +87,6 @@ module Faaso
           # Pull image from registry
           # docker_api.images.create(image: tag)
 
-          # FIXME: When reusing a paused/exited container, check that
-          # the version of the image is the correct one, otherwise purge them.
-
           # Get image history, sorted newer image first
           begin
             images = docker_api.images.history(
@@ -109,8 +106,6 @@ module Faaso
             all: true,
             filters: {"name" => [container_name]}
           ).sort { |a, b| (images.index(b.@image_id) || 9999) <=> (images.index(a.@image_id) || 9999) }
-          pp! images
-          pp! containers.map { |c| images.index(c.@image_id) }
 
           # If it's already up, do nothing
           if containers.any? { |container|
@@ -146,7 +141,7 @@ module Faaso
             next
           end
 
-          # Creating from scratch
+          # Deploy from scratch
           puts "Creating new container"
           conf = Docr::Types::CreateContainerConfig.new(
             image: "#{funko.name}:latest",
@@ -163,12 +158,25 @@ module Faaso
 
           response = docker_api.containers.create(name: container_name, config: conf)
           response.@warnings.each { |msg| puts "Warning: #{msg}" }
-          # container_id = response.@id
           docker_api.containers.start(response.@id)
-          # TODO: wait until container is running before next
+          containers = docker_api.containers.list(
+            all: true,
+            filters: {"name" => [container_name]}
+          )
+
+          (1..5).each { |i|
+            break if containers[0].state == "running"
+            sleep 0.1.seconds
+          }
+          if containers[0].state != "running"
+            puts "Container for #{funko.name} is not running yet"
+            next
+          end
+          puts "Container for #{funko.name} is running"
+          public_port = containers[0].@ports[0].@public_port
+          # TODO: Map route in reverse proxy to function
         end
         # TODO: Run test for healthcheck
-        # TODO: Map route in reverse proxy to function
         # TODO: Return function URL for testing
       end
     end
