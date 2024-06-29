@@ -137,7 +137,10 @@ module Faaso
 
           # FIXME: name should be unique
           response = docker_api.containers.create(name: "fungus", config: conf)
+          response.@warnings.each { |msg| puts "Warning: #{msg}" }
+          container_id = response.@id
           docker_api.containers.start(response.@id)
+          # TODO: wait until container is running before next
         end
         # TODO: Run test for healthcheck
         # TODO: Map route in reverse proxy to function
