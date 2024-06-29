@@ -98,7 +98,14 @@ module Faaso
           conf = Docr::Types::CreateContainerConfig.new(
             image: tag,
             hostname: "foo",
-            host_config: Docr::Types::HostConfig.new
+            # Port in the container side
+            exposed_ports: {"3000/tcp" => {} of String => String},
+            host_config: Docr::Types::HostConfig.new(
+              port_bindings: {"3000/tcp" => [Docr::Types::PortBinding.new(
+                host_port: "3000",    # Host port
+                host_ip: "127.0.0.1", # Host IP
+              )]}
+            )
           )
           # FIXME: name should be unique
           response = docker_api.containers.create(name: "fungus", config: conf)
