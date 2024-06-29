@@ -35,6 +35,9 @@ It should:
 Intentionally: No HA yet, no multiple instances of functions, no
 up/downscaling, no multiple versions routed by header.
 
+Specifically: no downscaling to zero. It makes everything MUCH
+more complicated.
+
 # Function structure
 
 Example using crystal, but it could be anything. Any function has
