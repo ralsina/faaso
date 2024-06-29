@@ -1,6 +1,8 @@
 require "docr"
 require "kemal"
 
+current_config = ""
+
 get "/" do
   "Updating routing"
   # Get all the funkos, create routes for them all
@@ -14,6 +16,8 @@ get "/" do
     funkos << names[0][7..]
   }
 
+  funkos.sort!
+
   proxy_config = %(
 Port 8888
 Listen 0.0.0.0
@@ -24,8 +28,13 @@ ReverseMagic Yes
 ReversePath "/admin/" "http://127.0.0.1:3000/"
 ) + funkos.map { |funko| %(ReversePath "/faaso/#{funko}/" "http://#{funko}:3000/") }.join("\n")
 
-  File.open("tinyproxy.conf", "w") do |file|
-    file << proxy_config
+  if current_config != proxy_config
+    File.open("tinyproxy.conf", "w") do |file|
+      file << proxy_config
+    end
+    # Reload config
+    Process.run(command: "/usr/bin/killall", args: ["-USR1", "tinyproxy"])
+    current_config = proxy_config
   end
   proxy_config
 end
