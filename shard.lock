@@ -12,3 +12,7 @@ shards:
     git: https://github.com/ralsina/docr.git
     version: 0.1.1+git.commit.18f15cc7111b1d0c63347c7cca07aee9ec87a7a8
 
+  kiwi:
+    git: https://github.com/ralsina/kiwi.git
+    version: 0.1.0+git.commit.65059b87771238593a28b2b8b9fdf77d8e2b9e89
+

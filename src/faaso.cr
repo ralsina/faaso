@@ -1,9 +1,10 @@
+require "./funko.cr"
 require "commander"
 require "docr"
 require "docr/utils.cr"
 require "file_utils"
+require "kiwi/file_store"
 require "uuid"
-require "./funko.cr"
 
 # FIXME make it configurable
 REPO = "localhost:5000"
@@ -11,6 +12,9 @@ REPO = "localhost:5000"
 # Functions as a Service, Ops!
 module Faaso
   VERSION = "0.1.0"
+
+  # A simple persistent k/v store
+  store = Kiwi::FileStore.new(".kiwi")
 
   module Commands
     class Build
@@ -56,17 +60,11 @@ module Faaso
 
           # FIXME: this should be configurable
           repo = REPO
-          tag = "#{repo}/#{funko.name}:latest"
 
           docker_api = Docr::API.new(Docr::Client.new)
           docker_api.images.build(
             context: tmp_dir.to_s,
-            tags: [tag, "#{funko.name}:latest"]) { }
-
-          puts "Pushing to repo as #{tag}"
-          docker_api.images.tag(repo: repo, name: slug, tag: "latest")
-          # FIXME: pushing is broken because my test registry has no auth
-          # docker_api.images.push(name: slug, tag: "latest", auth: "")
+            tags: ["#{funko.name}:latest"]) { }
         end
       end
     end
@@ -84,23 +82,51 @@ module Faaso
         funkos = Funko.from_paths(@arguments)
         funkos.each do |funko|
           repo = REPO
-          tag = "#{repo}/#{funko.name}:latest"
+          container_name = "faaso-#{funko.name}"
           docker_api = Docr::API.new(Docr::Client.new)
           # Pull image from registry
-          docker_api.images.create(image: tag)
+          # docker_api.images.create(image: tag)
 
-          containers = docker_api.containers.list(all: true)
-          # If it's running, do nothing
+          # FIXME: When reusing a paused/exited container, check that
+          # the version of the image is the correct one, otherwise purge them.
+
+          # Get image history, sorted newer image first
+          begin
+            images = docker_api.images.history(
+              name: funko.name
+            ).sort { |a, b| b.@created <=> a.@created }.map(&.@id)
+          rescue ex : Docr::Errors::DockerAPIError
+            puts "Error: no images available for #{funko.name}:latest"
+            puts ex
+            next
+          end
+
+          latest_image = images[0]
+
+          # Filter by name so only faaso-thisfunko are affected from now on
+          # sorted newer image first
+          containers = docker_api.containers.list(
+            all: true,
+            filters: {"name" => [container_name]}
+          ).sort { |a, b| (images.index(b.@image_id) || 9999) <=> (images.index(a.@image_id) || 9999) }
+          pp! images
+          pp! containers.map { |c| images.index(c.@image_id) }
+
+          # If it's already up, do nothing
           if containers.any? { |container|
-               container.@image == tag && container.@state == "running"
+               is_running = container.@state == "running"
+               is_old = container.@image_id != latest_image
+               p! container.@image_id
+               puts "Warning: running outdated version" if is_running && is_old
+               is_running
              }
-            puts "#{funko.name} is already running"
+            puts "#{funko.name} is already up"
             next
           end
 
           # If it is paused, unpause it
           paused = containers.select { |container|
-            container.@image == tag && container.@state == "paused"
+            container.@state == "paused"
           }
           if paused.size > 0
             puts "Resuming existing paused container"
@@ -110,7 +136,7 @@ module Faaso
 
           # If it is exited, start it
           existing = containers.select { |container|
-            container.@image == tag && container.@state == "exited"
+            container.@state == "exited"
           }
 
           puts "Starting function #{funko.name}"
@@ -123,7 +149,7 @@ module Faaso
           # Creating from scratch
           puts "Creating new container"
           conf = Docr::Types::CreateContainerConfig.new(
-            image: tag,
+            image: "#{funko.name}:latest",
             hostname: funko.name,
             # Port in the container side
             exposed_ports: {"#{funko.port}/tcp" => {} of String => String},
@@ -135,10 +161,9 @@ module Faaso
             )
           )
 
-          # FIXME: name should be unique
-          response = docker_api.containers.create(name: "fungus", config: conf)
+          response = docker_api.containers.create(name: container_name, config: conf)
           response.@warnings.each { |msg| puts "Warning: #{msg}" }
-          container_id = response.@id
+          # container_id = response.@id
           docker_api.containers.start(response.@id)
           # TODO: wait until container is running before next
         end
@@ -164,6 +189,23 @@ module Faaso
           # TODO: stop function container
           # TODO: delete function container
           # TODO: remove route from reverse proxy
+        end
+      end
+    end
+
+    class Deploy
+      @arguments : Array(String) = [] of String
+      @options : Commander::Options
+
+      def initialize(options, arguments)
+        @options = options
+        @arguments = arguments
+      end
+
+      def run
+        @arguments.each do |arg|
+          puts "Stopping function... #{arg}"
+          # TODO: Everything
         end
       end
     end

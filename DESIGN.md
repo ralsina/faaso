@@ -72,4 +72,4 @@ Probably some `metadata.yml` that is *not* in the template.
 # Implementation Ideas
 
 * caddy for proxy? It's simple, fast, API-configurable.
-* Local docker registry for images? See https://www.docker.com/blog/how-to-use-your-own-registry-2/
+* Local docker registry for images? See https://www.docker.com/blog/how-to-use-your-own-registry-2/ (maybe later)

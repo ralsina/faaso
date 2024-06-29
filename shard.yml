@@ -19,3 +19,6 @@ dependencies:
     branch: add_exposed_ports
   commander:
     github: mrrooijen/commander
+  kiwi:
+    github: ralsina/kiwi
+    branch: master
