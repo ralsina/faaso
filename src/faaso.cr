@@ -5,7 +5,10 @@ require "file_utils"
 require "uuid"
 require "./funko.cr"
 
-# TODO: Write documentation for `Faaso`
+# FIXME make it configurable
+REPO = "localhost:5000"
+
+# Functions as a Service, Ops!
 module Faaso
   VERSION = "0.1.0"
 
@@ -52,7 +55,7 @@ module Faaso
           slug = funko.name
 
           # FIXME: this should be configurable
-          repo = "localhost:5000"
+          repo = REPO
           tag = "#{repo}/#{funko.name}:latest"
 
           docker_api = Docr::API.new(Docr::Client.new)
@@ -78,60 +81,60 @@ module Faaso
       end
 
       def run
-        @arguments.each do |arg|
-          slug = arg.gsub("/", "_").strip("_")
-          repo = "localhost:5000"
-          tag = "#{repo}/#{slug}:latest"
+        funkos = Funko.from_paths(@arguments)
+        funkos.each do |funko|
+          repo = REPO
+          tag = "#{repo}/#{funko.name}:latest"
           docker_api = Docr::API.new(Docr::Client.new)
           # Pull image from registry
           docker_api.images.create(image: tag)
-          # TODO: Start a container with the image
+
           containers = docker_api.containers.list(all: true)
-          pp! containers
           # If it's running, do nothing
-          if containers.any? { |c|
-               c.@image == tag && c.@state == "running"
+          if containers.any? { |container|
+               container.@image == tag && container.@state == "running"
              }
-            puts "#{arg} is already running"
-            return 0
+            puts "#{funko.name} is already running"
+            next
           end
 
           # If it is paused, unpause it
-          paused = containers.select { |c|
-            c.@image == tag && c.@state == "paused"
+          paused = containers.select { |container|
+            container.@image == tag && container.@state == "paused"
           }
           if paused.size > 0
             puts "Resuming existing paused container"
             docker_api.containers.unpause(paused[0].@id)
-            return 0
+            next
           end
 
           # If it is exited, start it
-          existing = containers.select { |c|
-            c.@image == tag && c.@state == "exited"
+          existing = containers.select { |container|
+            container.@image == tag && container.@state == "exited"
           }
 
-          puts "Starting function #{arg}"
+          puts "Starting function #{funko.name}"
           if existing.size > 0
             puts "Restarting existing exited container"
             docker_api.containers.start(existing[0].@id)
-            return 0
+            next
           end
 
           # Creating from scratch
           puts "Creating new container"
           conf = Docr::Types::CreateContainerConfig.new(
             image: tag,
-            hostname: "foo",
+            hostname: funko.name,
             # Port in the container side
-            exposed_ports: {"3000/tcp" => {} of String => String},
+            exposed_ports: {"#{funko.port}/tcp" => {} of String => String},
             host_config: Docr::Types::HostConfig.new(
-              port_bindings: {"3000/tcp" => [Docr::Types::PortBinding.new(
-                host_port: "3000",    # Host port
+              port_bindings: {"#{funko.port}/tcp" => [Docr::Types::PortBinding.new(
+                host_port: "",        # Host port, empty means random
                 host_ip: "127.0.0.1", # Host IP
               )]}
             )
           )
+
           # FIXME: name should be unique
           response = docker_api.containers.create(name: "fungus", config: conf)
           docker_api.containers.start(response.@id)
