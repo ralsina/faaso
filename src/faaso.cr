@@ -3,6 +3,7 @@ require "docr"
 require "docr/utils.cr"
 require "file_utils"
 require "uuid"
+require "./funko.cr"
 
 # TODO: Write documentation for `Faaso`
 module Faaso
@@ -19,22 +20,46 @@ module Faaso
       end
 
       def run
-        @arguments.each do |arg|
-          # A function is a folder with stuff in it
-          # TODO: decide template based on file extensions or other metadata
-          template = "templates/crystal"
-          tmp_dir = "tmp/#{UUID.random}"
-          slug = arg.gsub("/", "_").strip("_")
-          repo = "localhost:5000"
-          tag = "#{repo}/#{slug}:latest"
-          puts "Building function... #{arg} in #{tmp_dir}"
-          Dir.mkdir_p("tmp") unless File.exists? "tmp"
-          FileUtils.cp_r(template, tmp_dir)
-          Dir.glob(arg + "/**/*").each do |file|
-            FileUtils.cp(file, tmp_dir)
+        funkos = Funko.from_paths(@arguments)
+        funkos.each do |funko|
+          # Create temporary build location
+          tmp_dir = Path.new("tmp", UUID.random.to_s)
+          Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
+
+          # Copy runtime if requested
+          if !funko.runtime.nil?
+            runtime_dir = Path.new("runtimes", funko.runtime.to_s)
+            if !File.exists? runtime_dir
+              puts "Error: runtime #{funko.runtime} not found"
+              next
+            end
+            Dir.glob("#{runtime_dir}/*").each { |src|
+              FileUtils.cp_r(src, tmp_dir)
+            }
           end
+
+          # Copy funko
+          if funko.path.empty?
+            puts "Internal error: empty funko path for #{funko.name}"
+            next
+          end
+          Dir.glob("#{funko.path}/*").each { |src|
+            FileUtils.cp_r(src, tmp_dir)
+          }
+
+          puts "Building function... #{funko.name} in #{tmp_dir}"
+
+          slug = funko.name
+
+          # FIXME: this should be configurable
+          repo = "localhost:5000"
+          tag = "#{repo}/#{funko.name}:latest"
+
           docker_api = Docr::API.new(Docr::Client.new)
-          docker_api.images.build(context: tmp_dir, tags: [tag, "#{slug}:latest"]) { }
+          docker_api.images.build(
+            context: tmp_dir.to_s,
+            tags: [tag, "#{funko.name}:latest"]) { }
+
           puts "Pushing to repo as #{tag}"
           docker_api.images.tag(repo: repo, name: slug, tag: "latest")
           # FIXME: pushing is broken because my test registry has no auth

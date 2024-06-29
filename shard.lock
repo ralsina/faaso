@@ -9,6 +9,6 @@ shards:
     version: 0.4.0
 
   docr:
-    git: https://github.com/marghidanu/docr.git
-    version: 0.1.1+git.commit.59fb466b748d5d29a8f2de88a54b71dbfe0285aa
+    git: https://github.com/ralsina/docr.git
+    version: 0.1.1+git.commit.18f15cc7111b1d0c63347c7cca07aee9ec87a7a8
 

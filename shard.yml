@@ -16,5 +16,6 @@ license: MIT
 dependencies:
   docr:
     github: ralsina/docr
+    branch: add_exposed_ports
   commander:
     github: mrrooijen/commander
