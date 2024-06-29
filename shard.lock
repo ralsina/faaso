@@ -1,5 +1,9 @@
 version: 2.0
 shards:
+  backtracer:
+    git: https://github.com/sija/backtracer.cr.git
+    version: 1.2.2
+
   commander:
     git: https://github.com/mrrooijen/commander.git
     version: 0.4.0
@@ -12,7 +16,19 @@ shards:
     git: https://github.com/ralsina/docr.git
     version: 0.1.1+git.commit.18f15cc7111b1d0c63347c7cca07aee9ec87a7a8
 
+  exception_page:
+    git: https://github.com/crystal-loot/exception_page.git
+    version: 0.4.1
+
+  kemal:
+    git: https://github.com/kemalcr/kemal.git
+    version: 1.5.0
+
   kiwi:
     git: https://github.com/ralsina/kiwi.git
     version: 0.1.0+git.commit.65059b87771238593a28b2b8b9fdf77d8e2b9e89
+
+  radix:
+    git: https://github.com/luislavena/radix.git
+    version: 0.4.1
 

@@ -7,6 +7,8 @@ authors:
 targets:
   faaso:
     main: src/main.cr
+  faaso-daemon:
+    main: src/daemon.cr
 
 crystal: '>= 1.12.2'
 
@@ -22,3 +24,5 @@ dependencies:
   kiwi:
     github: ralsina/kiwi
     branch: master
+  kemal:
+    github: kemalcr/kemal    
