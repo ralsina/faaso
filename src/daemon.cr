@@ -1,5 +1,9 @@
 require "docr"
 require "kemal"
+require "kemal-basic-auth"
+
+# FIXME: make configurable
+basic_auth "admin", "admin"
 
 current_config = ""
 

@@ -10,10 +10,9 @@ targets:
   faaso-daemon:
     main: src/daemon.cr
 
-crystal: '>= 1.12.2'
+crystal: ">= 1.12.2"
 
 license: MIT
-
 
 dependencies:
   docr:
@@ -22,6 +21,8 @@ dependencies:
   commander:
     github: mrrooijen/commander
   kemal:
-    github: kemalcr/kemal    
+    github: kemalcr/kemal
+  kemal-basic-auth:
+    github: kemalcr/kemal-basic-auth
   crinja:
     github: straight-shoota/crinja
