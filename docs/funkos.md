@@ -66,8 +66,10 @@ subgraph faaso-net
 end
 
 client -- GET /funko/hello/foo --> faaso-proxy
+client -- GET /funko/funko1/bar --> faaso-proxy
 
 faaso-proxy -- GET /foo --> faaso-hello
+faaso-proxy -- GET /bar --> faaso-funko1
 ```
 
 The dynamic proxying is achieved by reading the current state of
