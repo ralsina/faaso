@@ -25,15 +25,17 @@ end
 
 R(runtime for X)
 
-C(fa:fa-box Containerized Application)
+C(fa:fa-box Containerized Application Code)
 D1(fa:fa-image Local Docker Image)
+subgraph server
 D2(fa:fa-image Remote Docker Image)
 E(fa:fa-server FaaSO Proxy)
 F(Container Instance Running In Server)
+end
 G(Container Instance Running Locally)
 
 funko_hello --> C -- faaso build -l --> D1
-C -- faaso build --> E --> D2
+C --> E -- faaso build --> D2
 R --> C
 D2 -- faaso up --> F
 D1 -- faaso up -local --> G
