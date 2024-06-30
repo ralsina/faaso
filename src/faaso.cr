@@ -125,16 +125,12 @@ module Faaso
             response = docker_api.containers.create(name: container_name, config: conf)
             response.@warnings.each { |msg| puts "Warning: #{msg}" }
             docker_api.containers.start(response.@id)
-            containers = docker_api.containers.list(
-              all: true,
-              filters: {"name" => [container_name]}
-            )
 
             (1..5).each { |_|
-              break if containers[0].state == "running"
+              break if funko.running?
               sleep 0.1.seconds
             }
-            if containers[0].state != "running"
+            if !funko.running?
               puts "Container for #{funko.name} is not running yet"
               next
             end

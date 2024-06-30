@@ -1,5 +1,6 @@
 require "yaml"
 
+# A funko, built from its source metadata
 class Funko
   include YAML::Serializable
 
