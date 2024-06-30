@@ -85,34 +85,20 @@ module Faaso
           container_name = "faaso-#{funko.name}"
           docker_api = Docr::API.new(Docr::Client.new)
 
-          # Get image history, sorted newer image first
-          begin
-            images = docker_api.images.history(
-              name: funko.name
-            ).sort { |a, b| b.@created <=> a.@created }.map(&.@id)
-          rescue ex : Docr::Errors::DockerAPIError
+          images = funko.image_history
+          if images.empty?
             puts "Error: no images available for #{funko.name}:latest"
-            puts ex
             next
           end
 
-          latest_image = images[0]
-
-          # Filter by name so only faaso-thisfunko are affected from now on
-          # sorted newer image first
-          containers = docker_api.containers.list(
-            all: true,
-            filters: {"name" => [container_name]}
-          ).sort { |a, b| (images.index(b.@image_id) || 9999) <=> (images.index(a.@image_id) || 9999) }
+          # sort list of funko containers newer image first
+          containers = funko.containers.sort { |a, b|
+            (images.index(b.@image_id) || 9999) <=> (images.index(a.@image_id) || 9999)
+          }
 
           # If it's already up, do nothing
-          if containers.any? { |container|
-               is_running = container.@state == "running"
-               is_old = container.@image_id != latest_image
-               p! container.@image_id
-               puts "Warning: running outdated version" if is_running && is_old
-               is_running
-             }
+          # FIXME: bring back out-of-date warning
+          if funko.running?
             puts "#{funko.name} is already up"
             next
           end

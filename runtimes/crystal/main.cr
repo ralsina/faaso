@@ -2,7 +2,7 @@ require "kemal"
 require "./funko.cr"
 
 get "/ping/" do
-    "OK"
+  "OK"
 end
 
 Kemal.run

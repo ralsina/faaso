@@ -26,6 +26,7 @@ class Funko
   @[YAML::Field(ignore: true)]
   property path : String = ""
 
+  # Create an Array of funkos from an Array of folders containing definitions
   def self.from_paths(paths : Array(String | Path)) : Array(Funko)
     paths.map { |path| Path.new(path, "funko.yml") }
       .select { |path| File.exists?(path) }
@@ -34,5 +35,34 @@ class Funko
         f.path = path.parent.to_s
         f
       }
+  end
+
+  # Return a list of image IDs for this funko, most recent first
+  def image_history
+    docker_api = Docr::API.new(Docr::Client.new)
+    begin
+      docker_api.images.history(
+        name: name
+      ).sort { |i, j| j.@created <=> i.@created }.map(&.@id)
+    rescue ex : Docr::Errors::DockerAPIError
+      puts "Error: #{ex}"
+      [] of String
+    end
+  end
+
+  # Get all containers related to this funko
+  def containers
+    docker_api = Docr::API.new(Docr::Client.new)
+    docker_api.containers.list(
+      all: true,
+      filters: {"name" => ["faaso-#{name}"]}
+    )
+  end
+
+  # Is this funko running?
+  def running?
+    self.containers.any? { |container|
+      container.@state == "running"
+    }
   end
 end
