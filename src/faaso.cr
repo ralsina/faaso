@@ -51,7 +51,7 @@ module Faaso
             Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
             funko.prepare_build tmp_dir
 
-            puts "Building function... #{funko.name} in #{tmp_dir}"
+            Log.info { "Building function... #{funko.name} in #{tmp_dir}" }
             funko.build tmp_dir
           end
         else # Running against a server
@@ -88,16 +88,15 @@ module Faaso
                 {"funko.tgz" => File.open(tmp), "name" => "funko.tgz"},
                 user: "admin", password: "admin"
               )
-              puts "Build finished successfully."
+              Log.info { "Build finished successfully." }
               # body = JSON.parse(_response.body)
               # puts body["stdout"]
               # puts body["stderr"]
             rescue ex : Crest::InternalServerError
-              puts "Error building image."
+              Log.error { "Error building funko #{funko.name} from #{funko.path}" }
               body = JSON.parse(ex.response.body)
-              puts body["stdout"]
-              puts body["stderr"]
-              puts "Error building funko #{funko.name} from #{funko.path}"
+              Log.info { body["stdout"] }
+              Log.error { body["stderr"] }
               exit 1
             end
           end
@@ -133,39 +132,39 @@ module Faaso
               response = Crest.get("#{FAASO_API}funko/#{funko.name}/up/",
                 user: "admin", password: "admin")
               body = JSON.parse(response.body)
-              puts body["stdout"]
+              Log.info { body["stdout"] }
               next
             rescue ex : Crest::InternalServerError
-              puts "Error bringing up #{funko.name}"
+              Log.error { "Error bringing up #{funko.name}" }
               body = JSON.parse(ex.response.body)
-              puts body["stdout"]
-              puts body["stderr"]
+              Log.info { body["stdout"] }
+              Log.error { body["stderr"] }
               exit 1
             end
           end
 
           if funko.image_history.empty?
-            puts "Error: no images available for #{funko.name}:latest"
-            next
+            Log.error { "Error: no images available for #{funko.name}:latest" }
+            exit 1
           end
 
           case funko
           when .running?
             # If it's already up, do nothing
             # FIXME: bring back out-of-date warning
-            puts "#{funko.name} is already up"
+            Log.info { "#{funko.name} is already up" }
           when .paused?
             # If it is paused, unpause it
-            puts "Resuming existing paused container"
+            Log.info { "Resuming existing paused container" }
             funko.unpause
           when .exited?
-            puts "Starting function #{funko.name}"
-            puts "Restarting existing exited container"
+            Log.info { "Starting function #{funko.name}" }
+            Log.info { "Restarting existing exited container" }
             funko.start
           else
             # Only have an image, deploy from scratch
             Faaso.setup_network # We need it
-            puts "Creating and starting new container"
+            Log.info { "Creating and starting new container" }
             funko.create_container(autostart: true)
 
             (1..5).each { |_|
@@ -173,10 +172,10 @@ module Faaso
               sleep 0.1.seconds
             }
             if !funko.running?
-              puts "Container for #{funko.name} is not running yet"
+              Log.warn { "Container for #{funko.name} is not running yet" }
               next
             end
-            puts "Container for #{funko.name} is running"
+            Log.info { "Container for #{funko.name} is running" }
           end
         end
       end
@@ -197,10 +196,10 @@ module Faaso
           # Create temporary build location
           dst_path = Path.new("export", funko.name)
           if File.exists? dst_path
-            puts "Error: #{dst_path} already exists, not exporting #{funko.path}"
+            Log.error { "#{dst_path} already exists, not exporting #{funko.path}" }
             next
           end
-          puts "Exporting #{funko.path} to #{dst_path}"
+          Log.info { "Exporting #{funko.path} to #{dst_path}" }
           Dir.mkdir_p(dst_path)
           funko.prepare_build dst_path
         end
@@ -218,7 +217,7 @@ module Faaso
 
       def run
         @arguments.each do |arg|
-          puts "Stopping funko... #{arg}"
+          Log.info { "Stopping funko... #{arg}" }
           # TODO: check if funko is running
           # TODO: stop funko container
           # TODO: delete funko container
@@ -238,7 +237,7 @@ module Faaso
 
       def run
         @arguments.each do |arg|
-          puts "Deploying funko... #{arg}"
+          Log.info { "Deploying funko... #{arg}" }
           # TODO: Everything
         end
       end

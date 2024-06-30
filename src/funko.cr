@@ -88,7 +88,7 @@ class Funko
     docker_api = Docr::API.new(Docr::Client.new)
     docker_api.images.build(
       context: path.to_s,
-      tags: ["#{name}:latest"]) { |x| puts x }
+      tags: ["#{name}:latest"]) { |x| Log.info { x } }
   end
 
   # Return a list of image IDs for this funko, most recent first
@@ -99,7 +99,7 @@ class Funko
         name: name
       ).sort { |i, j| j.@created <=> i.@created }.map(&.@id)
     rescue ex : Docr::Errors::DockerAPIError
-      puts "Error: #{ex}"
+      Log.error { "#{ex}" }
       [] of String
     end
   end
@@ -172,7 +172,7 @@ class Funko
 
     docker_api = Docr::API.new(Docr::Client.new)
     response = docker_api.containers.create(name: "faaso-#{name}", config: conf)
-    response.@warnings.each { |msg| puts "Warning: #{msg}" }
+    response.@warnings.each { |msg| Log.warn { msg } }
     docker_api.containers.start(response.@id) if autostart
     response.@id
   end
