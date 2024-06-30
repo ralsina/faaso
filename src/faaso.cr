@@ -142,10 +142,10 @@ module Faaso
 
       def run
         @arguments.each do |arg|
-          puts "Stopping function... #{arg}"
-          # TODO: check if function is running
-          # TODO: stop function container
-          # TODO: delete function container
+          puts "Stopping funko... #{arg}"
+          # TODO: check if funko is running
+          # TODO: stop funko container
+          # TODO: delete funko container
           # TODO: remove route from reverse proxy
         end
       end
@@ -162,7 +162,7 @@ module Faaso
 
       def run
         @arguments.each do |arg|
-          puts "Stopping function... #{arg}"
+          puts "Deploying funko... #{arg}"
           # TODO: Everything
         end
       end
