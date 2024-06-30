@@ -46,6 +46,9 @@ in a *opinionated* way. All funkos listen in port 3000 in their own
 container instances, and they are all segregated into a network called
 faaso-net.
 
+The proxy is the only container exposed to the host network, everything
+else needs to be accessed through it.
+
 The faaso-proxy container will automatically proxy all requests so if you access the URL `http://faaso-proxy:8888/funko/hello/foo` that will be
 proxied to `/foo` in the `hello` funko.
 
@@ -75,3 +78,4 @@ faaso-proxy -- GET /bar --> faaso-funko1
 The dynamic proxying is achieved by reading the current state of
 Docker and just adapt to it using the naming conventions mentioned
 above.
+
