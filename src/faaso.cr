@@ -1,8 +1,16 @@
 require "./funko.cr"
 require "commander"
+require "crest"
 require "docr"
 require "docr/utils.cr"
+require "json"
 require "uuid"
+
+# API if you just ran faaso-daemon
+FAASO_API = "http://localhost:3000/"
+
+# API if you are running the proxy image locally
+# FAASO_API="http://localhost:8888/admin/"
 
 # Functions as a Service, Ops!
 module Faaso
@@ -34,14 +42,65 @@ module Faaso
 
       def run
         funkos = Funko.from_paths(@arguments)
-        funkos.each do |funko|
-          # Create temporary build location
-          tmp_dir = Path.new("tmp", UUID.random.to_s)
-          Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
-          funko.prepare_build tmp_dir
+        local = @options.@bool["local"]
 
-          puts "Building function... #{funko.name} in #{tmp_dir}"
-          funko.build tmp_dir
+        if local
+          funkos.each do |funko|
+            # Create temporary build location
+            tmp_dir = Path.new("tmp", UUID.random.to_s)
+            Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
+            funko.prepare_build tmp_dir
+
+            puts "Building function... #{funko.name} in #{tmp_dir}"
+            funko.build tmp_dir
+          end
+        else # Running against a server
+          funkos.each do |funko|
+            # Create a tarball for the funko
+            buf = IO::Memory.new
+            Compress::Gzip::Writer.open(buf) do |gzip|
+              Crystar::Writer.open(gzip) do |tw|
+                Dir.glob("#{funko.path}/**/*").each do |path|
+                  next unless File.file? path
+                  rel_path = Path[path].relative_to funko.path
+                  file_info = File.info(path)
+                  hdr = Crystar::Header.new(
+                    name: rel_path.to_s,
+                    mode: file_info.permissions.to_u32,
+                    size: file_info.size,
+                  )
+                  tw.write_header(hdr)
+                  tw.write(File.read(path).to_slice)
+                end
+              end
+            end
+
+            tmp = File.tempname
+            File.open(tmp, "w") do |outf|
+              outf << buf
+            end
+
+            url = "#{FAASO_API}funko/build/"
+
+            begin
+              _response = Crest.post(
+                url,
+                {"funko.tgz" => File.open(tmp), "name" => "funko.tgz"},
+                user: "admin", password: "admin"
+              )
+              puts "Build finished successfully."
+              # body = JSON.parse(_response.body)
+              # puts body["stdout"]
+              # puts body["stderr"]
+            rescue ex : Crest::InternalServerError
+              puts "Error building image."
+              body = JSON.parse(ex.response.body)
+              puts body["stdout"]
+              puts body["stderr"]
+              puts "Error building funko #{funko.name} from #{funko.path}"
+              exit 1
+            end
+          end
         end
       end
     end

@@ -80,7 +80,7 @@ class Funko
     docker_api = Docr::API.new(Docr::Client.new)
     docker_api.images.build(
       context: path.to_s,
-      tags: ["#{name}:latest"]) { }
+      tags: ["#{name}:latest"]) { |x| puts x }
   end
 
   # Return a list of image IDs for this funko, most recent first

@@ -5,6 +5,15 @@ cli = Commander::Command.new do |cmd|
   cmd.use = "faaso"
   cmd.long = "Functions as a Service, Open"
 
+  cmd.flags.add do |flag|
+    flag.name = "local"
+    flag.short = "-l"
+    flag.long = "--local"
+    flag.description = "Run commands locally instead of against a FaaSO server."
+    flag.default = false
+    flag.persistent = true
+  end
+
   cmd.commands.add do |command|
     command.use = "build"
     command.short = "Build a funko"

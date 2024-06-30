@@ -16,6 +16,8 @@ RUN apk add tinyproxy multirun openssl zlib yaml pcre2 gc libevent libgcc libxml
 RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
 
+RUN mkdir runtimes
+COPY runtimes/* ./runtimes/
 COPY tinyproxy.conf ./
 COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
 

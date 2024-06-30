@@ -28,3 +28,5 @@ dependencies:
     github: straight-shoota/crinja
   crystar:
     github: naqvis/crystar
+  crest:
+    github: mamantoha/crest    

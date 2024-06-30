@@ -73,7 +73,7 @@ post "/funko/build/" do |env|
   stdout = IO::Memory.new
   status = Process.run(
     command: "faaso",
-    args: ["build", tmp_dir.to_s],
+    args: ["build", "-l", tmp_dir.to_s],
     output: stdout,
     error: stderr,
   )
