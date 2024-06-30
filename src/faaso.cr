@@ -7,10 +7,7 @@ require "json"
 require "uuid"
 
 # API if you just ran faaso-daemon
-FAASO_API = "http://localhost:3000/"
-
-# API if you are running the proxy image locally
-# FAASO_API="http://localhost:8888/admin/"
+FAASO_SERVER = ENV.fetch("FAASO_SERVER", "http://localhost:3000/")
 
 # Functions as a Service, Ops!
 module Faaso
@@ -80,18 +77,18 @@ module Faaso
               outf << buf
             end
 
-            url = "#{FAASO_API}funko/build/"
+            url = "#{FAASO_SERVER}funko/build/"
 
             begin
-              _response = Crest.post(
+              Log.info { "Uploading funko to #{FAASO_SERVER}" }
+              response = Crest.post(
                 url,
                 {"funko.tgz" => File.open(tmp), "name" => "funko.tgz"},
                 user: "admin", password: "admin"
               )
               Log.info { "Build finished successfully." }
-              # body = JSON.parse(_response.body)
-              # puts body["stdout"]
-              # puts body["stderr"]
+              body = JSON.parse(response.body)
+              Log.info { body["stdout"] }
             rescue ex : Crest::InternalServerError
               Log.error { "Error building funko #{funko.name} from #{funko.path}" }
               body = JSON.parse(ex.response.body)
@@ -129,7 +126,7 @@ module Faaso
 
           if !local
             begin
-              response = Crest.get("#{FAASO_API}funko/#{funko.name}/up/",
+              response = Crest.get("#{FAASO_SERVER}funko/#{funko.name}/up/",
                 user: "admin", password: "admin")
               body = JSON.parse(response.body)
               Log.info { body["stdout"] }

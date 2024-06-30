@@ -8,12 +8,17 @@ require "uuid"
 # FIXME: make configurable
 basic_auth "admin", "admin"
 
-current_config = ""
+current_config = File.read("tinyproxy.conf")
+
+# Get current proxy config
+get "/proxy/" do
+  current_config
+end
 
 # Bump proxy config to current docker state, returns
 # new proxy config
-get "/" do
-  "Updating routing"
+patch "/proxy/" do
+  Log.info { "Updating routing" }
   # Get all the funkos, create routes for them all
   docker_api = Docr::API.new(Docr::Client.new)
   containers = docker_api.containers.list(all: true)
