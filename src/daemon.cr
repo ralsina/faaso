@@ -69,22 +69,29 @@ post "/funko/build/" do |env|
   end
 
   # Build the thing
+  response = run_faaso(["build", tmp_dir.to_s])
+
+  if response["exit_code"] != 0
+    halt env, status_code: 500, response: response.to_json
+  else
+    response.to_json
+  end
+end
+
+def run_faaso(args : Array(String))
   stderr = IO::Memory.new
   stdout = IO::Memory.new
   status = Process.run(
     command: "faaso",
-    args: ["build", "-l", tmp_dir.to_s],
+    args: args + ["-l"], # Always local in the server
     output: stdout,
     error: stderr,
   )
-  response = {
+  {
     "exit_code" => status.exit_code,
     "stdout"    => stdout.to_s,
     "stderr"    => stderr.to_s,
-  }.to_json
-
-  halt env, status_code: 500, response: response if status.exit_code != 0
-  response
+  }
 end
 
 Kemal.run
