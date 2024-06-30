@@ -23,6 +23,7 @@ module Faaso
   end
 
   module Commands
+    # Build images for one or more funkos
     class Build
       @arguments : Array(String) = [] of String
       @options : Commander::Options
@@ -35,6 +36,7 @@ module Faaso
       def run
         funkos = Funko.from_paths(@arguments)
         funkos.each do |funko|
+          # FIXME: refactor lots of this into the Funko class
           # Create temporary build location
           tmp_dir = Path.new("tmp", UUID.random.to_s)
           Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
@@ -113,13 +115,10 @@ module Faaso
             puts "Restarting existing exited container"
             funko.start
           else
-            # FIXME: move into Funko class
-            # Deploy from scratch
+            # Only have an image, deploy from scratch
             Faaso.setup_network # We need it
-            puts "Creating new container"
-            id = funko.create_container
-            puts "Starting container"
-            docker_api.containers.start(id)
+            puts "Creating and starting new container"
+            funko.create_container(autostart: true)
 
             (1..5).each { |_|
               break if funko.running?

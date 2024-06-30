@@ -107,7 +107,7 @@ class Funko
   end
 
   # Create a container for this funko
-  def create_container : String
+  def create_container( autostart : Bool = true) : String
     conf = Docr::Types::CreateContainerConfig.new(
       image: "#{name}:latest",
       hostname: name,
@@ -127,6 +127,7 @@ class Funko
     docker_api = Docr::API.new(Docr::Client.new)
     response = docker_api.containers.create(name: "faaso-#{name}", config: conf)
     response.@warnings.each { |msg| puts "Warning: #{msg}" }
+    docker_api.containers.start(response.@id) if autostart 
     response.@id
   end
 end
