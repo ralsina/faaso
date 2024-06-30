@@ -85,80 +85,61 @@ module Faaso
           container_name = "faaso-#{funko.name}"
           docker_api = Docr::API.new(Docr::Client.new)
 
-          images = funko.image_history
-          if images.empty?
+          if funko.image_history.empty?
             puts "Error: no images available for #{funko.name}:latest"
             next
           end
 
-          # sort list of funko containers newer image first
-          containers = funko.containers.sort { |a, b|
-            (images.index(b.@image_id) || 9999) <=> (images.index(a.@image_id) || 9999)
-          }
-
-          # If it's already up, do nothing
-          # FIXME: bring back out-of-date warning
-          if funko.running?
+          case funko
+          when .running?
+            # If it's already up, do nothing
+            # FIXME: bring back out-of-date warning
             puts "#{funko.name} is already up"
-            next
-          end
-
-          # If it is paused, unpause it
-          paused = containers.select { |container|
-            container.@state == "paused"
-          }
-          if paused.size > 0
+          when .paused?
+            # If it is paused, unpause it
             puts "Resuming existing paused container"
-            docker_api.containers.unpause(paused[0].@id)
-            next
-          end
-
-          # If it is exited, start it
-          existing = containers.select { |container|
-            container.@state == "exited"
-          }
-
-          puts "Starting function #{funko.name}"
-          if existing.size > 0
+            funko.unpause
+          when .exited?
+            puts "Starting function #{funko.name}"
             puts "Restarting existing exited container"
-            docker_api.containers.start(existing[0].@id)
-            next
-          end
-
-          # Deploy from scratch
-          Faaso.setup_network # We need it
-          puts "Creating new container"
-          conf = Docr::Types::CreateContainerConfig.new(
-            image: "#{funko.name}:latest",
-            hostname: funko.name,
-            # Port in the container side
-            exposed_ports: {"#{funko.port}/tcp" => {} of String => String},
-            host_config: Docr::Types::HostConfig.new(
-              network_mode: "faaso-net",
-              port_bindings: {"#{funko.port}/tcp" => [Docr::Types::PortBinding.new(
-                host_port: "",        # Host port, empty means random
-                host_ip: "127.0.0.1", # Host IP
-              )]}
+            funko.start
+          else
+            # FIXME: move into Funko class
+            # Deploy from scratch
+            Faaso.setup_network # We need it
+            puts "Creating new container"
+            conf = Docr::Types::CreateContainerConfig.new(
+              image: "#{funko.name}:latest",
+              hostname: funko.name,
+              # Port in the container side
+              exposed_ports: {"#{funko.port}/tcp" => {} of String => String},
+              host_config: Docr::Types::HostConfig.new(
+                network_mode: "faaso-net",
+                port_bindings: {"#{funko.port}/tcp" => [Docr::Types::PortBinding.new(
+                  host_port: "",        # Host port, empty means random
+                  host_ip: "127.0.0.1", # Host IP
+                )]}
+              )
             )
-          )
 
-          response = docker_api.containers.create(name: container_name, config: conf)
-          response.@warnings.each { |msg| puts "Warning: #{msg}" }
-          docker_api.containers.start(response.@id)
-          containers = docker_api.containers.list(
-            all: true,
-            filters: {"name" => [container_name]}
-          )
+            response = docker_api.containers.create(name: container_name, config: conf)
+            response.@warnings.each { |msg| puts "Warning: #{msg}" }
+            docker_api.containers.start(response.@id)
+            containers = docker_api.containers.list(
+              all: true,
+              filters: {"name" => [container_name]}
+            )
 
-          (1..5).each { |_|
-            break if containers[0].state == "running"
-            sleep 0.1.seconds
-          }
-          if containers[0].state != "running"
-            puts "Container for #{funko.name} is not running yet"
-            next
+            (1..5).each { |_|
+              break if containers[0].state == "running"
+              sleep 0.1.seconds
+            }
+            if containers[0].state != "running"
+              puts "Container for #{funko.name} is not running yet"
+              next
+            end
+            puts "Container for #{funko.name} is running"
           end
-          puts "Container for #{funko.name} is running"
         end
       end
     end

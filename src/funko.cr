@@ -59,10 +59,49 @@ class Funko
     )
   end
 
-  # Is this funko running?
+  # Is any instance of this funko running?
   def running?
     self.containers.any? { |container|
       container.@state == "running"
     }
+  end
+
+  # Is any instance of this funko paused?
+  def paused?
+    self.containers.any? { |container|
+      container.@state == "paused"
+    }
+  end
+
+  # Unpause paused container with the newer image
+  def unpause
+    docker_api = Docr::API.new(Docr::Client.new)
+    images = self.image_history
+    paused = self.containers.select { |container|
+      container.@state == "paused"
+    }.sort! { |i, j|
+      (images.index(j.@image_id) || 9999) <=> (images.index(i.@image_id) || 9999)
+    }
+    docker_api.containers.unpause(paused[0].@id) unless paused.empty?
+  end
+
+  # Is any instance of this funko exited?
+  def exited?
+    self.containers.any? { |container|
+      container.@state == "exited"
+    }
+  end
+
+  # Restart exited container with the newer image
+  def start
+    # FIXME refactor DRY with unpause
+    docker_api = Docr::API.new(Docr::Client.new)
+    images = self.image_history
+    exited = self.containers.select { |container|
+      container.@state == "exited"
+    }.sort! { |i, j|
+      (images.index(j.@image_id) || 9999) <=> (images.index(i.@image_id) || 9999)
+    }
+    docker_api.containers.restart(exited[0].@id) unless exited.empty?
   end
 end
