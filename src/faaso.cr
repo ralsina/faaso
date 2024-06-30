@@ -16,18 +16,17 @@ module Faaso
   # A simple persistent k/v store
   store = Kiwi::FileStore.new(".kiwi")
 
-  # Ensure the faaso-net network exists 
+  # Ensure the faaso-net network exists
   def self.setup_network
-    begin
     docker_api = Docr::API.new(Docr::Client.new)
     docker_api.networks.create(Docr::Types::NetworkConfig.new(
       name: "faaso-net",
       check_duplicate: false,
       driver: "bridge"
     ))
-    rescue ex : Docr::Errors::DockerAPIError
-      raise ex if ex.status_code != 409  # Network already exists
-    end
+  rescue ex : Docr::Errors::DockerAPIError
+    raise ex if ex.status_code != 409 # Network already exists
+
   end
 
   module Commands
@@ -156,7 +155,7 @@ module Faaso
           end
 
           # Deploy from scratch
-          Faaso.setup_network  # We need it
+          Faaso.setup_network # We need it
           puts "Creating new container"
           conf = Docr::Types::CreateContainerConfig.new(
             image: "#{funko.name}:latest",
@@ -180,7 +179,7 @@ module Faaso
             filters: {"name" => [container_name]}
           )
 
-          (1..5).each { |i|
+          (1..5).each { |_|
             break if containers[0].state == "running"
             sleep 0.1.seconds
           }
