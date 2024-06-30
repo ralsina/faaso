@@ -14,7 +14,7 @@ FaaSO can use your funko and its runtime to create a Docker image.
 That docker image can be built in a server by the FaaSO proxy or it can be
 built locally just like any docker image.
 
-Then we can start it, either locally or in the server, using the proxy.
+Then we can start it locally or, using the proxy, in the server.
 
 ```mermaid
 flowchart TD
