@@ -105,6 +105,31 @@ module Faaso
       end
     end
 
+    class Export
+      @arguments : Array(String) = [] of String
+      @options : Commander::Options
+
+      def initialize(options, arguments)
+        @options = options
+        @arguments = arguments
+      end
+
+      def run
+        funkos = Funko.from_paths(@arguments)
+        funkos.each do |funko|
+          # Create temporary build location
+          dst_path = Path.new("export", funko.name)
+          if File.exists? dst_path
+            puts "Error: #{dst_path} already exists, not exporting #{funko.path}"
+            next
+          end
+          puts "Exporting #{funko.path} to #{dst_path}"
+          Dir.mkdir_p(dst_path)
+          funko.prepare_build dst_path
+        end
+      end
+    end
+
     class Down
       @arguments : Array(String) = [] of String
       @options : Commander::Options

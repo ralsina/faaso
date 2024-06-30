@@ -12,10 +12,10 @@ class Funko
   # if Nil, it has no template whatsoever
   property runtime : (String | Nil)? = nil
 
-  # Extra packages shipped with the Docker image
+  # Extra operating system packages shipped with the runtime's Docker image
   property ship_packages : Array(String) = [] of String
 
-  # Extra packages used only in the *build* image
+  # Extra operating system packages used only when *building* the funko
   property devel_packages : Array(String) = [] of String
 
   # Where this is located in the filesystem

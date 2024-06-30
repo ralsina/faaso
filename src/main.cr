@@ -34,10 +34,19 @@ cli = Commander::Command.new do |cmd|
 
   cmd.commands.add do |command|
     command.use = "down"
-    command.short = "Stop a function"
-    command.long = "Stop a function in a container"
+    command.short = "Stop a funko"
+    command.long = "Stop a funko in a container"
     command.run do |options, arguments|
       Faaso::Commands::Down.new(options, arguments).run
+    end
+  end
+
+  cmd.commands.add do |command|
+    command.use = "export"
+    command.short = "Export a funko to a directory"
+    command.long = "Exports a funko as a self-contained directory."
+    command.run do |options, arguments|
+      Faaso::Commands::Export.new(options, arguments).run
     end
   end
 end
