@@ -105,4 +105,28 @@ class Funko
     }
     docker_api.containers.restart(exited[0].@id) unless exited.empty?
   end
+
+  # Create a container for this funko
+  def create_container : String
+    conf = Docr::Types::CreateContainerConfig.new(
+      image: "#{name}:latest",
+      hostname: name,
+      # Port in the container side
+      # FIXME: Maybe don't need this now we are using the proxy
+      exposed_ports: {"#{port}/tcp" => {} of String => String},
+      host_config: Docr::Types::HostConfig.new(
+        network_mode: "faaso-net",
+        # Also probably not needed anymore
+        port_bindings: {"#{port}/tcp" => [Docr::Types::PortBinding.new(
+          host_port: "",        # Host port, empty means random
+          host_ip: "127.0.0.1", # Host IP
+        )]}
+      )
+    )
+
+    docker_api = Docr::API.new(Docr::Client.new)
+    response = docker_api.containers.create(name: "faaso-#{name}", config: conf)
+    response.@warnings.each { |msg| puts "Warning: #{msg}" }
+    response.@id
+  end
 end

@@ -117,23 +117,9 @@ module Faaso
             # Deploy from scratch
             Faaso.setup_network # We need it
             puts "Creating new container"
-            conf = Docr::Types::CreateContainerConfig.new(
-              image: "#{funko.name}:latest",
-              hostname: funko.name,
-              # Port in the container side
-              exposed_ports: {"#{funko.port}/tcp" => {} of String => String},
-              host_config: Docr::Types::HostConfig.new(
-                network_mode: "faaso-net",
-                port_bindings: {"#{funko.port}/tcp" => [Docr::Types::PortBinding.new(
-                  host_port: "",        # Host port, empty means random
-                  host_ip: "127.0.0.1", # Host IP
-                )]}
-              )
-            )
-
-            response = docker_api.containers.create(name: container_name, config: conf)
-            response.@warnings.each { |msg| puts "Warning: #{msg}" }
-            docker_api.containers.start(response.@id)
+            id = funko.create_container
+            puts "Starting container"
+            docker_api.containers.start(id)
 
             (1..5).each { |_|
               break if funko.running?
