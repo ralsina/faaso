@@ -48,6 +48,18 @@ ReversePath "/admin/" "http://127.0.0.1:3000/"
   proxy_config
 end
 
+# Bring up the funko
+get "/funko/:name/up/" do |env|
+  name = env.params.url["name"]
+  response = run_faaso(["up", name])
+
+  if response["exit_code"] != 0
+    halt env, status_code: 500, response: response.to_json
+  else
+    response.to_json
+  end
+end
+
 # Build image for funko received as "funko.tgz"
 # TODO: This may take a while, consider using something like
 # mosquito-cr/mosquito to make it a job queue

@@ -47,6 +47,14 @@ class Funko
       }
   end
 
+  # Create an array of funkos just from names. These are limited in function
+  # and can't call `prepare_build` or some other functionality
+  def self.from_names(names : Array(String)) : Array(Funko)
+    names.map { |name|
+      Funko.from_yaml("name: #{name}")
+    }
+  end
+
   # Setup the target directory `path` with all the files needed
   # to build a docker image
   def prepare_build(path : Path)

@@ -105,7 +105,7 @@ module Faaso
       end
     end
 
-    # Bring up one or more funkos.
+    # Bring up one or more funkos by name.
     #
     # This doesn't guarantee that they will be running the latest
     # version, and it will try to recicle paused and exited containers.
@@ -124,8 +124,26 @@ module Faaso
       end
 
       def run
-        funkos = Funko.from_paths(@arguments)
+        funkos = Funko.from_names(@arguments)
         funkos.each do |funko|
+          local = @options.@bool["local"]
+
+          if !local
+            begin
+              response = Crest.get("#{FAASO_API}funko/#{funko.name}/up/",
+                user: "admin", password: "admin")
+              body = JSON.parse(response.body)
+              puts body["stdout"]
+              next
+            rescue ex : Crest::InternalServerError
+              puts "Error bringing up #{funko.name}"
+              body = JSON.parse(ex.response.body)
+              puts body["stdout"]
+              puts body["stderr"]
+              exit 1
+            end
+          end
+
           if funko.image_history.empty?
             puts "Error: no images available for #{funko.name}:latest"
             next
