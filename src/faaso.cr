@@ -3,18 +3,11 @@ require "commander"
 require "docr"
 require "docr/utils.cr"
 require "file_utils"
-require "kiwi/file_store"
 require "uuid"
-
-# FIXME make it configurable
-REPO = "localhost:5000"
 
 # Functions as a Service, Ops!
 module Faaso
   VERSION = "0.1.0"
-
-  # A simple persistent k/v store
-  store = Kiwi::FileStore.new(".kiwi")
 
   # Ensure the faaso-net network exists
   def self.setup_network
@@ -69,11 +62,6 @@ module Faaso
 
           puts "Building function... #{funko.name} in #{tmp_dir}"
 
-          slug = funko.name
-
-          # FIXME: this should be configurable
-          repo = REPO
-
           docker_api = Docr::API.new(Docr::Client.new)
           docker_api.images.build(
             context: tmp_dir.to_s,
@@ -94,7 +82,6 @@ module Faaso
       def run
         funkos = Funko.from_paths(@arguments)
         funkos.each do |funko|
-          repo = REPO
           container_name = "faaso-#{funko.name}"
           docker_api = Docr::API.new(Docr::Client.new)
           # Pull image from registry
@@ -188,8 +175,6 @@ module Faaso
             next
           end
           puts "Container for #{funko.name} is running"
-          public_port = containers[0].@ports[0].@public_port
-          # TODO: Map route in reverse proxy to function
         end
         # TODO: Run test for healthcheck
         # TODO: Return function URL for testing

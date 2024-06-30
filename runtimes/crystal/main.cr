@@ -1,4 +1,4 @@
 require "kemal"
-require "./function.cr"
+require "./funko.cr"
 
 Kemal.run
