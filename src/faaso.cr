@@ -73,13 +73,13 @@ module Faaso
     end
 
     # Bring up one or more funkos.
-    # 
+    #
     # This doesn't guarantee that they will be running the latest
     # version, and it will try to recicle paused and exited containers.
-    # 
+    #
     # If there is no other way, it will create a brand new container with
     # the latest known image and start it.
-    # 
+    #
     # If there are no images for the funko, it will fail to bring it up.
     class Up
       @arguments : Array(String) = [] of String
@@ -93,9 +93,6 @@ module Faaso
       def run
         funkos = Funko.from_paths(@arguments)
         funkos.each do |funko|
-          container_name = "faaso-#{funko.name}"
-          docker_api = Docr::API.new(Docr::Client.new)
-
           if funko.image_history.empty?
             puts "Error: no images available for #{funko.name}:latest"
             next
