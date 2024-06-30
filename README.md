@@ -90,7 +90,7 @@ and so on.
 But the funko has *the interesting bits* of the app.
 
 The full details of how to write funkos are still in flux, so not documenting 
-it for now. Eventually, you will be able to either just write the parts you 
+it for now. Eventually, you will be able to just write the parts you 
 need to write to create funkos in different languages. It's easy!
 
 ### So what can a funko do?
