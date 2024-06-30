@@ -7,7 +7,7 @@ RUN mkdir src/
 COPY src/* src/
 RUN shards install
 RUN shards build -d --error-trace
-RUN strip bin/faaso-daemon
+RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
 RUN apk add tinyproxy multirun openssl zlib yaml pcre2 gc libevent libgcc libxml2
@@ -17,6 +17,6 @@ RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
 
 COPY tinyproxy.conf ./
-COPY --from=build /home/app/bin/faaso-daemon ./
+COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
 
-CMD ["/usr/bin/multirun", "./faaso-daemon", "tinyproxy -d -c tinyproxy.conf"]
+CMD ["/usr/bin/multirun", "faaso-daemon", "tinyproxy -d -c tinyproxy.conf"]

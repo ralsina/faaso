@@ -1,12 +1,17 @@
+require "crystar"
+require "compress/gzip"
 require "docr"
-require "kemal"
 require "kemal-basic-auth"
+require "kemal"
+require "uuid"
 
 # FIXME: make configurable
 basic_auth "admin", "admin"
 
 current_config = ""
 
+# Bump proxy config to current docker state, returns
+# new proxy config
 get "/" do
   "Updating routing"
   # Get all the funkos, create routes for them all
@@ -41,6 +46,45 @@ ReversePath "/admin/" "http://127.0.0.1:3000/"
     current_config = proxy_config
   end
   proxy_config
+end
+
+# Build image for funko received as "funko.tgz"
+# TODO: This may take a while, consider using something like
+# mosquito-cr/mosquito to make it a job queue
+post "/funko/build/" do |env|
+  # Create place to build funko
+  tmp_dir = Path.new("tmp", UUID.random.to_s)
+  Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
+
+  # Expand tarball in there
+  file = env.params.files["funko.tgz"].tempfile
+  Compress::Gzip::Reader.open(file) do |gzip|
+    Crystar::Reader.open(gzip) do |tar|
+      tar.each_entry do |entry|
+        File.open(Path.new(tmp_dir, entry.name), "w") do |dst|
+          IO.copy entry.io, dst
+        end
+      end
+    end
+  end
+
+  # Build the thing
+  stderr = IO::Memory.new
+  stdout = IO::Memory.new
+  status = Process.run(
+    command: "faaso",
+    args: ["build", tmp_dir.to_s],
+    output: stdout,
+    error: stderr,
+  )
+  response = {
+    "exit_code" => status.exit_code,
+    "stdout"    => stdout.to_s,
+    "stderr"    => stderr.to_s,
+  }.to_json
+
+  halt env, status_code: 500, response: response if status.exit_code != 0
+  response
 end
 
 Kemal.run

@@ -26,3 +26,5 @@ dependencies:
     github: kemalcr/kemal-basic-auth
   crinja:
     github: straight-shoota/crinja
+  crystar:
+    github: naqvis/crystar
