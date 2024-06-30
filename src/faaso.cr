@@ -2,7 +2,6 @@ require "./funko.cr"
 require "commander"
 require "docr"
 require "docr/utils.cr"
-require "file_utils"
 require "uuid"
 
 # Functions as a Service, Ops!
@@ -36,38 +35,13 @@ module Faaso
       def run
         funkos = Funko.from_paths(@arguments)
         funkos.each do |funko|
-          # FIXME: refactor lots of this into the Funko class
           # Create temporary build location
           tmp_dir = Path.new("tmp", UUID.random.to_s)
           Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
-
-          # Copy runtime if requested
-          if !funko.runtime.nil?
-            runtime_dir = Path.new("runtimes", funko.runtime.to_s)
-            if !File.exists? runtime_dir
-              puts "Error: runtime #{funko.runtime} not found"
-              next
-            end
-            Dir.glob("#{runtime_dir}/*").each { |src|
-              FileUtils.cp_r(src, tmp_dir)
-            }
-          end
-
-          # Copy funko
-          if funko.path.empty?
-            puts "Internal error: empty funko path for #{funko.name}"
-            next
-          end
-          Dir.glob("#{funko.path}/*").each { |src|
-            FileUtils.cp_r(src, tmp_dir)
-          }
+          funko.prepare_build tmp_dir
 
           puts "Building function... #{funko.name} in #{tmp_dir}"
-
-          docker_api = Docr::API.new(Docr::Client.new)
-          docker_api.images.build(
-            context: tmp_dir.to_s,
-            tags: ["#{funko.name}:latest"]) { }
+          funko.build tmp_dir
         end
       end
     end

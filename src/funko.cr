@@ -1,3 +1,5 @@
+require "crinja"
+require "file_utils"
 require "yaml"
 
 # A funko, built from its source metadata
@@ -10,22 +12,29 @@ class Funko
   # if Nil, it has no template whatsoever
   property runtime : (String | Nil)? = nil
 
-  # Port of the funko process (optional, default is 3000)
-  property port : UInt32? = 3000
+  # Extra packages shipped with the Docker image
+  property ship_packages : Array(String) = [] of String
 
-  # Extra packages, passed as EXTRA_PACKAGES argument
-  # to the Dockerfile, use it for installing things in
-  # the SHIPPED docker image
-  property extra_packages : Array(String)?
-
-  # Extra packages, passed as DEVEL_PACKAGES argument
-  # to the Dockerfile, use it for installing things in
-  # the docker stage used to build the code
-  property devel_packages : Array(String)?
+  # Extra packages used only in the *build* image
+  property devel_packages : Array(String) = [] of String
 
   # Where this is located in the filesystem
   @[YAML::Field(ignore: true)]
   property path : String = ""
+
+  # Healthcheck properties
+  property healthcheck_options : String = "--interval=1m --timeout=2s --start-period=2s --retries=3"
+  property healthcheck_command : String = "curl --fail http://localhost:3000/ping || exit 1"
+
+  def _to_context
+    {
+      "name"                => name,
+      "ship_packages"       => ship_packages,
+      "devel_packages"      => devel_packages,
+      "healthcheck_options" => healthcheck_options,
+      "healthcheck_command" => healthcheck_command,
+    }
+  end
 
   # Create an Array of funkos from an Array of folders containing definitions
   def self.from_paths(paths : Array(String | Path)) : Array(Funko)
@@ -36,6 +45,42 @@ class Funko
         f.path = path.parent.to_s
         f
       }
+  end
+
+  # Setup the target directory `path` with all the files needed
+  # to build a docker image
+  def prepare_build(path : Path)
+    # Copy runtime if requested
+    if !runtime.nil?
+      runtime_dir = Path.new("runtimes", runtime.as(String))
+      raise Exception.new("Error: runtime #{runtime} not found for funko #{name} in #{path}") unless File.exists?(runtime_dir)
+      Dir.glob("#{runtime_dir}/*").each { |src|
+        FileUtils.cp_r(src, path)
+      }
+      # Replace templates with processed files
+      context = _to_context
+      Dir.glob("#{path}/**/*.j2").each { |template|
+        dst = template[..-4]
+        File.open(dst, "w") do |file|
+          file << Crinja.render(File.read(template), context)
+        end
+        File.delete template
+      }
+    end
+
+    # Copy funko
+    raise Exception.new("Internal error: empty funko path for #{name}") if self.path.empty?
+    Dir.glob("#{self.path}/*").each { |src|
+      FileUtils.cp_r(src, path)
+    }
+  end
+
+  # Build image using docker in path previously prepared using `prepare_build`
+  def build(path : Path)
+    docker_api = Docr::API.new(Docr::Client.new)
+    docker_api.images.build(
+      context: path.to_s,
+      tags: ["#{name}:latest"]) { }
   end
 
   # Return a list of image IDs for this funko, most recent first
@@ -112,15 +157,8 @@ class Funko
       image: "#{name}:latest",
       hostname: name,
       # Port in the container side
-      # FIXME: Maybe don't need this now we are using the proxy
-      exposed_ports: {"#{port}/tcp" => {} of String => String},
       host_config: Docr::Types::HostConfig.new(
         network_mode: "faaso-net",
-        # Also probably not needed anymore
-        port_bindings: {"#{port}/tcp" => [Docr::Types::PortBinding.new(
-          host_port: "",        # Host port, empty means random
-          host_ip: "127.0.0.1", # Host IP
-        )]}
       )
     )
 

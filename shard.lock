@@ -8,6 +8,10 @@ shards:
     git: https://github.com/mrrooijen/commander.git
     version: 0.4.0
 
+  crinja:
+    git: https://github.com/straight-shoota/crinja.git
+    version: 0.8.1
+
   crystar:
     git: https://github.com/naqvis/crystar.git
     version: 0.4.0
@@ -23,10 +27,6 @@ shards:
   kemal:
     git: https://github.com/kemalcr/kemal.git
     version: 1.5.0
-
-  kiwi:
-    git: https://github.com/ralsina/kiwi.git
-    version: 0.1.0+git.commit.65059b87771238593a28b2b8b9fdf77d8e2b9e89
 
   radix:
     git: https://github.com/luislavena/radix.git

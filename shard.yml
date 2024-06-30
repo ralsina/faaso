@@ -23,3 +23,5 @@ dependencies:
     github: mrrooijen/commander
   kemal:
     github: kemalcr/kemal    
+  crinja:
+    github: straight-shoota/crinja
