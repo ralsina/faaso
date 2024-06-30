@@ -84,8 +84,6 @@ module Faaso
         funkos.each do |funko|
           container_name = "faaso-#{funko.name}"
           docker_api = Docr::API.new(Docr::Client.new)
-          # Pull image from registry
-          # docker_api.images.create(image: tag)
 
           # Get image history, sorted newer image first
           begin
@@ -176,8 +174,6 @@ module Faaso
           end
           puts "Container for #{funko.name} is running"
         end
-        # TODO: Run test for healthcheck
-        # TODO: Return function URL for testing
       end
     end
 

@@ -10,7 +10,7 @@ RUN shards build --release
 RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
-RUN apk update && apk upgrade && apk add openssl pcre2 libgcc gc libevent && apk cache clean
+RUN apk update && apk upgrade && apk add openssl pcre2 libgcc gc libevent curl && apk cache clean
 RUN addgroup -S app && adduser app -S -G app
 
 WORKDIR /home/app
@@ -19,3 +19,4 @@ USER app
 COPY --from=build /home/app/bin/function  .
 
 CMD ["./function"]
+HEALTHCHECK  CMD curl --fail http://localhost:3000/ping || exit 1
