@@ -26,15 +26,17 @@ end
 R(runtime for X)
 
 C(fa:fa-box Containerized Application)
-D(fa:fa-image Docker Image)
+D1(fa:fa-image Local Docker Image)
+D2(fa:fa-image Remote Docker Image)
 E(fa:fa-server FaaSO Proxy)
 F(Container Instance Running In Server)
 G(Container Instance Running Locally)
 
-funko_hello --> C -- faaso build --> D
+funko_hello --> C -- faaso build -l --> D1
+C -- faaso build --> E --> D2
 R --> C
-D --> E -- faaso up --> F
-D -- faaso up -l --> G
+D2 -- faaso up --> F
+D1 -- faaso up -local --> G
 ```
 
 How is that application reached? FaaSO will usually run the image
