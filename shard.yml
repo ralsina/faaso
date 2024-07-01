@@ -8,7 +8,7 @@ targets:
   faaso:
     main: src/main.cr
   faaso-daemon:
-    main: src/daemon.cr
+    main: src/daemon/main.cr
 
 crystal: ">= 1.12.2"
 

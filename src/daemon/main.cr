@@ -1,5 +1,5 @@
-require "./daemon-secrets.cr"
-require "./daemon-proxyconf.cr"
+require "./secrets.cr"
+require "./proxyconf.cr"
 require "compress/gzip"
 require "crystar"
 require "docr"
