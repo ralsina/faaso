@@ -1,5 +1,6 @@
-require "crystar"
+require "./daemon-secrets.cr"
 require "compress/gzip"
+require "crystar"
 require "docr"
 require "kemal-basic-auth"
 require "kemal"
