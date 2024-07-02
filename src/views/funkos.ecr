@@ -1,7 +1,7 @@
 <%- result.each do |f| -%>
 <tr>
   <td><%= f["name"] %></td>
-  <td><%= f["state"] %></td>
+  <td><%= f["status"] %></td>
   <td>
   <%- if f["state"] == "running" -%>
     <button state="disabled">Start</button>

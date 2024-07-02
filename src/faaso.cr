@@ -38,7 +38,7 @@ module Faaso
       end
 
       def run
-        funkos = Funko.from_paths(@arguments)
+        funkos = Funko::Funko.from_paths(@arguments)
         local = @options.@bool["local"]
 
         if local
@@ -120,7 +120,7 @@ module Faaso
       end
 
       def run
-        funkos = Funko.from_names(@arguments)
+        funkos = Funko::Funko.from_names(@arguments)
         funkos.each do |funko|
           local = @options.@bool["local"]
 
@@ -188,7 +188,7 @@ module Faaso
       end
 
       def run
-        funkos = Funko.from_paths(@arguments)
+        funkos = Funko::Funko.from_paths(@arguments)
         funkos.each do |funko|
           # Create temporary build location
           dst_path = Path.new("export", funko.name)

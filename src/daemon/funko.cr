@@ -2,7 +2,9 @@ require "docr"
 require "kemal"
 require "../funko.cr"
 
-module Funkos
+module Funko
+  extend self
+
   get "/funkos/" do |env|
     funkos = Funko.from_docker
     funkos.sort! { |a, b| a.name <=> b.name }
@@ -20,8 +22,9 @@ module Funkos
       end
 
       result << {
-        "name"  => funko.name,
-        "state" => state,
+        "name"   => funko.name,
+        "state"  => state,
+        "status" => funko.status,
       }
     end
 

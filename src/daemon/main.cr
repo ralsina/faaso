@@ -1,4 +1,4 @@
-require "./funkos.cr"
+require "./funko.cr"
 require "./proxyconf.cr"
 require "./secrets.cr"
 require "compress/gzip"
