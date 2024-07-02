@@ -1,15 +1,14 @@
+<!DOCTYPE html>
 <head>
+  <meta charset="utf-8" />
   <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css" />
   <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <body>
-    <script>
-      async function getFunkos() {
-        const response = await fetch("funkos/");
-        funkos = await response.json();
-        console.log(funkos);
-      }
-      getFunkos();
-    </script>
+  <header class="container">
+    <h1>Your Funko Collection</h1>
+    </header>
+    <main class=container>
     <button hx-get="funkos/?format=html" hx-target="#funko-list">Update</button>
     <table>
     <thead>
@@ -20,6 +19,7 @@
       </tr>
       <tbody id="funko-list">
       </tbody>
-    </thead>    
+    </thead>
+    </main>
   </body>
 </head>
