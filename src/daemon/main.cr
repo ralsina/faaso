@@ -1,5 +1,6 @@
-require "./secrets.cr"
+require "./funkos.cr"
 require "./proxyconf.cr"
+require "./secrets.cr"
 require "compress/gzip"
 require "crystar"
 require "docr"

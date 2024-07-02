@@ -1,0 +1,34 @@
+<head>
+  <script src="https://cdn.jsdelivr.net/gh/vanjs-org/van/public/van-1.5.0.nomodule.min.js"></script>
+  <body>
+    <script>
+      const { a, div, li, p, ul, span, button } = van.tags;
+
+      const funkos = van.state([]);
+      const funko_list = () => {
+        console.log("derived");
+        return div(
+          p("hello"),
+          ul(
+            ...funkos.val.map((funko) => {
+              return li(funko);
+            })
+          )
+        );
+      };
+
+      async function getFunkos() {
+        for (;;) {
+          const response = await fetch("funkos/");
+          funkos.val = await response.json();
+          console.log(funkos.val);
+          await new Promise((r) => setTimeout(r, 5000));
+        }
+      }
+
+      van.add(document.body, funko_list());
+
+      getFunkos();
+    </script>
+  </body>
+</head>

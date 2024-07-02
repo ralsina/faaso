@@ -4,7 +4,7 @@ RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
 COPY shard.yml ./
 RUN mkdir src/
-COPY src/* src/
+COPY src/ src/
 RUN shards install
 RUN shards build -d --error-trace
 RUN strip bin/*
@@ -16,8 +16,9 @@ RUN apk add tinyproxy multirun openssl zlib yaml pcre2 gc libevent libgcc libxml
 RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
 
-RUN mkdir runtimes
-COPY runtimes/* ./runtimes/
+RUN mkdir runtimes public
+COPY runtimes/ runtimes/
+COPY public/ public/
 COPY tinyproxy.conf ./
 COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
 
