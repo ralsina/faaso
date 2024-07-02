@@ -70,12 +70,11 @@ class Funko
     docker_api = Docr::API.new(Docr::Client.new)
     names = Set(String).new
     docker_api.images.list(all: true).select { |i|
-      next if i.@repo_tags.nil? 
+      next if i.@repo_tags.nil?
       i.@repo_tags.as(Array(String)).each { |tag|
         names << tag.split(":", 2)[0].split("-", 2)[1] if tag.starts_with?("faaso-")
       }
     }
-    pp! names
     from_names(names.to_a)
   end
 

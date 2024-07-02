@@ -1,7 +1,26 @@
-<%- funkos.each do |funko| -%>
+<%- result.each do |f| -%>
 <tr>
-  <td><%= funko.name %></td>
-  <td>sarasa</td>
-  <td><button>DOSTUFF</button></td>
+  <td><%= f["name"] %></td>
+  <td><%= f["state"] %></td>
+  <td>
+  <%- if f["state"] == "running" -%>
+    <button state="disabled">Start</button>
+    <button>Pause</button>
+    <button>Stop</button>
+    <button>Restart</button>
+  <%- end -%>
+  <%- if f["state"] == "paused" -%>
+    <button>Start</button>
+    <button disabled>Pause</button>
+    <button>Stop</button>
+    <button>Restart</button>
+  <%- end -%>
+  <%- if f["state"] == "stopped" -%>
+    <button>Start</button>
+    <button disabled>Pause</button>
+    <button disabled>Stop</button>
+    <button disabled>Restart</button>
+  <%- end -%>
+  </td>
 </tr>
 <%- end -%>
