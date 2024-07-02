@@ -36,6 +36,16 @@ class Funko
     }
   end
 
+  def to_json(json : JSON::Builder)
+    json.object do
+      json.field("name", name)
+      json.field("ship_packages", ship_packages)
+      json.field("devel_packages", devel_packages)
+      json.field("healthcheck_options", healthcheck_options)
+      json.field("healthcheck_command", healthcheck_command)
+    end
+  end
+
   # Create an Array of funkos from an Array of folders containing definitions
   def self.from_paths(paths : Array(String | Path)) : Array(Funko)
     paths.map { |path| Path.new(path, "funko.yml") }
@@ -53,6 +63,20 @@ class Funko
     names.map { |name|
       Funko.from_yaml("name: #{name}")
     }
+  end
+
+  # Get all the funkos docker knows about.
+  def self.from_docker : Array(Funko)
+    docker_api = Docr::API.new(Docr::Client.new)
+    names = Set(String).new
+    docker_api.images.list(all: true).select { |i|
+      next if i.@repo_tags.nil? 
+      i.@repo_tags.as(Array(String)).each { |tag|
+        names << tag.split(":", 2)[0].split("-", 2)[1] if tag.starts_with?("faaso-")
+      }
+    }
+    pp! names
+    from_names(names.to_a)
   end
 
   # Setup the target directory `path` with all the files needed
@@ -88,7 +112,7 @@ class Funko
     docker_api = Docr::API.new(Docr::Client.new)
     docker_api.images.build(
       context: path.to_s,
-      tags: ["#{name}:latest"]) { |x| Log.info { x } }
+      tags: ["faaso-#{name}:latest"]) { |x| Log.info { x } }
   end
 
   # Return a list of image IDs for this funko, most recent first
@@ -96,7 +120,7 @@ class Funko
     docker_api = Docr::API.new(Docr::Client.new)
     begin
       docker_api.images.history(
-        name: name
+        name: "faaso-#{name}"
       ).sort { |i, j| j.@created <=> i.@created }.map(&.@id)
     rescue ex : Docr::Errors::DockerAPIError
       Log.error { "#{ex}" }
@@ -164,7 +188,7 @@ class Funko
     secrets_mount = "#{Dir.current}/secrets/#{name}"
     Dir.mkdir_p(secrets_mount)
     conf = Docr::Types::CreateContainerConfig.new(
-      image: "#{name}:latest",
+      image: "faaso-#{name}:latest",
       hostname: name,
       # Port in the container side
       host_config: Docr::Types::HostConfig.new(
