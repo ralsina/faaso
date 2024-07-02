@@ -2,7 +2,7 @@ name: function
 version: 0.1.0
 
 targets:
-  function:
+  funko:
     main: main.cr
 
 dependencies:

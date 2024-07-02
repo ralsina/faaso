@@ -16,7 +16,7 @@ RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
 USER app
 
-COPY --from=build /home/app/bin/function  .
+COPY --from=build /home/app/bin/funko  .
 
-CMD ["./function"]
+CMD ["./funko"]
 HEALTHCHECK {{ healthcheck_options }}  CMD {{ healthcheck_command }}
