@@ -174,7 +174,7 @@ class Funko
             source: secrets_mount,
             target: "/secrets",
             type: "bind"
-          )
+          ),
         ]
       )
     )

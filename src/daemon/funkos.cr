@@ -23,7 +23,7 @@ module Funkos
     funkos.sort! { |a, b| a.name <=> b.name }
 
     if env.params.query.fetch("format", "json") == "html"
-        render "src/views/funkos.ecr"
+      render "src/views/funkos.ecr"
     else
       funkos.to_json
     end
