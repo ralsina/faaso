@@ -4,3 +4,4 @@
 *.dwarf
 tmp/
 export/
+secrets/
