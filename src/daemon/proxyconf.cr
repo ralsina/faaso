@@ -30,7 +30,8 @@ module Proxy
     funkos.sort!
 
     config = %(
-  UserName nobody
+  User nobody
+  Group nogroup
   Port 8888
   Listen 0.0.0.0
   Timeout 600

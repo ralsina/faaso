@@ -25,4 +25,4 @@ COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
 RUN mkdir /secrets
 RUN echo "sarasa" > /secrets/sarlanga
 
-CMD ["/usr/bin/multirun", "faaso-daemon", "tinyproxy -d -c tinyproxy.conf"]
+CMD ["/usr/bin/multirun", "-v", "faaso-daemon", "tinyproxy -d -c tinyproxy.conf"]
