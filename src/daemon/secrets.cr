@@ -27,6 +27,18 @@ module Secrets
     end
   end
 
+  # Load secrets from the disk
+  def self.load_secrets
+    Dir.glob(Path.new(SECRET_PATH, "*")).each do |funko_dir|
+      funko = File.basename(funko_dir)
+      Dir.glob(Path.new(funko_dir, "*")).each do |secret_file|
+        name = File.basename(secret_file)
+        value = File.read(secret_file)
+        SECRETS["#{funko}-#{name}"] = value
+      end
+    end
+  end
+
   # Gets a secret in form {"name": "funko_name-secret_name", "value": "secret_value"}
   post "/secrets/" do |env|
     name = env.params.json["name"].as(String)
@@ -34,6 +46,10 @@ module Secrets
     SECRETS[name] = value
     Secrets.update_secrets
     halt env, status_code: 201, response: "Created"
+  end
+
+  get "/secrets/" do |env|
+    halt env, status_code: 200, response: SECRETS.keys.to_json
   end
 
   # Deletes a secret from the disk and memory
@@ -44,3 +60,5 @@ module Secrets
     halt env, status_code: 204, response: "Deleted"
   end
 end
+
+Secrets.load_secrets
