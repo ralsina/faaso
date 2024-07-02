@@ -1,3 +1,4 @@
+require "docr"
 require "kemal"
 
 module Proxy
@@ -29,6 +30,7 @@ module Proxy
     funkos.sort!
 
     config = %(
+  UserName nobody
   Port 8888
   Listen 0.0.0.0
   Timeout 600
