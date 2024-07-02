@@ -161,12 +161,21 @@ class Funko
 
   # Create a container for this funko
   def create_container(autostart : Bool = true) : String
+    secrets_mount = "#{Dir.current}/secrets/#{name}"
+    Dir.mkdir_p(secrets_mount)
     conf = Docr::Types::CreateContainerConfig.new(
       image: "#{name}:latest",
       hostname: name,
       # Port in the container side
       host_config: Docr::Types::HostConfig.new(
         network_mode: "faaso-net",
+        mounts: [
+          Docr::Types::Mount.new(
+            source: secrets_mount,
+            target: "/secrets",
+            type: "bind"
+          )
+        ]
       )
     )
 
