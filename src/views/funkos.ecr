@@ -1,25 +1,32 @@
 <%- result.each do |f| -%>
 <tr>
   <td><%= f["name"] %></td>
-  <td><%= f["status"] %></td>
+  <%- if f["name"] == "proxy" -%>
+    <td>Running</td>
+  <%- else -%>
+    <td><%= f["status"] %></td>
+  <%- end -%>
   <td>
-  <%- if f["state"] == "running" -%>
-    <button disabled>Start</button>
-    <button>Pause</button>
-    <button>Stop</button>
-    <button>Restart</button>
-  <%- end -%>
-  <%- if f["state"] == "paused" -%>
-    <button>Start</button>
-    <button disabled>Pause</button>
-    <button>Stop</button>
-    <button>Restart</button>
-  <%- end -%>
-  <%- if f["state"] == "stopped" -%>
-    <button>Start</button>
-    <button disabled>Pause</button>
-    <button disabled>Stop</button>
-    <button disabled>Restart</button>
+  <%- if f["name"] == "proxy" -%>
+  <%- else -%>
+    <%- if f["state"] == "running" -%>
+      <button disabled>Start</button>
+      <button>Pause</button>
+      <button>Stop</button>
+      <button>Restart</button>
+    <%- end -%>
+    <%- if f["state"] == "paused" -%>
+      <button>Start</button>
+      <button disabled>Pause</button>
+      <button>Stop</button>
+      <button>Restart</button>
+    <%- end -%>
+    <%- if f["state"] == "stopped" -%>
+      <button>Start</button>
+      <button disabled>Pause</button>
+      <button disabled>Stop</button>
+      <button disabled>Restart</button>
+    <%- end -%>
   <%- end -%>
   </td>
 </tr>

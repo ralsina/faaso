@@ -72,18 +72,25 @@ module Funko
     def self.from_docker : Array(Funko)
       docker_api = Docr::API.new(Docr::Client.new)
       names = [] of String
-      funko_containers = docker_api.containers.list(
+
+      # Get all containers that look like funkos
+      docker_api.containers.list(
         all: true,
       ).each { |container|
-        p! container.@names
         container.@names.each { |name|
           names << name.split("-", 2)[1].lstrip("/") if name.starts_with?("/faaso-")
         }
       }
 
-      pp! names
-
-      from_names(names.to_a.sort!)
+      # Now get all images that look like funkos, since
+      # we can start them just fine.
+      docker_api.images.list.each { |image|
+        next if image.@repo_tags.nil?
+        image.@repo_tags.as(Array(String)).each { |tag|
+          names << tag.split("-", 2)[1].split(":", 2)[0] if tag.starts_with?("faaso-")
+        }
+      }
+      from_names(names.to_set.to_a.sort!)
     end
 
     # Setup the target directory `path` with all the files needed
