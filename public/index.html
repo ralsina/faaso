@@ -1,34 +1,25 @@
 <head>
-  <script src="https://cdn.jsdelivr.net/gh/vanjs-org/van/public/van-1.5.0.nomodule.min.js"></script>
+  <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css" />
+  <script src="https://unpkg.com/htmx.org@2.0.0"></script>
   <body>
     <script>
-      const { a, div, li, p, ul, span, button } = van.tags;
-
-      const funkos = van.state([]);
-      const funko_list = () => {
-        console.log("derived");
-        return div(
-          p("hello"),
-          ul(
-            ...funkos.val.map((funko) => {
-              return li(funko);
-            })
-          )
-        );
-      };
-
       async function getFunkos() {
-        for (;;) {
-          const response = await fetch("funkos/");
-          funkos.val = await response.json();
-          console.log(funkos.val);
-          await new Promise((r) => setTimeout(r, 5000));
-        }
+        const response = await fetch("funkos/");
+        funkos = await response.json();
+        console.log(funkos);
       }
-
-      van.add(document.body, funko_list());
-
       getFunkos();
     </script>
+    <button hx-get="funkos/?format=html" hx-target="#funko-list">Update</button>
+    <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      <tbody id="funko-list">
+      </tbody>
+    </thead>    
   </body>
 </head>

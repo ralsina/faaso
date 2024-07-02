@@ -10,7 +10,7 @@ module Funkos
     end
   end
 
-  get "/funkos/" do |_|
+  get "/funkos/" do |env|
     docker_api = Docr::API.new(Docr::Client.new)
     containers = docker_api.containers.list(all: true)
 
@@ -20,7 +20,12 @@ module Funkos
       next if names.empty?
       funkos << Funko.new(name: names[0][7..])
     }
-    funkos.sort! { |a, b| a.name <=> b.name}
-    funkos.to_json
+    funkos.sort! { |a, b| a.name <=> b.name }
+
+    if env.params.query.fetch("format", "json") == "html"
+        render "src/views/funkos.ecr"
+    else
+      funkos.to_json
+    end
   end
 end
