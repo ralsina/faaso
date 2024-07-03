@@ -6,6 +6,20 @@ require "yaml"
 module Funko
   extend self
 
+  struct Status
+    property name : String = ""
+    property scale : Int32 = 0
+    property containers : Array(Docr::Types::ContainerSummary) = [] of Docr::Types::ContainerSummary
+    property images : Array(Docr::Types::ImageSummary) = [] of Docr::Types::ImageSummary
+
+    def initialize(name, scale, containers, images)
+      @name = name
+      @scale = scale
+      @containers = containers
+      @images = images
+    end
+  end
+
   class Funko
     include YAML::Serializable
 
@@ -168,12 +182,12 @@ module Funko
 
     # A comprehensive status for the funko:
     def docker_status
-      {
-        "name"       => name,
-        "containers" => containers,
-        "images"     => images,
-        "scale"      => scale,
-      }
+      Status.new(
+        name: name,
+        containers: containers,
+        images: images,
+        scale: scale,
+      )
     end
 
     # Descriptive status for the funko

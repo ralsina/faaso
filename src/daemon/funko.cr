@@ -5,6 +5,18 @@ require "../funko.cr"
 module Funko
   extend self
 
+  # Get the funko's status
+  get "/funkos/:name/status/" do |env|
+    name = env.params.url["name"]
+    response = run_faaso(["status", name])
+
+    if response["exit_code"] != 0
+      halt env, status_code: 500, response: response.to_json
+    else
+      response.to_json
+    end
+  end
+
   # Get the funko's scale
   get "/funkos/:name/scale/" do |env|
     name = env.params.url["name"]
