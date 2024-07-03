@@ -22,7 +22,7 @@
       <tbody id="funko-list">
       </tbody>
     </table>
-    <button id="update-funkos" style="float:right;" hx-trigger="load, click" hx-get="funkos/?format=html"
+    <button id="update-funkos" style="float:right;" hx-trigger="load, click, every 60s" hx-get="funkos/?format=html"
       hx-target="#funko-list">Update</button>
   </main>
   <script>
