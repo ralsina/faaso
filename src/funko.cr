@@ -99,7 +99,6 @@ module Funko
         Log.info { "Adding instance" }
         (current_scale...new_scale).each {
           id = create_container
-          sleep 0.2.seconds
           start(id)
         }
       else
@@ -112,6 +111,12 @@ module Funko
           break if current_scale == new_scale
         }
       end
+
+      # And now, let's kill all the containers that are NOT running
+      containers.select { |container| container.@state != "running" }.each { |container|
+        Log.info { "Pruning dead instance" }
+        docker_api.containers.delete(container.@id)
+      }
     end
 
     # Setup the target directory `path` with all the files needed
