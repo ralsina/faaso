@@ -15,18 +15,18 @@ crystal: ">= 1.12.2"
 license: MIT
 
 dependencies:
-  docr:
-    github: ralsina/docr
-    branch: add_exposed_ports
-  commander:
-    github: mrrooijen/commander
-  kemal:
-    github: kemalcr/kemal
-  kemal-basic-auth:
-    github: kemalcr/kemal-basic-auth
+  crest:
+    github: mamantoha/crest    
   crinja:
     github: straight-shoota/crinja
   crystar:
     github: naqvis/crystar
-  crest:
-    github: mamantoha/crest    
+  docopt:
+    github: chenkovsky/docopt.cr
+  docr:
+    github: ralsina/docr
+    branch: add_exposed_ports
+  kemal:
+    github: kemalcr/kemal
+  kemal-basic-auth:
+    github: kemalcr/kemal-basic-auth

@@ -25,6 +25,10 @@ module Funko
     @[YAML::Field(ignore: true)]
     property path : String = ""
 
+    # Scale: how many instances of this funko should be running
+    @[YAML::Field(ignore: true)]
+    property scale = 0
+
     # Healthcheck properties
     property healthcheck_options : String = "--interval=1m --timeout=2s --start-period=2s --retries=3"
     property healthcheck_command : String = "curl --fail http://localhost:3000/ping || exit 1"
@@ -60,37 +64,31 @@ module Funko
         }
     end
 
-    # Create an array of funkos just from names. These are limited in function
-    # and can't call `prepare_build` or some other functionality
-    def self.from_names(names : Array(String)) : Array(Funko)
-      names.map { |name|
-        Funko.from_yaml("name: #{name}")
+    # Get the number of running instances of this funko
+    def scale
+      docker_api = Docr::API.new(Docr::Client.new)
+      docker_api.containers.list.count { |container|
+        container.@name.starts_with? "faaso-#{name}-" && container.@state == "running"
       }
     end
 
-    # Get all the funkos docker knows about.
-    def self.from_docker : Array(Funko)
+    # Set the number of running instances of this funko
+    def scale(new_scale : Int)
       docker_api = Docr::API.new(Docr::Client.new)
-      names = [] of String
+      current_scale = self.scale
+      return if current_scale == new_scale
 
-      # Get all containers that look like funkos
-      docker_api.containers.list(
-        all: true,
-      ).each { |container|
-        container.@names.each { |name|
-          names << name.split("-", 2)[1].lstrip("/") if name.starts_with?("/faaso-")
+      if new_scale > current_scale
+        (current_scale...new_scale).each { start(create_container) }
+      else
+        containers.select { |contatiner| container.@state == "running" }.sort! { |i, j|
+          i.@created <=> j.@created
+        }.each { |container|
+          docker_api.containers.stop(container.@id)
+          current_scale -= 1
+          break if current_scale == new_scale
         }
-      }
-
-      # Now get all images that look like funkos, since
-      # we can start them just fine.
-      docker_api.images.list.each { |image|
-        next if image.@repo_tags.nil?
-        image.@repo_tags.as(Array(String)).each { |tag|
-          names << tag.split("-", 2)[1].split(":", 2)[0] if tag.starts_with?("faaso-")
-        }
-      }
-      from_names(names.to_set.to_a.sort!)
+      end
     end
 
     # Setup the target directory `path` with all the files needed
@@ -279,6 +277,39 @@ module Funko
       response.@warnings.each { |msg| Log.warn { msg } }
       docker_api.containers.start(response.@id) if autostart
       response.@id
+    end
+
+    # Create an array of funkos just from names. These are limited in function
+    # and can't call `prepare_build` or some other functionality
+    def self.from_names(names : Array(String)) : Array(Funko)
+      names.map { |name|
+        Funko.from_yaml("name: #{name}")
+      }
+    end
+
+    # Get all the funkos docker knows about.
+    def self.from_docker : Array(Funko)
+      docker_api = Docr::API.new(Docr::Client.new)
+      names = [] of String
+
+      # Get all containers that look like funkos
+      docker_api.containers.list(
+        all: true,
+      ).each { |container|
+        container.@names.each { |name|
+          names << name.split("-", 2)[1].lstrip("/") if name.starts_with?("/faaso-")
+        }
+      }
+
+      # Now get all images that look like funkos, since
+      # we can start them just fine.
+      docker_api.images.list.each { |image|
+        next if image.@repo_tags.nil?
+        image.@repo_tags.as(Array(String)).each { |tag|
+          names << tag.split("-", 2)[1].split(":", 2)[0] if tag.starts_with?("faaso-")
+        }
+      }
+      from_names(names.to_set.to_a.sort!)
     end
   end
 end

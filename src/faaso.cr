@@ -1,5 +1,4 @@
 require "./funko.cr"
-require "commander"
 require "crest"
 require "docr"
 require "docr/utils.cr"
@@ -29,19 +28,10 @@ module Faaso
   module Commands
     # Build images for one or more funkos
     class Build
-      @arguments : Array(String) = [] of String
-      @options : Commander::Options
+      def run(options, folders : Array(String))
+        funkos = Funko::Funko.from_paths(folders)
 
-      def initialize(options, arguments)
-        @options = options
-        @arguments = arguments
-      end
-
-      def run
-        funkos = Funko::Funko.from_paths(@arguments)
-        local = @options.@bool["local"]
-
-        if local
+        if options["--local"]
           funkos.each do |funko|
             # Create temporary build location
             tmp_dir = Path.new("tmp", UUID.random.to_s)
@@ -112,7 +102,7 @@ module Faaso
     # If there are no images for the funko, it will fail to bring it up.
     class Up
       @arguments : Array(String) = [] of String
-      @options : Commander::Options
+      @options : Hash(String, Bool)
 
       def initialize(options, arguments)
         @options = options
@@ -179,64 +169,17 @@ module Faaso
     end
 
     class Export
-      @arguments : Array(String) = [] of String
-      @options : Commander::Options
-
-      def initialize(options, arguments)
-        @options = options
-        @arguments = arguments
-      end
-
-      def run
-        funkos = Funko::Funko.from_paths(@arguments)
-        funkos.each do |funko|
-          # Create temporary build location
-          dst_path = Path.new("export", funko.name)
-          if File.exists? dst_path
-            Log.error { "#{dst_path} already exists, not exporting #{funko.path}" }
-            next
-          end
-          Log.info { "Exporting #{funko.path} to #{dst_path}" }
-          Dir.mkdir_p(dst_path)
-          funko.prepare_build dst_path
+      def run(options, source : String, destination : String)
+        funko = Funko::Funko.from_paths([source])[0]
+        # Create temporary build location
+        dst_path = destination
+        if File.exists? dst_path
+          Log.error { "#{dst_path} already exists, not exporting #{funko.path}" }
+          return 1
         end
-      end
-    end
-
-    class Down
-      @arguments : Array(String) = [] of String
-      @options : Commander::Options
-
-      def initialize(options, arguments)
-        @options = options
-        @arguments = arguments
-      end
-
-      def run
-        @arguments.each do |arg|
-          Log.info { "Stopping funko... #{arg}" }
-          # TODO: check if funko is running
-          # TODO: stop funko container
-          # TODO: delete funko container
-          # TODO: remove route from reverse proxy
-        end
-      end
-    end
-
-    class Deploy
-      @arguments : Array(String) = [] of String
-      @options : Commander::Options
-
-      def initialize(options, arguments)
-        @options = options
-        @arguments = arguments
-      end
-
-      def run
-        @arguments.each do |arg|
-          Log.info { "Deploying funko... #{arg}" }
-          # TODO: Everything
-        end
+        Log.info { "Exporting #{funko.path} to #{dst_path}" }
+        Dir.mkdir_p(dst_path)
+        funko.prepare_build Path[dst_path]
       end
     end
   end

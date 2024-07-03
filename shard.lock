@@ -4,10 +4,6 @@ shards:
     git: https://github.com/sija/backtracer.cr.git
     version: 1.2.2
 
-  commander:
-    git: https://github.com/mrrooijen/commander.git
-    version: 0.4.0
-
   crest:
     git: https://github.com/mamantoha/crest.git
     version: 1.3.13
@@ -19,6 +15,10 @@ shards:
   crystar:
     git: https://github.com/naqvis/crystar.git
     version: 0.4.0
+
+  docopt:
+    git: https://github.com/chenkovsky/docopt.cr.git
+    version: 0.2.0+git.commit.620fce4f334ff15d7321e5ecb6665ad258fe9297
 
   docr:
     git: https://github.com/ralsina/docr.git
