@@ -145,6 +145,7 @@ module Funko
     end
 
     # Return a list of image IDs for this funko, most recent first
+    # FIXME: use self.images and add filters
     def image_history
       docker_api = Docr::API.new(Docr::Client.new)
       begin
@@ -162,6 +163,16 @@ module Funko
       docker_api = Docr::API.new(Docr::Client.new)
       docker_api.containers.list(all: true).select { |container|
         container.@names.any?(&.starts_with?("/faaso-#{name}-"))
+      }
+    end
+
+    # A comprehensive status for the funko:
+    def docker_status
+      {
+        "name"       => name,
+        "containers" => containers,
+        "images"     => images,
+        "scale"      => scale,
       }
     end
 
