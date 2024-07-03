@@ -300,7 +300,7 @@ module Funko
         all: true,
       ).each { |container|
         container.@names.each { |name|
-          names << name.split("-", 2)[1].lstrip("/") if name.starts_with?("/faaso-")
+          names << name.split("-", 3)[1].lstrip("/") if name.starts_with?("/faaso-")
         }
       }
 

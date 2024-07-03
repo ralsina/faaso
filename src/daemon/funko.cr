@@ -79,12 +79,11 @@ module Funko
     result = [] of Hash(String, String)
 
     funkos.each do |funko|
-      state = "FIXME"
-
       result << {
-        "name"   => funko.name,
-        "state"  => state,
-        "status" => "FIXME",
+        "name"       => funko.name,
+        "scale"      => funko.scale.to_s,
+        "containers" => funko.containers.size.to_s,
+        "images"     => funko.images.size.to_s,
       }
     end
 

@@ -1,31 +1,20 @@
 <%- result.each do |f| -%>
 <tr hx-indicator="#spinner-<%= f["name"] %>">
   <td><%= f["name"] %></td>
-  <%- if f["name"] == "proxy" -%>
-    <td>Running</td>
-  <%- else -%>
-    <td><%= f["status"] %></td>
-  <%- end -%>
+  <td><%= f["scale"] %></td>
+  <td><%= f["containers"] %></td>
+  <td><%= f["images"] %></td>
   <td>
   <%- if f["name"] == "proxy" -%>
   <%- else -%>
-    <%- if f["state"] == "running" -%>
+    <%- if f["scale"].to_i > 0 -%>
       <button disabled hx-get="funkos/<%= f["name"] %>/start">Start</button>
-      <button hx-get="funkos/<%= f["name"] %>/pause" hx-on:htmx:after-request="update_funkos()">Pause</button>
       <button hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">Stop</button>
       <button hx-get="funkos/<%= f["name"] %>/restart" hx-on:htmx:after-request="update_funkos()">Restart</button>
-    <%- end -%>
-    <%- if f["state"] == "paused" -%>
+    <%- else -%>
       <button hx-get="funkos/<%= f["name"] %>/start" hx-on:htmx:after-request="update_funkos()">Start</button>
-      <button disabled hx-get="funkos/<%= f["name"] %>/pause">Pause</button>
-      <button hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">Stop</button>
+      <button disabled hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">Stop</button>
       <button hx-get="funkos/<%= f["name"] %>/restart" hx-on:htmx:after-request="update_funkos()">Restart</button>
-    <%- end -%>
-    <%- if f["state"] == "stopped" -%>
-      <button hx-get="funkos/<%= f["name"] %>/start" hx-on:htmx:after-request="update_funkos()">Start</button>
-      <button disabled hx-get="funkos/<%= f["name"] %>/pause">Pause</button>
-      <button disabled hx-get="funkos/<%= f["name"] %>/stop">Stop</button>
-      <button disabled hx-get="funkos/<%= f["name"] %>/restart">Restart</button>
     <%- end -%>
   <%- end -%>
    <img id="spinner-<%= f["name"] %>" src="https://htmx.org/img/bars.svg"  class="htmx-indicator">
