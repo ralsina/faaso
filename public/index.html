@@ -1,15 +1,23 @@
 <!DOCTYPE html>
+
 <head>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css" />
   <script src="https://unpkg.com/htmx.org@2.0.0"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
   <header class="container">
-    <h1>Your Funko Collection</h1>
+    <h1>FaaSO Admin Interface</h1>
   </header>
   <main class=container>
+    <h2>Your Funko Collection
+      <button id="update-funkos" style="float:right; display:inline;" hx-trigger="load, click, every 60s"
+        hx-get="funkos/?format=html" hx-target="#funko-list">
+        Refresh
+      </button>
+    </h2>
     <span id="message"></span>
     <table hx-target="#message">
       <thead>
@@ -24,12 +32,60 @@
       <tbody id="funko-list">
       </tbody>
     </table>
-    <button id="update-funkos" style="float:right;" hx-trigger="load, click, every 60s" hx-get="funkos/?format=html"
-      hx-target="#funko-list">Update</button>
   </main>
   <script>
-    update_funkos =function() {
+    update_funkos = function () {
       document.getElementById("update-funkos").click()
     }
   </script>
+  <main class=container>
+    <h2>
+      Your Secrets
+      <button id="update-secrets" style="float:right; display:inline;" hx-trigger="load, click, every 60s"
+        hx-get="secrets/?format=html" hx-target="#secret-list">
+        Refresh
+      </button>
+      <button style="float:right; display:inline;" onclick="show_new_secret()">
+        Add
+      </button>
+    </h2>
+    <span id="message"></span>
+    <table hx-target="#message">
+      <thead>
+        <tr>
+          <th>Funko</th>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="secret-list">
+      </tbody>
+      <dialog id="add-secret">
+        <topic>New Secret</topic>
+        <form hx-post="secrets/">
+          <input placeholder="funko name" id="new-secret-funko" name="funko">
+          <input placeholder="secret name" id="new-secret-name" name="name">
+          <input placeholder="secret value" type="password" id="new-secret-password" name="value">
+          <button type="submit" hx-on:htmx:after-request="update_secrets(); hide_new_secret()">CREATE</button>
+          <button onclick="hide_new_secret()">CANCEL</button>
+        </form>
+      </dialog>
+      <script>
+        update_secrets = function() {
+          document.getElementById("update-secrets").click()
+        }
+        show_new_secret = function() {
+          document.getElementById('new-secret-funko').value=""
+          document.getElementById('add-secret').value=""
+          document.getElementById('add-secret').value=""
+          document.getElementById('add-secret').show()
+        }
+        hide_new_secret = function() {
+          document.getElementById('new-secret-funko').value=""
+          document.getElementById('add-secret').value=""
+          document.getElementById('add-secret').value=""
+          document.getElementById('add-secret').hide()
+        }
+      </script>
+  </main>
 </body>

@@ -39,7 +39,7 @@ module Proxy
   ReverseOnly Yes
   ReverseMagic Yes
   ReversePath "/admin/" "http://127.0.0.1:3000/"
-  ) + funkos.map { |funko| %(ReversePath "/faaso/#{funko}/" "http://#{funko}:3000/") }.join("\n")
+  ) + funkos.map { |funko| %(ReversePath "/faaso/#{funko.split("-")[0]}/" "http://#{funko}:3000/") }.join("\n")
 
     if @@current_config != config
       File.open("tinyproxy.conf", "w") do |file|

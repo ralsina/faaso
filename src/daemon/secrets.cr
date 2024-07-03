@@ -7,15 +7,30 @@ module Secrets
 
   # Gets a secret in form {"name": "funko_name-secret_name", "value": "secret_value"}
   post "/secrets/" do |env|
-    name = env.params.json["name"].as(String)
-    value = env.params.json["value"].as(String)
-    SECRETS[name] = value
+    funko = env.params.body["funko"].as(String)
+    name = env.params.body["name"].as(String)
+    value = env.params.body["value"].as(String)
+    if funko.empty? || name.empty? || value.empty?
+      halt env, status_code: 400, response: "Bad request"
+    end
+    SECRETS["#{funko}-#{name}"] = value
     Secrets.update_secrets
     halt env, status_code: 201, response: "Created"
   end
 
   get "/secrets/" do |env|
-    halt env, status_code: 200, response: SECRETS.keys.to_json
+    result = [] of Hash(String, String)
+    SECRETS.each { |k, _|
+      result << {
+        "funko" => k.split("-")[0],
+        "name"  => k.split("-", 2)[1],
+      }
+    }
+    if env.params.query.fetch("format", "json") == "html"
+      render "src/views/secrets.ecr"
+    else
+      result.to_json
+    end
   end
 
   # Deletes a secret from the disk and memory

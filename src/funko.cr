@@ -96,10 +96,11 @@ module Funko
 
       Log.info { "Scaling #{name} from #{current_scale} to #{new_scale}" }
       if new_scale > current_scale
-        Log.info { "Adding instance" }
         (current_scale...new_scale).each {
+          Log.info { "Adding instance" }
           id = create_container
           start(id)
+          sleep 0.1.seconds
         }
       else
         containers.select { |container| container.@state == "running" }.sort! { |i, j|
@@ -109,6 +110,7 @@ module Funko
           docker_api.containers.stop(container.@id)
           current_scale -= 1
           break if current_scale == new_scale
+          sleep 0.1.seconds
         }
       end
 
