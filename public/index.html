@@ -4,22 +4,30 @@
   <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css" />
   <script src="https://unpkg.com/htmx.org@2.0.0"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <body>
+</head>
+<body>
   <header class="container">
     <h1>Your Funko Collection</h1>
-    </header>
-    <main class=container>
-    <button hx-get="funkos/?format=html" hx-target="#funko-list">Update</button>
-    <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
+  </header>
+  <main class=container>
+    <span id="message"></span>
+    <table hx-target="#message">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
       <tbody id="funko-list">
       </tbody>
-    </thead>
-    </main>
-  </body>
-</head>
+    </table>
+    <button id="update-funkos" style="float:right;" hx-trigger="load, click" hx-get="funkos/?format=html"
+      hx-target="#funko-list">Update</button>
+  </main>
+  <script>
+    update_funkos =function() {
+      document.getElementById("update-funkos").click()
+    }
+  </script>
+</body>

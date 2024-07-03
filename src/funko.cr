@@ -173,6 +173,18 @@ module Funko
       }
     end
 
+    # Pause running container
+    def pause
+      docker_api = Docr::API.new(Docr::Client.new)
+      images = self.image_history
+      running = self.containers.select { |container|
+        container.@state == "running"
+      }.sort! { |i, j|
+        (images.index(j.@image_id) || 9999) <=> (images.index(i.@image_id) || 9999)
+      }
+      docker_api.containers.pause(running[0].@id) unless running.empty?
+    end
+
     # Unpause paused container with the newer image
     def unpause
       docker_api = Docr::API.new(Docr::Client.new)
@@ -192,17 +204,54 @@ module Funko
       }
     end
 
-    # Restart exited container with the newer image
+    # Start exited container with the newer image
+    # or unpause paused container
     def start
-      # FIXME refactor DRY with unpause
+      if self.exited?
+        docker_api = Docr::API.new(Docr::Client.new)
+        images = self.image_history
+        exited = self.containers.select { |container|
+          container.@state == "exited"
+        }.sort! { |i, j|
+          (images.index(j.@image_id) || 9999) <=> (images.index(i.@image_id) || 9999)
+        }
+        docker_api.containers.restart(exited[0].@id) unless exited.empty?
+      elsif self.paused?
+        self.unpause
+      end
+    end
+
+    # Stop container with the newer image
+    def stop
       docker_api = Docr::API.new(Docr::Client.new)
       images = self.image_history
-      exited = self.containers.select { |container|
-        container.@state == "exited"
-      }.sort! { |i, j|
+      containers = self.containers.sort! { |i, j|
         (images.index(j.@image_id) || 9999) <=> (images.index(i.@image_id) || 9999)
       }
-      docker_api.containers.restart(exited[0].@id) unless exited.empty?
+      return docker_api.containers.stop(containers[0].@id) unless containers.empty?
+      nil
+    end
+
+    # Wait up to `t` seconds for the funko to reach the requested `state`
+    def wait_for(state : String, t)
+      channel = Channel(Nil).new
+      spawn do
+        sleep 0.1.seconds
+        case state
+        when "exited"
+          if self.exited?
+            channel.send(nil)
+          end
+        when "running"
+          if self.running?
+            channel.send(nil)
+          end
+        when "paused"
+          if self.paused?
+            channel.send(nil)
+          end
+        end
+      end
     end
 
     # Create a container for this funko
