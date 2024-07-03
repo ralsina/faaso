@@ -73,6 +73,9 @@ module Funko
     end
   end
 
+  # Endpoints for the web frontend
+
+  # General status for the front page
   get "/funkos/" do |env|
     funkos = Funko.from_docker
     funkos.sort! { |a, b| a.name <=> b.name }
@@ -93,7 +96,35 @@ module Funko
       result.to_json
     end
   end
+  # Stop => scale to 0
+  get "/funkos/:name/stop" do |env|
+    name = env.params.url["name"]
+    funko = Funko.from_names([name])[0]
+    funko.scale(0)
+    funko.wait_for(0, 1)
+  end
 
+  # Start => scale to 1
+  get "/funkos/:name/start" do |env|
+    name = env.params.url["name"]
+    funko = Funko.from_names([name])[0]
+    if funko.scale == 0
+      funko.scale(1)
+      funko.wait_for(1, 1)
+    end
+  end
+
+  # Restart => scale to 0, then 1
+  get "/funkos/:name/restart" do |env|
+    name = env.params.url["name"]
+    funko = Funko.from_names([name])[0]
+    funko.scale(0)
+    funko.wait_for(0, 1)
+    funko.scale(1)
+    funko.wait_for(1, 1)
+  end
+
+  # Helper to run faaso locally and get a response back
   def run_faaso(args : Array(String))
     Log.info { "Running faaso [#{args.join(", ")}, -l]" }
     output = IO::Memory.new

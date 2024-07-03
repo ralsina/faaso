@@ -234,24 +234,20 @@ module Funko
     end
 
     # Wait up to `t` seconds for the funko to reach the requested `state`
-    def wait_for(state : String, t)
+    def wait_for(new_scale : Int, t)
       channel = Channel(Nil).new
       spawn do
-        sleep 0.1.seconds
-        case state
-        when "exited"
-          if self.exited?
-            channel.send(nil)
-          end
-        when "running"
-          if self.running?
-            channel.send(nil)
-          end
-        when "paused"
-          if self.paused?
-            channel.send(nil)
-          end
+        loop do
+          channel.send(nil) if scale == new_scale
+          sleep 0.2.seconds
         end
+      end
+
+      select
+      when channel.receive
+        Log.info { "Funko #{name} reached scale #{new_scale}" }
+      when timeout(t.seconds)
+        Log.error { "Funko #{name} did not reach scale #{new_scale} in #{t} seconds" }
       end
     end
 
