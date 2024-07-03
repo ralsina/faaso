@@ -67,8 +67,8 @@
           <input placeholder="secret name" id="new-secret-name" name="name">
           <input placeholder="secret value" type="password" id="new-secret-password" name="value">
           <button type="submit" hx-on:htmx:after-request="update_secrets(); hide_new_secret()">CREATE</button>
-          <button onclick="hide_new_secret()">CANCEL</button>
         </form>
+        <button onclick="hide_new_secret(); close()">CLOSE</button>
       </dialog>
       <script>
         update_secrets = function() {
@@ -84,7 +84,7 @@
           document.getElementById('new-secret-funko').value=""
           document.getElementById('add-secret').value=""
           document.getElementById('add-secret').value=""
-          document.getElementById('add-secret').hide()
+          document.getElementById('add-secret').close()
         }
       </script>
   </main>
