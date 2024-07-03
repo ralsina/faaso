@@ -2,21 +2,6 @@ require "./faaso.cr"
 require "colorize"
 require "docopt"
 
-doc = <<-DOC
-FaaSO CLI tool.
-
-Usage:
-  faaso build FOLDER ...       [-l] [-v=<level>]
-  faaso scale FUNKO_NAME SCALE [-l] [-v=<level>]
-  faaso export SOURCE DESTINATION   [-v=<level>]
-
-Options:
-  -h --help                  Show this screen.
-  --version                  Show version.
-  -l --local                 Run commands locally instead of against a FaaSO server.
-  -v=level                   Control the logging verbosity, 0 to 5 [default: 3]
-DOC
-
 # Log formatter for
 struct LogFormat < Log::StaticFormatter
   @@colors = {
@@ -29,7 +14,7 @@ struct LogFormat < Log::StaticFormatter
   }
 
   def run
-    string "[#{Time.local}] #{@entry.severity.label}: #{@entry.message}".colorize(@@colors[@entry.severity.label])
+    string "#{@entry.message}".colorize(@@colors[@entry.severity.label])
   end
 
   def self.setup(verbosity)
@@ -48,6 +33,22 @@ struct LogFormat < Log::StaticFormatter
   end
 end
 
+doc = <<-DOC
+FaaSO CLI tool.
+
+Usage:
+  faaso build FOLDER ... [-l] [-v=<level>]
+  faaso scale FUNKO_NAME [SCALE] [-l] [-v=<level>]
+  faaso status FUNKO_NAME [-l] [-v=<level>]
+  faaso export SOURCE DESTINATION   [-v=<level>]
+
+Options:
+  -l --local       Run commands locally instead of against a FaaSO server.
+  -h --help        Show this screen.
+  --version        Show version.
+  -v=level         Control the logging verbosity, 0 to 5 [default: 3]
+DOC
+
 ans = Docopt.docopt(doc, ARGV)
 LogFormat.setup(ans["-v"].to_s.to_i)
 
@@ -56,4 +57,8 @@ when .fetch("build", false)
   Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
 when .fetch("export", false)
   Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
+when .fetch("scale", false)
+  Faaso::Commands::Scale.new.run(ans, ans["FUNKO_NAME"].as(String), ans["SCALE"])
+when .fetch("status", false)
+  Faaso::Commands::Status.new.run(ans, ans["FUNKO_NAME"].as(String))
 end

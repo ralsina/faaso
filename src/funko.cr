@@ -67,8 +67,10 @@ module Funko
     # Get the number of running instances of this funko
     def scale
       docker_api = Docr::API.new(Docr::Client.new)
-      docker_api.containers.list.count { |container|
-        container.@name.starts_with? "faaso-#{name}-" && container.@state == "running"
+      docker_api.containers.list.select { |container|
+        container.@state == "running"
+      }.count { |container|
+        container.@names.any?(&.starts_with?("/faaso-#{name}-"))
       }
     end
 
@@ -78,12 +80,19 @@ module Funko
       current_scale = self.scale
       return if current_scale == new_scale
 
+      Log.info { "Scaling #{name} from #{current_scale} to #{new_scale}" }
       if new_scale > current_scale
-        (current_scale...new_scale).each { start(create_container) }
+        Log.info { "Adding instance" }
+        (current_scale...new_scale).each {
+          id = create_container
+          sleep 0.2.seconds
+          start(id)
+        }
       else
-        containers.select { |contatiner| container.@state == "running" }.sort! { |i, j|
+        containers.select { |container| container.@state == "running" }.sort! { |i, j|
           i.@created <=> j.@created
         }.each { |container|
+          Log.info { "Removing instance" }
           docker_api.containers.stop(container.@id)
           current_scale -= 1
           break if current_scale == new_scale
@@ -127,6 +136,14 @@ module Funko
         tags: ["faaso-#{name}:latest"]) { |x| Log.info { x } }
     end
 
+    def images
+      docker_api = Docr::API.new(Docr::Client.new)
+      docker_api.images.list.select { |image|
+        false if image.@repo_tags.nil?
+        true if image.@repo_tags.as(Array(String)).any?(&.starts_with?("faaso-#{name}:"))
+      }
+    end
+
     # Return a list of image IDs for this funko, most recent first
     def image_history
       docker_api = Docr::API.new(Docr::Client.new)
@@ -143,10 +160,9 @@ module Funko
     # Get all containers related to this funko
     def containers
       docker_api = Docr::API.new(Docr::Client.new)
-      docker_api.containers.list(
-        all: true,
-        filters: {"name" => ["faaso-#{name}"]}
-      )
+      docker_api.containers.list(all: true).select { |container|
+        container.@names.any?(&.starts_with?("/faaso-#{name}-"))
+      }
     end
 
     # Descriptive status for the funko
@@ -200,6 +216,16 @@ module Funko
       self.containers.any? { |container|
         container.@state == "exited"
       }
+    end
+
+    # Start container with given id
+    def start(id : String)
+      docker_api = Docr::API.new(Docr::Client.new)
+      begin
+        docker_api.containers.start(id)
+      rescue ex : Docr::Errors::DockerAPIError
+        Log.error { "#{ex}" } unless ex.status_code == 304 # This just happens
+      end
     end
 
     # Start exited container with the newer image
@@ -258,7 +284,7 @@ module Funko
       Dir.mkdir_p(secrets_mount)
       conf = Docr::Types::CreateContainerConfig.new(
         image: "faaso-#{name}:latest",
-        hostname: name,
+        hostname: "#{name}",
         # Port in the container side
         host_config: Docr::Types::HostConfig.new(
           network_mode: "faaso-net",
@@ -273,7 +299,7 @@ module Funko
       )
 
       docker_api = Docr::API.new(Docr::Client.new)
-      response = docker_api.containers.create(name: "faaso-#{name}", config: conf)
+      response = docker_api.containers.create(name: "faaso-#{name}-#{randstr}", config: conf)
       response.@warnings.each { |msg| Log.warn { msg } }
       docker_api.containers.start(response.@id) if autostart
       response.@id
@@ -312,4 +338,9 @@ module Funko
       from_names(names.to_set.to_a.sort!)
     end
   end
+end
+
+def randstr(length = 6) : String
+  chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+  String.new(Bytes.new(chars.to_slice.sample(length).to_unsafe, length))
 end
