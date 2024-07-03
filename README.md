@@ -101,12 +101,15 @@ Once you have a funko, you can *build* it, which will give you a docker image.
 
 Or you can export it and get rid of all the mistery of how your funko **really** works:
 
-```faaso export myfunko```
+```faaso export myfunko/ myfuko-exported```
 
-Or, once you built it, you can run it, and you will be able to see it using 
+Or, once you built it, you can run it, and you will be able to see it using
 `docker ps`:
 
-```faaso up myfunko```
+```faaso scale myfunko 1```
+
+Here `scale myfunko 1` simply means "run one instance of myfunko". You can run more
+than one, although currently only one is used by the proxy.
 
 ### The FaaSO proxy
 
