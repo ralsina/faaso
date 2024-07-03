@@ -195,59 +195,6 @@ module Funko
       )
     end
 
-    # Descriptive status for the funko
-    def status
-      status = self.containers.map { |container|
-        container.@status
-      }.join(", ")
-      status.empty? ? "Stopped" : status
-    end
-
-    # Is any instance of this funko running?
-    def running?
-      self.containers.any? { |container|
-        container.@state == "running"
-      }
-    end
-
-    # Is any instance of this funko paused?
-    def paused?
-      self.containers.any? { |container|
-        container.@state == "paused"
-      }
-    end
-
-    # Pause running container
-    def pause
-      docker_api = Docr::API.new(Docr::Client.new)
-      images = self.image_history
-      running = self.containers.select { |container|
-        container.@state == "running"
-      }.sort! { |i, j|
-        (images.index(j.@image_id) || 9999) <=> (images.index(i.@image_id) || 9999)
-      }
-      docker_api.containers.pause(running[0].@id) unless running.empty?
-    end
-
-    # Unpause paused container with the newer image
-    def unpause
-      docker_api = Docr::API.new(Docr::Client.new)
-      images = self.image_history
-      paused = self.containers.select { |container|
-        container.@state == "paused"
-      }.sort! { |i, j|
-        (images.index(j.@image_id) || 9999) <=> (images.index(i.@image_id) || 9999)
-      }
-      docker_api.containers.unpause(paused[0].@id) unless paused.empty?
-    end
-
-    # Is any instance of this funko exited?
-    def exited?
-      self.containers.any? { |container|
-        container.@state == "exited"
-      }
-    end
-
     # Start container with given id
     def start(id : String)
       docker_api = Docr::API.new(Docr::Client.new)
