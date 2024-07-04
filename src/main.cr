@@ -46,6 +46,8 @@ Usage:
 Options:
   -l --local       Run commands locally instead of against a FaaSO server.
   -h --help        Show this screen.
+  -d --delete      Delete
+  -a --add         Add
   --version        Show version.
   -v=level         Control the logging verbosity, 0 to 5 [default: 3]
 DOC
