@@ -37,8 +37,8 @@ doc = <<-DOC
 FaaSO CLI tool.
 
 Usage:
-  faaso build FOLDER ...            [-v=<level>] [-l]
-  faaso scale FUNKO [SCALE]         [-v=<level>] [-l]
+  faaso build  FOLDER ...           [-v=<level>] [-l]
+  faaso scale  FUNKO [SCALE]        [-v=<level>] [-l]
   faaso status FUNKO                [-v=<level>] [-l]
   faaso export SOURCE DESTINATION   [-v=<level>]
   faaso secret [-d|-a] FUNKO SECRET [-v=<level>] [-l]
