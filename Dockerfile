@@ -1,5 +1,5 @@
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as build
-RUN apk add crystal shards yaml-dev openssl-dev zlib-dev libxml2-dev
+RUN apk update && apk add crystal shards yaml-dev openssl-dev zlib-dev libxml2-dev && apk cache clean
 RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
 COPY shard.yml ./
@@ -10,7 +10,7 @@ RUN shards build -d --error-trace
 RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
-RUN apk add tinyproxy multirun openssl zlib yaml pcre2 gc libevent libgcc libxml2
+RUN apk update && apk add tinyproxy multirun openssl zlib yaml pcre2 gc libevent libgcc libxml2 ttyd && apk cache clean
 
 # Unprivileged user
 RUN addgroup -S app && adduser app -S -G app

@@ -30,15 +30,16 @@ module Proxy
     funkos.sort!
 
     config = %(
-  User nobody
-  Group nogroup
-  Port 8888
-  Listen 0.0.0.0
-  Timeout 600
-  Allow 0.0.0.0/0
-  ReverseOnly Yes
-  ReverseMagic Yes
-  ReversePath "/admin/" "http://127.0.0.1:3000/"
+User nobody
+Group nogroup
+Port 8888
+Listen 0.0.0.0
+Timeout 600
+Allow 0.0.0.0/0
+ReverseOnly Yes
+ReverseMagic Yes
+ReversePath "/admin/" "http://127.0.0.1:3000/"
+ReversePath "/admin/terminal/" "http://127.0.0.1:7681"
   ) + funkos.map { |funko| %(ReversePath "/faaso/#{funko.split("-")[0]}/" "http://#{funko}:3000/") }.join("\n")
 
     if @@current_config != config
