@@ -12,4 +12,13 @@ http://localhost:8888 {
   handle_path /admin/* {
     reverse_proxy /* http://127.0.0.1:3000
   }
+
+
+      handle_path /faaso/hello/* {
+        reverse_proxy /* http://faaso-hello-8t3u59:3000 http://faaso-hello-5epnbg:3000 http://faaso-hello-zt5j6g:3000 {
+          health_uri /ping
+          fail_duration 30s
+        }
+      }
+      
 }

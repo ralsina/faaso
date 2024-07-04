@@ -1,13 +1,42 @@
 <%- result.each do |f| -%>
 <tr hx-indicator="#spinner-<%= f["name"] %>">
-  <td><%= f["name"] %></td>
-  <td><%= f["scale"] %></td>
-  <td><%= f["containers"] %></td>
-  <td><%= f["images"] %></td>
+  <td>
+    <%= f["name"] %>
+    <img id="spinner-<%= f["name"] %>" src="bars.svg"  class="htmx-indicator">
+  </td>
+  <td>
+    <table>
+      <thead>
+        <th>ID</th>
+        <th>Current?</th>
+        <th>Actions</th>
+      </thead>
+      <tbody>
+        <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
+          <tr>
+            <td><tt><%= c.@names[0].split("-")[-1] %></tt></td>
+            <td>
+              <%- if c.image_id == f["latest_image"] -%>
+                <span style="color:green;""> 🟢</span>
+              <%- else -%>
+                <span style="color:red;""> 🟢</span>
+              <%- end -%>
+            </td>
+            <td>
+              <button hx-target="#terminal" hx-get="funkos/<%= f["name"] %>/terminal/logs/">Logs</button>
+              <button hx-target="#terminal" hx-get="funkos/<%= f["name"] %>/terminal/shell/">Shell</button>
+            </td>
+          </tr>
+        <%- end -%>
+      </tbody>
+      </p>
+  </td>
+      
+    </table>
   <td>
   <%- if f["name"] == "proxy" -%>
   <%- else -%>
-    <%- if f["scale"].to_i > 0 -%>
+    <%- if f["scale"].as(String).to_i > 0 -%>
       <button disabled hx-get="funkos/<%= f["name"] %>/start">Start</button>
       <button hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">Stop</button>
     <%- else -%>
@@ -15,10 +44,7 @@
       <button disabled hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">Stop</button>
     <%- end -%>
       <button hx-get="funkos/<%= f["name"] %>/restart" hx-on:htmx:after-request="update_funkos()">Restart</button>
-      <button hx-target="#terminal" hx-get="funkos/<%= f["name"] %>/terminal/logs/">Logs</button>
-      <button hx-target="#terminal" hx-get="funkos/<%= f["name"] %>/terminal/shell/">Shell</button>
   <%- end -%>
-   <img id="spinner-<%= f["name"] %>" src="bars.svg"  class="htmx-indicator">
   </td>
 </tr>
 <%- end -%>

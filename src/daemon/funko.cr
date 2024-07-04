@@ -79,14 +79,14 @@ module Funko
   get "/funkos/" do |env|
     funkos = Funko.from_docker
     funkos.sort! { |a, b| a.name <=> b.name }
-    result = [] of Hash(String, String)
+    result = [] of Hash(String, String | Array(Docr::Types::ContainerSummary))
 
     funkos.each do |funko|
       result << {
-        "name"       => funko.name,
-        "scale"      => funko.scale.to_s,
-        "containers" => funko.containers.size.to_s,
-        "images"     => funko.images.size.to_s,
+        "name"         => funko.name,
+        "scale"        => funko.scale.to_s,
+        "containers"   => funko.containers,
+        "latest_image" => funko.latest_image,
       }
     end
 
