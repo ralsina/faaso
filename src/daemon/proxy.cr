@@ -1,5 +1,5 @@
 require "docr"
-require "funko"
+require "./funko.cr"
 require "kemal"
 
 module Proxy
