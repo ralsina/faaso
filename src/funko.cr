@@ -178,11 +178,12 @@ module Funko
       end
     end
 
-    # Get all containers related to this funko
+    # Get all running containers related to this funko
     def containers
       docker_api = Docr::API.new(Docr::Client.new)
       docker_api.containers.list(all: true).select { |container|
-        container.@names.any?(&.starts_with?("/faaso-#{name}-"))
+        container.@names.any?(&.starts_with?("/faaso-#{name}-")) &&
+        container.@state == "running"
       }
     end
 
