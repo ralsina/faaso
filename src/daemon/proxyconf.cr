@@ -1,4 +1,5 @@
 require "docr"
+require "funko"
 require "kemal"
 
 module Proxy

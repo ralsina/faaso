@@ -166,7 +166,6 @@ module Funko
     end
 
     # Return a list of image IDs for this funko, most recent first
-    # FIXME: use self.images and add filters
     def image_history
       docker_api = Docr::API.new(Docr::Client.new)
       begin

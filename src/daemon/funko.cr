@@ -91,8 +91,7 @@ module Funko
     end
 
     if env.params.query.fetch("format", "json") == "html"
-      render "src/views/funkos.ecr"
-    else
+      render "src/views/funkos.ecr"    else
       result.to_json
     end
   end
