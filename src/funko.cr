@@ -206,17 +206,6 @@ module Funko
       end
     end
 
-    # Stop container with the newer image
-    def stop
-      docker_api = Docr::API.new(Docr::Client.new)
-      images = self.image_history
-      containers = self.containers.sort! { |i, j|
-        (images.index(j.@image_id) || 9999) <=> (images.index(i.@image_id) || 9999)
-      }
-      return docker_api.containers.stop(containers[0].@id) unless containers.empty?
-      nil
-    end
-
     # Wait up to `t` seconds for the funko to reach the requested `state`
     def wait_for(new_scale : Int, t)
       channel = Channel(Nil).new
