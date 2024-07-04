@@ -26,10 +26,9 @@ module Proxy
   http_port 8888
   https_port 8887
   local_certs
-  admin off
 }
 
-http://localhost:8888 {
+http://mindy:8888 {
   handle_path /admin/terminal/* {
     reverse_proxy /* http://127.0.0.1:7681
   }
@@ -65,7 +64,7 @@ CONFIG
         file << config
       end
       # Reload config
-      Process.run(command: "/usr/bin/killall", args: ["-USR1", "caddy"])
+      Process.run(command: "caddy", args: ["reload", "--config", "Caddyfile"])
       @@current_config = config
     end
     config
