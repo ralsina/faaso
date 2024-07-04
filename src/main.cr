@@ -54,7 +54,7 @@ DOC
 
 ans = Docopt.docopt(doc, ARGV)
 LogFormat.setup(ans["-v"].to_s.to_i)
-Log.debug {ans}
+Log.debug { ans }
 
 case ans
 when .fetch("build", false)

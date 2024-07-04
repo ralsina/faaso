@@ -1,13 +1,12 @@
 module Faaso
   module Commands
-
     # Controls a funko's scale
-    # 
+    #
     # Scale is how many instances are running.
-    # 
+    #
     # If it's increased, more instances are created.
     # It it's decreased, instances are destroyed.
-    # 
+    #
     # In both cases stopped instances after the required
     # scale is reached are deleted.
     struct Scale
