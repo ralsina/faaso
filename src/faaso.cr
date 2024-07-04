@@ -1,6 +1,7 @@
 require "./commands/build.cr"
 require "./commands/export.cr"
 require "./commands/scale.cr"
+require "./commands/secret.cr"
 require "./commands/status.cr"
 require "./funko.cr"
 require "crest"

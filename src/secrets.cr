@@ -15,9 +15,9 @@ module Secrets
       File.write(Path.new(funko_dir, name), value)
     end
     # Delete secrets not in the hash
-    Dir.glob(Path.new(SECRET_PATH, "*")).each do |funko_dir|
+    Dir.glob("#{SECRET_PATH}/*").each do |funko_dir|
       funko = File.basename(funko_dir)
-      Dir.glob(Path.new(funko_dir, "*")).each do |secret_file|
+      Dir.glob("#{funko_dir}/*").each do |secret_file|
         name = File.basename(secret_file)
         unless SECRETS.has_key?("#{funko}-#{name}")
           File.delete(secret_file)

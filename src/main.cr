@@ -41,7 +41,7 @@ Usage:
   faaso scale FUNKO [SCALE]         [-v=<level>] [-l]
   faaso status FUNKO_NAME           [-v=<level>] [-l]
   faaso export SOURCE DESTINATION   [-v=<level>]
-  faaso secret [-d|-a] FUNKO NAME   [-v=<level>] [-l]
+  faaso secret [-d|-a] FUNKO SECRET [-v=<level>] [-l]
 
 Options:
   -l --local       Run commands locally instead of against a FaaSO server.
@@ -65,4 +65,6 @@ when .fetch("scale", false)
   Faaso::Commands::Scale.new.run(ans, ans["FUNKO_NAME"].as(String), ans["SCALE"])
 when .fetch("status", false)
   Faaso::Commands::Status.new.run(ans, ans["FUNKO_NAME"].as(String))
+when .fetch("secret", false)
+  Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
 end

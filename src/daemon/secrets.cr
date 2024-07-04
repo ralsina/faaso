@@ -34,9 +34,10 @@ module Secrets
   end
 
   # Deletes a secret from the disk and memory
-  delete "/secrets/:name/" do |env|
+  delete "/secrets/:funko/:name/" do |env|
+    funko = env.params.url["funko"]
     name = env.params.url["name"]
-    SECRETS.delete(name)
+    SECRETS.delete("#{funko}-#{name}")
     update_secrets
     halt env, status_code: 204, response: "Deleted"
   end
