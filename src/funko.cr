@@ -187,7 +187,7 @@ module Funko
       docker_api = Docr::API.new(Docr::Client.new)
       docker_api.containers.list(all: true).select { |container|
         container.@names.any?(&.starts_with?("/faaso-#{name}-")) &&
-        container.@state == "running"
+          container.@state == "running"
       }
     end
 
