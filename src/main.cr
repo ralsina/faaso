@@ -39,7 +39,7 @@ FaaSO CLI tool.
 Usage:
   faaso build FOLDER ...            [-v=<level>] [-l]
   faaso scale FUNKO [SCALE]         [-v=<level>] [-l]
-  faaso status FUNKO_NAME           [-v=<level>] [-l]
+  faaso status FUNKO                [-v=<level>] [-l]
   faaso export SOURCE DESTINATION   [-v=<level>]
   faaso secret [-d|-a] FUNKO SECRET [-v=<level>] [-l]
 
@@ -53,8 +53,8 @@ Options:
 DOC
 
 ans = Docopt.docopt(doc, ARGV)
-pp! ans
 LogFormat.setup(ans["-v"].to_s.to_i)
+Log.debug {ans}
 
 case ans
 when .fetch("build", false)
@@ -62,9 +62,9 @@ when .fetch("build", false)
 when .fetch("export", false)
   Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
 when .fetch("scale", false)
-  Faaso::Commands::Scale.new.run(ans, ans["FUNKO_NAME"].as(String), ans["SCALE"])
+  Faaso::Commands::Scale.new.run(ans, ans["FUNKO"].as(String), ans["SCALE"])
 when .fetch("status", false)
-  Faaso::Commands::Status.new.run(ans, ans["FUNKO_NAME"].as(String))
+  Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String))
 when .fetch("secret", false)
   Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
 end
