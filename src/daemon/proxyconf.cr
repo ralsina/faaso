@@ -48,6 +48,7 @@ localhost:8888 {
     reverse_proxy /* http://#{funko}:3000
   }
 ) }.join("\n") + "}"
+    # FIXME that 👆🏼 is not a functional load balancing config if scale > 1
 
     if @@current_config != config
       File.open("Caddyfile", "w") do |file|
