@@ -10,7 +10,7 @@ RUN shards build -d --error-trace
 RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
-RUN apk update && apk add tinyproxy multirun openssl zlib yaml pcre2 gc libevent libgcc libxml2 ttyd && apk cache clean
+RUN apk update && apk add caddy multirun openssl zlib yaml pcre2 gc libevent libgcc libxml2 ttyd && apk cache clean
 
 # Unprivileged user
 RUN addgroup -S app && adduser app -S -G app
@@ -19,10 +19,10 @@ WORKDIR /home/app
 RUN mkdir runtimes public
 COPY runtimes/ runtimes/
 COPY public/ public/
-COPY tinyproxy.conf ./
+COPY Caddyfile ./
 COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
 
 RUN mkdir /secrets
 RUN echo "sarasa" > /secrets/sarlanga
 
-CMD ["/usr/bin/multirun", "-v", "faaso-daemon", "tinyproxy -d -c tinyproxy.conf"]
+CMD ["/usr/bin/multirun", "-v", "faaso-daemon", "caddy run --config Caddyfile"]

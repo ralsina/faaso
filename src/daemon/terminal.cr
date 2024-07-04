@@ -3,7 +3,7 @@ module Terminal
 
   @@terminal_process : Process | Nil = nil
 
-  def start_terminal(_args = ["bash"], readonly = false)
+  def start_terminal(_args = ["sh"], readonly = false)
     args = ["-p", "7681", "-c", "admin:admin", "-o"]
     args += ["-W"] unless readonly
     args += _args 
@@ -16,5 +16,3 @@ module Terminal
   end
 end
 
-
-Terminal.start_terminal
