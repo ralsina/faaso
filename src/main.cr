@@ -37,10 +37,11 @@ doc = <<-DOC
 FaaSO CLI tool.
 
 Usage:
-  faaso build FOLDER ... [-l] [-v=<level>]
-  faaso scale FUNKO_NAME [SCALE] [-l] [-v=<level>]
-  faaso status FUNKO_NAME [-l] [-v=<level>]
+  faaso build FOLDER ...            [-v=<level>] [-l]
+  faaso scale FUNKO [SCALE]         [-v=<level>] [-l]
+  faaso status FUNKO_NAME           [-v=<level>] [-l]
   faaso export SOURCE DESTINATION   [-v=<level>]
+  faaso secret [-d|-a] FUNKO NAME   [-v=<level>] [-l]
 
 Options:
   -l --local       Run commands locally instead of against a FaaSO server.
@@ -50,6 +51,7 @@ Options:
 DOC
 
 ans = Docopt.docopt(doc, ARGV)
+pp! ans
 LogFormat.setup(ans["-v"].to_s.to_i)
 
 case ans
