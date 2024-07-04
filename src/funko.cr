@@ -206,23 +206,6 @@ module Funko
       end
     end
 
-    # Start exited container with the newer image
-    # or unpause paused container
-    def start
-      if self.exited?
-        docker_api = Docr::API.new(Docr::Client.new)
-        images = self.image_history
-        exited = self.containers.select { |container|
-          container.@state == "exited"
-        }.sort! { |i, j|
-          (images.index(j.@image_id) || 9999) <=> (images.index(i.@image_id) || 9999)
-        }
-        docker_api.containers.restart(exited[0].@id) unless exited.empty?
-      elsif self.paused?
-        self.unpause
-      end
-    end
-
     # Stop container with the newer image
     def stop
       docker_api = Docr::API.new(Docr::Client.new)
