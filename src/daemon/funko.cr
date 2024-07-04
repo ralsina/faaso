@@ -125,24 +125,16 @@ module Funko
   end
 
   # Return an iframe that shows the container's logs
-  get "/funkos/:name/terminal/logs" do |env|
-    name = env.params.url["name"]
-    funko = Funko.from_names([name])[0]
-    # FIXME: Just getting the 1st one for now, it
-    # may not even be running
-    container_name = funko.containers.map { |c| c.@names[0] }[0]
-    Terminal.start_terminal(["docker", "logs", "-f", container_name.to_s])
+  get "/funkos/terminal/logs/:instance/" do |env|
+    instance = env.params.url["instance"]
+    Terminal.start_terminal(["docker", "logs", "-f", instance])
     "<iframe src='terminal/' width='100%' height='100%'></iframe>"
   end
 
   # Get an iframe with a shell into the container
-  get "/funkos/:name/terminal/shell" do |env|
-    name = env.params.url["name"]
-    funko = Funko.from_names([name])[0]
-    # FIXME: Just getting the 1st one for now, it
-    # may not even be running
-    container_name = funko.containers.map { |c| c.@names[0] }[0].lstrip("/")
-    Terminal.start_terminal(["docker", "exec", "-ti", container_name, "/bin/sh"], readonly: false)
+  get "/funkos/terminal/shell/:instance/" do |env|
+    instance = env.params.url["instance"]
+    Terminal.start_terminal(["docker", "exec", "-ti", instance, "/bin/sh"], readonly: false)
     "<iframe src='terminal/' width='100%' height='100%'></iframe>"
   end
 

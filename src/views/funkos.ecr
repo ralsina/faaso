@@ -23,8 +23,8 @@
               <%- end -%>
             </td>
             <td>
-              <button hx-target="#terminal" hx-get="funkos/<%= f["name"] %>/terminal/logs/">Logs</button>
-              <button hx-target="#terminal" hx-get="funkos/<%= f["name"] %>/terminal/shell/">Shell</button>
+              <button hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">Logs</button>
+              <button hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">Shell</button>
             </td>
           </tr>
         <%- end -%>

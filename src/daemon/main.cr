@@ -13,7 +13,7 @@ require "uuid"
 basic_auth "admin", "admin"
 
 get "/" do |env|
-  env.redirect "index.html"
+  env.redirect "/index.html"
 end
 
 Kemal.run
