@@ -23,6 +23,5 @@ COPY Caddyfile ./
 COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
 
 RUN mkdir /secrets
-RUN echo "sarasa" > /secrets/sarlanga
 
 CMD ["/usr/bin/multirun", "-v", "faaso-daemon", "caddy run --config Caddyfile"]

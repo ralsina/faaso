@@ -1,9 +1,11 @@
 {
-  https_port 8888
-  http_port 8887
+  http_port 8888
+  https_port 8887
+  local_certs
+  admin off
 }
 
-localhost:8888 {
+http://localhost:8888 {
   handle_path /admin/terminal/* {
     reverse_proxy /* http://127.0.0.1:7681
   }
