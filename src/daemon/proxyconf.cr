@@ -47,7 +47,7 @@ localhost:8888 {
   handle_path /faaso/#{funko.split("-")[0]}/* {
     reverse_proxy /* http://#{funko}:3000
   }
-)}.join("\n") +"}"
+) }.join("\n") + "}"
 
     if @@current_config != config
       File.open("Caddyfile", "w") do |file|

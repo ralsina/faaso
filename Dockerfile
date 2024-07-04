@@ -10,7 +10,7 @@ RUN shards build -d --error-trace
 RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
-RUN apk update && apk add caddy multirun openssl zlib yaml pcre2 gc libevent libgcc libxml2 ttyd && apk cache clean
+RUN apk update && apk add caddy multirun docker openssl zlib yaml pcre2 gc libevent libgcc libxml2 ttyd && apk cache clean
 
 # Unprivileged user
 RUN addgroup -S app && adduser app -S -G app
