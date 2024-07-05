@@ -80,12 +80,7 @@ module Funko
 
     # Get the number of running instances of this funko
     def scale
-      docker_api = Docr::API.new(Docr::Client.new)
-      docker_api.containers.list.select { |container|
-        container.@state == "running"
-      }.count { |container|
-        container.@names.any?(&.starts_with?("/faaso-#{name}-"))
-      }
+      containers.size
     end
 
     # Set the number of running instances of this funko
@@ -153,9 +148,12 @@ module Funko
     def build(path : Path)
       Log.info { "Building image for #{name} in #{path}" }
       docker_api = Docr::API.new(Docr::Client.new)
+      tags = ["faaso-#{name}:latest"]
+      Log.info { "   Tags: #{tags}" }
       docker_api.images.build(
         context: path.to_s,
-        tags: ["faaso-#{name}:latest"]) { |x| Log.info { x } }
+        tags: tags,
+        no_cache: true) { |x| Log.info { x } }
     end
 
     def images
@@ -232,7 +230,15 @@ module Funko
 
     # Create a container for this funko
     def create_container(autostart : Bool = true) : String
-      secrets_mount = "#{Dir.current}/secrets/#{name}"
+      # The path to secrets is tricky. On the server it will be in
+      # ./secrets/ BUT when you call on the Docker API you need to
+      # pass the path in the HOST SYSTEM WHERE DOCKER IS RUNNING
+      # so allow for a FAASO_SECRET_PATH override which will
+      # be set for the proxy container
+      secrets_mount = ENV.fetch(
+        "FAASO_SECRET_PATH",
+        "#{Dir.current}/secrets/#{name}"
+      )
       Dir.mkdir_p(secrets_mount)
       conf = Docr::Types::CreateContainerConfig.new(
         image: "faaso-#{name}:latest",

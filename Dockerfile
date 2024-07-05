@@ -8,6 +8,7 @@ COPY src/ src/
 COPY runtimes/ runtimes/
 RUN shards install
 RUN shards build -d --error-trace
+RUN cat .rucksack >> bin/faaso
 # RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
@@ -16,6 +17,8 @@ RUN apk update && apk add caddy nss-tools multirun docker openssl zlib yaml pcre
 # Unprivileged user
 RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
+RUN mkdir /home/app/tmp && chown app /home/app/tmp
+
 
 RUN mkdir runtimes public
 COPY public/ public/
