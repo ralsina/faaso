@@ -23,12 +23,12 @@ module Faaso
         end
 
         # Get runtime template files list
-        template_base = "" 
+        template_base = ""
         template_files = [] of String
         if @@known.includes? "./runtimes/#{runtime}"
           Log.info { "Using known runtime #{runtime}" }
           template_base = "./runtimes/#{runtime}/template"
-          template_files = @@filelist.select { |f| f.starts_with? template_base }
+          template_files = @@filelist.select(&.starts_with?(template_base))
         elsif File.exists? runtime
           Log.info { "Using directory #{runtime} as runtime" }
           template_base = "#{runtime}/template"
@@ -38,8 +38,6 @@ module Faaso
           return 1
         end
 
-        pp! template_files
-
         # Create new folder
         if Dir.exists? folder
           Log.error { "Folder #{folder} already exists" }
@@ -48,28 +46,28 @@ module Faaso
 
         Dir.mkdir_p folder
 
-        template_files.each do |f|
+        template_files.each do |t_file|
           content = IO::Memory.new
           # We need to use RUCKSACK_MODE=0 so it
           # fallbacks to the filesystem
-          rucksack(f).read(content)
+          rucksack(t_file).read(content)
           if content.nil?
-            Log.error { "Can't find file #{f}" }
+            Log.error { "Can't find file #{t_file}" }
             return 1
           end
 
-          # f is like "#{template_base}/foo"
+          # t_file is like "#{template_base}/foo"
           # dst is like #{folder}/foo
-          dst = Path[folder] / Path[f].relative_to(template_base)
+          dst = Path[folder] / Path[t_file].relative_to(template_base)
           # Render templated files
-          if f.ends_with? ".j2"
+          if t_file.ends_with? ".j2"
             dst = dst.sibling(dst.stem)
-            Log.info { "Creating file #{dst} from #{f}" }
+            Log.info { "  Creating file #{dst} from #{t_file}" }
             File.open(dst, "w") do |file|
               file << Crinja.render(content.to_s, {"name" => Path[folder].basename})
             end
-          else  # Just copy the file
-            Log.info { "Creating file #{dst} from #{f}" }
+          else # Just copy the file
+            Log.info { "  Creating file #{dst} from #{t_file}" }
             File.open(dst, "w") do |file|
               file << content.to_s
             end
