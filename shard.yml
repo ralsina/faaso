@@ -28,5 +28,3 @@ dependencies:
     branch: add_exposed_ports
   kemal:
     github: kemalcr/kemal
-  kemal-basic-auth:
-    github: kemalcr/kemal-basic-auth

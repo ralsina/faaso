@@ -28,7 +28,11 @@ module Proxy
   local_certs
 }
 
-http://mindy:8888 {
+http://*:8888 {
+	basicauth /admin/* {
+		admin {$HTTP_BASIC_AUTH_PASSWORD}
+	}
+
   handle_path /admin/terminal/* {
     reverse_proxy /* http://127.0.0.1:7681
   }
