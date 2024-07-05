@@ -18,17 +18,26 @@ struct LogFormat < Log::StaticFormatter
   end
 
   def self.setup(verbosity)
-    _verbosity = [
-      Log::Severity::Fatal,
-      Log::Severity::Error,
-      Log::Severity::Warn,
-      Log::Severity::Info,
-      Log::Severity::Debug,
-      Log::Severity::Trace,
-    ][[verbosity, 5].min]
+    Colorize.on_tty_only!
+    if verbosity < 3
+      _verbosity = [
+        Log::Severity::Fatal,
+        Log::Severity::Error,
+        Log::Severity::Warn,
+      ][[verbosity, 2].min]
+      Log.setup(
+        _verbosity,
+        Log::IOBackend.new(io: STDERR, formatter: LogFormat)
+      )
+    end
+
+    _verbosity = [Log::Severity::Info,
+                  Log::Severity::Debug,
+                  Log::Severity::Trace,
+    ][[verbosity - 3, 3].min]
     Log.setup(
       _verbosity,
-      Log::IOBackend.new(io: STDERR, formatter: LogFormat)
+      Log::IOBackend.new(io: STDOUT, formatter: LogFormat)
     )
   end
 end
@@ -38,17 +47,19 @@ FaaSO CLI tool.
 
 Usage:
   faaso build  FOLDER ...           [-v=<level>] [-l]
-  faaso scale  FUNKO [SCALE]        [-v=<level>] [-l]
-  faaso status FUNKO                [-v=<level>] [-l]
   faaso export SOURCE DESTINATION   [-v=<level>]
+  faaso new -r <RUNTIME> FOLDER     [-v=<level>]
+  faaso scale  FUNKO [SCALE]        [-v=<level>] [-l]
   faaso secret [-d|-a] FUNKO SECRET [-v=<level>] [-l]
+  faaso status FUNKO                [-v=<level>] [-l]
+  faaso version
 
 Options:
-  -l --local       Run commands locally instead of against a FaaSO server.
-  -h --help        Show this screen.
-  -d --delete      Delete
   -a --add         Add
-  --version        Show version.
+  -d --delete      Delete
+  -h --help        Show this screen
+  -l --local       Run commands locally instead of against a FaaSO server
+  -r --runtime     Runtime for the new funko (use -r list for examples)
   -v=level         Control the logging verbosity, 0 to 5 [default: 3]
 DOC
 
@@ -61,10 +72,12 @@ when .fetch("build", false)
   Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
 when .fetch("export", false)
   Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
+# when .fetch("new", false)
+#   Faaso::Commands::New.new.run(ans, ans["FOLDER"].as(String))
 when .fetch("scale", false)
   Faaso::Commands::Scale.new.run(ans, ans["FUNKO"].as(String), ans["SCALE"])
-when .fetch("status", false)
-  Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String))
 when .fetch("secret", false)
   Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
+when .fetch("status", false)
+  Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String))
 end
