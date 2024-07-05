@@ -1,6 +1,7 @@
 build: shard.yml $(wildcard src/**/*) $(runtimes/**/*)
 	shards build
 	cat .rucksack >> bin/faaso
+	cat .rucksack >> bin/faaso-daemon
 proxy: build
 	docker build . -t faaso-proxy
 start-proxy:
