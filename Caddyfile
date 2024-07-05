@@ -6,7 +6,7 @@
 
 http://*:8888 {
 	basicauth /admin/* {
-		admin {$HTTP_BASIC_AUTH_PASSWORD}
+		admin {$FAASO_PASSWORD}
 	}
 
   handle_path /admin/terminal/* {

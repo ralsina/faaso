@@ -25,7 +25,8 @@ module Faaso
           template_base,
           template_files,
           folder,
-          {"name" => Path[folder].basename}
+          {"name"    => Path[folder].basename,
+           "runtime" => runtime}
         )
         0
       end

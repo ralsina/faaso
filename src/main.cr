@@ -85,3 +85,8 @@ when .fetch("status", false)
 end
 
 exit(status)
+
+# Embed runtimes in the faaso binary using rucksack
+{% for name in `find ./runtimes -type f`.split('\n') %}
+  rucksack({{name}})
+{% end %}
