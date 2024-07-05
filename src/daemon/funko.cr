@@ -58,8 +58,8 @@ module Funko
         tar.each_entry do |entry|
           dst = Path.new(tmp_dir, entry.name)
           Dir.mkdir_p dst.dirname
-          File.open(Path.new(tmp_dir, entry.name), "w") do |dst|
-            IO.copy entry.io, dst
+          File.open(Path.new(tmp_dir, entry.name), "w") do |outf|
+            IO.copy entry.io, outf
           end
         end
       end
@@ -150,7 +150,7 @@ module Funko
       output: output,
       error: output,
     )
-    Log.debug { "faaso output: #{output.to_s}" }
+    Log.debug { "faaso output: #{output}" }
     result = {
       "exit_code" => status.exit_code,
       "output"    => output.to_s,

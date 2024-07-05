@@ -14,10 +14,8 @@ module Faaso
 
           funko.prepare_build(path: tmp_dir)
           if options["--local"]
-            funkos.each do |funko|
-              Log.info { "Building function... #{funko.name} in #{tmp_dir}" }
-              funko.build tmp_dir
-            end
+            Log.info { "Building function... #{funko.name} in #{tmp_dir}" }
+            funko.build tmp_dir
           else # Running against a server
             # Create a tarball for the funko
             buf = IO::Memory.new
