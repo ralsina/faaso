@@ -5,8 +5,11 @@ module Faaso
     # Creates a new empty funko out of a given runtime
     struct New
       @@known : Array(String) = {{`find ./runtimes -type d -mindepth 1`.split('\n').reject(&.empty?)}}
+      @@filelist : Array(String) = {{`find ./runtimes -type f -mindepth 1`.split('\n').reject(&.empty?)}}
 
       def run(options, folder)
+        Log.debug { "@@known: #{@@known}"}
+        Log.debug { "@@filelist: #{@@filelist}"}
         if options["-r"].as(String) == "list"
           Log.info { "Crystal has some included runtimes:\n" }
           @@known.each do |runtime|
