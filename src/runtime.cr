@@ -27,11 +27,12 @@ module Runtime
     elsif File.exists? runtime
       Log.info { "Using directory #{runtime} as runtime" }
       runtime_base = "#{runtime}"
-      runtime_files = Dir.glob("#{runtime_base}/**/*")
+      runtime_files = Dir.glob("#{runtime_base}/**/*").select { |file| File.file?(file) }
+      runtime_files = runtime_files.map { |file| Path[file].normalize.to_s }
     else
       raise Exception.new("Can't find runtime #{runtime}")
     end
-    {runtime_base, runtime_files.reject(&.starts_with? "#{runtime_base}template")}
+    {runtime_base, runtime_files.reject(&.starts_with? Path[runtime_base, "template"].normalize.to_s)}
   end
 
   def self.template_files(runtime : String) : {String, Array(String)}
@@ -44,7 +45,8 @@ module Runtime
     elsif File.exists? runtime
       Log.info { "Using directory #{runtime} as runtime" }
       template_base = "#{runtime}/template"
-      template_files = Dir.glob("#{template_base}/**/*")
+      template_files = Dir.glob("#{template_base}/**/*").select { |file| File.file?(file) }
+      template_files = template_files.map { |file| Path[file].normalize.to_s }
     else
       raise Exception.new("Can't find runtime #{runtime}")
     end
