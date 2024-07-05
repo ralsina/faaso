@@ -2,7 +2,7 @@ module Faaso
   module Commands
     # Build images for one or more funkos from source
     struct Build
-      def run(options, folders : Array(String))
+      def run(options, folders : Array(String)) : Int32
         funkos = Funko::Funko.from_paths(folders)
 
         if options["--local"]
@@ -58,10 +58,11 @@ module Faaso
               body = JSON.parse(ex.response.body)
               Log.info { body["stdout"] }
               Log.error { body["stderr"] }
-              exit 1
+              return 1
             end
           end
         end
+        0
       end
     end
   end

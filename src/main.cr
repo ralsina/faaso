@@ -67,17 +67,20 @@ ans = Docopt.docopt(doc, ARGV)
 LogFormat.setup(ans["-v"].to_s.to_i)
 Log.debug { ans }
 
+status : Int32 = 0
 case ans
 when .fetch("build", false)
-  Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
+  status = Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
 when .fetch("export", false)
-  Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
+  status = Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
 when .fetch("new", false)
-  Faaso::Commands::New.new.run(ans, ans["FOLDER"].as(Array(String))[0])
+  status = Faaso::Commands::New.new.run(ans, ans["FOLDER"].as(Array(String))[0])
 when .fetch("scale", false)
-  Faaso::Commands::Scale.new.run(ans, ans["FUNKO"].as(String), ans["SCALE"])
+  status = Faaso::Commands::Scale.new.run(ans, ans["FUNKO"].as(String), ans["SCALE"])
 when .fetch("secret", false)
-  Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
+  status = Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
 when .fetch("status", false)
-  Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String))
+  status = Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String))
 end
+
+exit(status)

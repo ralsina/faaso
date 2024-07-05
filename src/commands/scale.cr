@@ -10,7 +10,7 @@ module Faaso
     # In both cases stopped instances after the required
     # scale is reached are deleted.
     struct Scale
-      def local(options, name, scale)
+      def local(options, name, scale) : Int32
         funko = Funko::Funko.from_names([name])[0]
         # Asked about scale
         if !scale
@@ -20,12 +20,13 @@ module Faaso
         # Asked to set scale
         if funko.image_history.empty?
           Log.error { "Error: no images available for #{funko.name}:latest" }
-          exit 1
+          return 1
         end
         funko.scale(scale.as(String).to_i)
+        0
       end
 
-      def remote(options, name, scale)
+      def remote(options, name, scale) : Int32
         if !scale
           response = Crest.get(
             "#{FAASO_SERVER}funkos/#{name}/scale/", \
@@ -37,14 +38,15 @@ module Faaso
         end
         body = JSON.parse(response.body)
         Log.info { body["output"] }
+        0
       rescue ex : Crest::InternalServerError
         Log.error { "Error scaling funko #{name}" }
         body = JSON.parse(ex.response.body)
         Log.info { body["output"] }
-        exit 1
+        1
       end
 
-      def run(options, name, scale)
+      def run(options, name, scale) : Int32
         if options["--local"]
           return local(options, name, scale)
         end
