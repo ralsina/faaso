@@ -1,5 +1,5 @@
 build: shard.yml $(wildcard src/**/*) $(runtimes/**/*)
-	shards build
+	shards build -d --error-trace
 	cat .rucksack >> bin/faaso
 	cat .rucksack >> bin/faaso-daemon
 proxy: build
