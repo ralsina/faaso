@@ -5,3 +5,5 @@
 tmp/
 export/
 secrets/
+.rucksack
+.rucksack.toc

@@ -46,12 +46,12 @@ doc = <<-DOC
 FaaSO CLI tool.
 
 Usage:
-  faaso build  FOLDER ...           [-v=<level>] [-l]
-  faaso export SOURCE DESTINATION   [-v=<level>]
-  faaso new -r <RUNTIME> FOLDER     [-v=<level>]
-  faaso scale  FUNKO [SCALE]        [-v=<level>] [-l]
-  faaso secret [-d|-a] FUNKO SECRET [-v=<level>] [-l]
-  faaso status FUNKO                [-v=<level>] [-l]
+  faaso build  FOLDER ...           [-v <level>] [-l]
+  faaso export SOURCE DESTINATION   [-v <level>]
+  faaso new -r runtime FOLDER       [-v <level>]
+  faaso scale FUNKO [SCALE]         [-v <level>] [-l]
+  faaso secret (-d|-a) FUNKO SECRET [-v <level>] [-l]
+  faaso status FUNKO                [-v <level>] [-l]
   faaso version
 
 Options:
@@ -59,8 +59,8 @@ Options:
   -d --delete      Delete
   -h --help        Show this screen
   -l --local       Run commands locally instead of against a FaaSO server
-  -r --runtime     Runtime for the new funko (use -r list for examples)
-  -v=level         Control the logging verbosity, 0 to 5 [default: 3]
+  -r runtime       Runtime for the new funko (use -r list for examples)
+  -v level         Control the logging verbosity, 0 to 5 [default: 3]
 DOC
 
 ans = Docopt.docopt(doc, ARGV)
@@ -72,8 +72,8 @@ when .fetch("build", false)
   Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
 when .fetch("export", false)
   Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
-# when .fetch("new", false)
-#   Faaso::Commands::New.new.run(ans, ans["FOLDER"].as(String))
+when .fetch("new", false)
+  Faaso::Commands::New.new.run(ans, ans["FOLDER"].as(Array(String))[0])
 when .fetch("scale", false)
   Faaso::Commands::Scale.new.run(ans, ans["FUNKO"].as(String), ans["SCALE"])
 when .fetch("secret", false)

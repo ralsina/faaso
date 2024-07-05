@@ -28,3 +28,8 @@ dependencies:
     branch: add_exposed_ports
   kemal:
     github: kemalcr/kemal
+  rucksack:
+    github: busyloop/rucksack
+
+scripts:
+  postinstall: cat .rucksack >> bin/faaso
