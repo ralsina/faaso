@@ -1,3 +1,4 @@
+require "./runtime.cr"
 require "crinja"
 require "file_utils"
 require "yaml"
@@ -121,23 +122,18 @@ module Funko
     def prepare_build(path : Path)
       # Copy runtime if requested
       if !runtime.nil?
-        runtime_dir = Path.new("runtimes", runtime.as(String))
-        raise Exception.new("Error: runtime #{runtime} not found for funko #{name} in #{path}") unless File.exists?(runtime_dir)
-        Dir.glob("#{runtime_dir}/*").each { |src|
-          FileUtils.cp_r(src, path)
-        }
-        # Replace templates with processed files
-        context = _to_context
-        Dir.glob("#{path}/**/*.j2").each { |template|
-          dst = template[..-4]
-          File.open(dst, "w") do |file|
-            file << Crinja.render(File.read(template), context)
-          end
-          File.delete template
-        }
+        # Get runtime files list
+        runtime_base, runtime_files = Runtime.runtime_files(runtime.as(String))
+
+        Runtime.copy_templated(
+          runtime_base,
+          runtime_files,
+          path.to_s,
+          _to_context
+        )
       end
 
-      # Copy funko
+      # Copy funko on top of runtime
       raise Exception.new("Internal error: empty funko path for #{name}") if self.path.empty?
       Dir.glob("#{self.path}/*").each { |src|
         FileUtils.cp_r(src, path)

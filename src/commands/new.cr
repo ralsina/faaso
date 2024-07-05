@@ -1,41 +1,15 @@
-require "rucksack"
+require "../runtime.cr"
 
 module Faaso
   module Commands
     # Creates a new empty funko out of a given runtime
     struct New
-      @@known : Array(String) = {{`find ./runtimes -type d -mindepth 1`.split('\n').reject(&.empty?)}}
-      @@filelist : Array(String) = {{`find ./runtimes -type f -mindepth 1`.split('\n').reject(&.empty?)}}
-
       def run(options, folder) : Int32
-        Log.debug { "@@known: #{@@known}" }
-        Log.debug { "@@filelist: #{@@filelist}" }
-
         runtime = options["-r"].as(String)
         # Give a list of known runtimes
         if runtime == "list"
-          Log.info { "Crystal has some included runtimes:\n" }
-          @@known.each do |i|
-            Log.info { "  * #{Path[i].basename}" }
-          end
-          Log.info { "\nOr if you have your own, use a folder name" }
+          Runtime.list
           return 0
-        end
-
-        # Get runtime template files list
-        template_base = ""
-        template_files = [] of String
-        if @@known.includes? "./runtimes/#{runtime}"
-          Log.info { "Using known runtime #{runtime}" }
-          template_base = "./runtimes/#{runtime}/template"
-          template_files = @@filelist.select(&.starts_with?(template_base))
-        elsif File.exists? runtime
-          Log.info { "Using directory #{runtime} as runtime" }
-          template_base = "#{runtime}/template"
-          template_files = Dir.glob("#{template_base}/**/*")
-        else
-          Log.error { "Can't find runtime #{runtime}" }
-          return 1
         end
 
         # Create new folder
@@ -44,43 +18,17 @@ module Faaso
           return 1
         end
 
-        Dir.mkdir_p folder
+        # Get runtime template files list
+        template_base, template_files = Runtime.template_files(runtime)
 
-        template_files.each do |t_file|
-          content = IO::Memory.new
-          # We need to use RUCKSACK_MODE=0 so it
-          # fallbacks to the filesystem
-          rucksack(t_file).read(content)
-          if content.nil?
-            Log.error { "Can't find file #{t_file}" }
-            return 1
-          end
-
-          # t_file is like "#{template_base}/foo"
-          # dst is like #{folder}/foo
-          dst = Path[folder] / Path[t_file].relative_to(template_base)
-          # Render templated files
-          if t_file.ends_with? ".j2"
-            dst = dst.sibling(dst.stem)
-            Log.info { "  Creating file #{dst} from #{t_file}" }
-            File.open(dst, "w") do |file|
-              file << Crinja.render(content.to_s, {"name" => Path[folder].basename})
-            end
-          else # Just copy the file
-            Log.info { "  Creating file #{dst} from #{t_file}" }
-            File.open(dst, "w") do |file|
-              file << content.to_s
-            end
-          end
-        end
-
+        Runtime.copy_templated(
+          template_base,
+          template_files,
+          folder,
+          {"name" => Path[folder].basename}
+        )
         0
       end
     end
   end
 end
-
-# Embed runtimes in the binary using rucksack
-{% for name in `find ./runtimes -type f`.split('\n') %}
-  rucksack({{name}})
-{% end %}
