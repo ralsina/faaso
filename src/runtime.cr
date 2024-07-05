@@ -91,3 +91,8 @@ module Runtime
     end
   end
 end
+
+# Embed runtimes in the faaso binary using rucksack
+{% for name in `find ./runtimes -type f`.split('\n') %}
+  rucksack({{name}})
+{% end %}

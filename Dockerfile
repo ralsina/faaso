@@ -1,14 +1,12 @@
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as build
-RUN apk update && apk add crystal shards yaml-dev openssl-dev zlib-dev libxml2-dev && apk cache clean
+RUN apk update && apk add crystal shards yaml-dev openssl-dev zlib-dev libxml2-dev make && apk cache clean
 RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
-COPY shard.yml ./
+COPY shard.yml Makefile ./
 RUN mkdir src/
 COPY src/ src/
 COPY runtimes/ runtimes/
-RUN shards install
-RUN shards build -d --error-trace
-RUN cat .rucksack >> bin/faaso
+RUN make
 # RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship

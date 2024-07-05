@@ -126,6 +126,16 @@ module Funko
     funko.wait_for(1, 1)
   end
 
+  # Delete => scale to 0, remove all containers and images
+  delete "/funkos/:name/" do |env|
+    name = env.params.url["name"]
+    funko = Funko.from_names([name])[0]
+    funko.scale(0)
+    funko.wait_for(0, 1)
+    funko.remove_all_containers
+    funko.remove_all_images
+  end
+
   # Return an iframe that shows the container's logs
   get "/funkos/terminal/logs/:instance/" do |env|
     instance = env.params.url["instance"]

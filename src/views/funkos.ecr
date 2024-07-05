@@ -39,9 +39,11 @@
     <%- if f["scale"].as(String).to_i > 0 -%>
       <button disabled hx-get="funkos/<%= f["name"] %>/start">Start</button>
       <button hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">Stop</button>
+      <button disabled hx-delete="funkos/<%= f["name"] %>/" hx-on:htmx:after-request="update_funkos()">Delete</button>
     <%- else -%>
       <button hx-get="funkos/<%= f["name"] %>/start" hx-on:htmx:after-request="update_funkos()">Start</button>
       <button disabled hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">Stop</button>
+      <button hx-delete="funkos/<%= f["name"] %>/" hx-on:htmx:after-request="update_funkos()">Delete</button>
     <%- end -%>
       <button hx-get="funkos/<%= f["name"] %>/restart" hx-on:htmx:after-request="update_funkos()">Restart</button>
   <%- end -%>

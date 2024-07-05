@@ -224,6 +224,32 @@ module Funko
       end
     end
 
+    # Remove all containers related to this funko
+    def remove_all_containers
+      docker_api = Docr::API.new(Docr::Client.new)
+      docker_api.containers.list(all: true).select { |container|
+        container.@names.any?(&.starts_with?("/faaso-#{name}-"))
+      }.each { |container|
+        begin
+          docker_api.containers.stop(container.@id) if container.status != "exited"
+        rescue ex : Docr::Errors::DockerAPIError
+          Log.error { "#{ex}" } unless ex.status_code == 304 # This just happens
+        end
+        docker_api.containers.delete(container.@id)
+      }
+    end
+
+    # Remove all images related to this funko
+    def remove_all_images
+      docker_api = Docr::API.new(Docr::Client.new)
+      docker_api.images.list.select { |image|
+        return false if image.@repo_tags.nil?
+        true if image.@repo_tags.as(Array(String)).any?(&.starts_with?("faaso-#{name}:"))
+      }.each { |image|
+        docker_api.images.delete(image.@id)
+      }
+    end
+
     # Create a container for this funko
     def create_container(autostart : Bool = true) : String
       # The path to secrets is tricky. On the server it will be in

@@ -1,8 +1,8 @@
 require "./faaso.cr"
 require "colorize"
 require "docopt"
+require "rucksack"
 
-# Log formatter for
 struct LogFormat < Log::StaticFormatter
   @@colors = {
     "FATAL" => :red,
@@ -85,8 +85,3 @@ when .fetch("status", false)
 end
 
 exit(status)
-
-# Embed runtimes in the faaso binary using rucksack
-{% for name in `find ./runtimes -type f`.split('\n') %}
-  rucksack({{name}})
-{% end %}
