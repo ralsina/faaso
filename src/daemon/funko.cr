@@ -56,6 +56,8 @@ module Funko
     Compress::Gzip::Reader.open(file) do |gzip|
       Crystar::Reader.open(gzip) do |tar|
         tar.each_entry do |entry|
+          dst = Path.new(tmp_dir, entry.name)
+          Dir.mkdir_p dst.dirname
           File.open(Path.new(tmp_dir, entry.name), "w") do |dst|
             IO.copy entry.io, dst
           end
@@ -64,7 +66,7 @@ module Funko
     end
 
     # Build the thing
-    response = run_faaso(["build", tmp_dir.to_s])
+    response = run_faaso(["build", tmp_dir.to_s, "--no-runtime"])
 
     if response["exit_code"] != 0
       halt env, status_code: 500, response: response.to_json
@@ -148,6 +150,7 @@ module Funko
       output: output,
       error: output,
     )
+    Log.debug { "faaso output: #{output.to_s}" }
     result = {
       "exit_code" => status.exit_code,
       "output"    => output.to_s,

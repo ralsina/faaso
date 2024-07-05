@@ -5,9 +5,10 @@ WORKDIR /home/app
 COPY shard.yml ./
 RUN mkdir src/
 COPY src/ src/
+COPY runtimes/ runtimes/
 RUN shards install
 RUN shards build -d --error-trace
-RUN strip bin/*
+# RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
 RUN apk update && apk add caddy nss-tools multirun docker openssl zlib yaml pcre2 gc libevent libgcc libxml2 ttyd && apk cache clean
@@ -17,7 +18,6 @@ RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
 
 RUN mkdir runtimes public
-COPY runtimes/ runtimes/
 COPY public/ public/
 COPY Caddyfile ./
 COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/

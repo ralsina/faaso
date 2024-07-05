@@ -151,6 +151,7 @@ module Funko
 
     # Build image using docker in path previously prepared using `prepare_build`
     def build(path : Path)
+      Log.info { "Building image for #{name} in #{path}" }
       docker_api = Docr::API.new(Docr::Client.new)
       docker_api.images.build(
         context: path.to_s,

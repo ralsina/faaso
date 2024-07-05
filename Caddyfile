@@ -1,19 +1,18 @@
 {
-	http_port 8888
-	https_port 8887
-	local_certs
+  http_port 8888
+  https_port 8887
+  local_certs
 }
 
 http://*:8888 {
 	basicauth /admin/* {
-		# admin $2a$14$C35905PxPzICAZKc/O9jYOS7ipZNPBtrndja8Yu3bvs/UujckryHS
 		admin {$HTTP_BASIC_AUTH_PASSWORD}
 	}
 
-	handle_path /admin/terminal/* {
-		reverse_proxy /* http://127.0.0.1:7681
-	}
-	handle_path /admin/* {
-		reverse_proxy /* http://127.0.0.1:3000
-	}
+  handle_path /admin/terminal/* {
+    reverse_proxy /* http://127.0.0.1:7681
+  }
+  handle_path /admin/* {
+    reverse_proxy /* http://127.0.0.1:3000
+  }
 }

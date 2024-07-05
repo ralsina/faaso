@@ -4,26 +4,30 @@ module Faaso
     struct Build
       def run(options, folders : Array(String)) : Int32
         funkos = Funko::Funko.from_paths(folders)
+        # Create temporary build location
 
-        if options["--local"]
-          funkos.each do |funko|
-            # Create temporary build location
-            tmp_dir = Path.new("tmp", UUID.random.to_s)
-            Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
-            funko.prepare_build tmp_dir
+        funkos.each do |funko|
+          tmp_dir = Path.new("tmp", UUID.random.to_s)
+          Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
 
-            Log.info { "Building function... #{funko.name} in #{tmp_dir}" }
-            funko.build tmp_dir
-          end
-        else # Running against a server
-          funkos.each do |funko|
+          funko.runtime = nil if options["--no-runtime"]
+
+          funko.prepare_build(path: tmp_dir)
+          if options["--local"]
+            funkos.each do |funko|
+              Log.info { "Building function... #{funko.name} in #{tmp_dir}" }
+              funko.build tmp_dir
+            end
+          else # Running against a server
             # Create a tarball for the funko
             buf = IO::Memory.new
             Compress::Gzip::Writer.open(buf) do |gzip|
               Crystar::Writer.open(gzip) do |tw|
-                Dir.glob("#{funko.path}/**/*").each do |path|
+                Log.debug { "Adding files to tarball" }
+                Dir.glob("#{tmp_dir}/**/*").each do |path|
                   next unless File.file? path
-                  rel_path = Path[path].relative_to funko.path
+                  rel_path = Path[path].relative_to tmp_dir
+                  Log.debug { "Adding #{rel_path}" }
                   file_info = File.info(path)
                   hdr = Crystar::Header.new(
                     name: rel_path.to_s,
@@ -52,12 +56,9 @@ module Faaso
               )
               Log.info { "Build finished successfully." }
               body = JSON.parse(response.body)
-              Log.info { body["stdout"] }
+              Log.info { body["output"] }
             rescue ex : Crest::InternalServerError
-              Log.error { "Error building funko #{funko.name} from #{funko.path}" }
-              body = JSON.parse(ex.response.body)
-              Log.info { body["stdout"] }
-              Log.error { body["stderr"] }
+              Log.error(exception: ex) { "Error building funko #{funko.name} from #{funko.path}" }
               return 1
             end
           end

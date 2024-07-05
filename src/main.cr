@@ -46,7 +46,7 @@ doc = <<-DOC
 FaaSO CLI tool.
 
 Usage:
-  faaso build  FOLDER ...           [-v <level>] [-l]
+  faaso build  FOLDER ...           [-v <level>] [-l] [--no-runtime]
   faaso export SOURCE DESTINATION   [-v <level>]
   faaso new -r runtime FOLDER       [-v <level>]
   faaso scale FUNKO [SCALE]         [-v <level>] [-l]
@@ -59,6 +59,7 @@ Options:
   -d --delete      Delete
   -h --help        Show this screen
   -l --local       Run commands locally instead of against a FaaSO server
+  --no-runtime     Don't merge a runtime into the funko
   -r runtime       Runtime for the new funko (use -r list for examples)
   -v level         Control the logging verbosity, 0 to 5 [default: 3]
 DOC
