@@ -21,4 +21,10 @@
   or building
 * Make more things configurable / remove hardcoded stuff
 * CD for binaries and images for at least arm64/x86
-* Multi-container docker logs
+* Multi-container docker logs [faaso logs -f FUNKO]
+* Direct error and above to stderr, others to stdout, while keeping 
+  logging level configurable
+
+# Things to do but not before release
+
+* Propagate errors from `run_faaso` to the remote client 
