@@ -2,7 +2,6 @@ require "docr"
 require "./funko.cr"
 require "kemal"
 
-
 module Proxy
   CADDY_CONFIG_PATH = "config/Caddyfile"
   @@current_config = File.read(CADDY_CONFIG_PATH)
@@ -32,7 +31,7 @@ module Proxy
 
 http://*:8888 {
 	basicauth /admin/* {
-		admin {$HTTP_BASIC_AUTH_PASSWORD}
+		admin {$FAASO_PASSWORD}
 	}
 
   handle_path /admin/terminal/* {
