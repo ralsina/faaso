@@ -16,6 +16,7 @@
   * How to setup the proxy
   * APIs
 * Sanitize all inputs
-* Streaming responses in slow operations 
-  like scaling down or building
+* Streaming responses in slow operations like scaling down
+  or building
 * Make more things configurable / remove hardcoded stuff
+* CD for binaries and images for at least arm64/x86
