@@ -2,8 +2,10 @@ require "docr"
 require "./funko.cr"
 require "kemal"
 
+
 module Proxy
-  @@current_config = File.read("Caddyfile")
+  CADDY_CONFIG_PATH = "config/Caddyfile"
+  @@current_config = File.read(CADDY_CONFIG_PATH)
 
   # Get current proxy config
   get "/proxy/" do
@@ -64,7 +66,7 @@ CONFIG
 
     if @@current_config != config
       Log.info { "Updating proxy config" }
-      File.open("Caddyfile", "w") do |file|
+      File.open(CADDY_CONFIG_PATH, "w") do |file|
         file << config
       end
       # Reload config

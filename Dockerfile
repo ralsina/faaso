@@ -17,12 +17,11 @@ RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
 RUN mkdir /home/app/tmp && chown app /home/app/tmp
 
-
-RUN mkdir runtimes public
 COPY public/ public/
-COPY Caddyfile ./
 COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
 
+# Mount points for persistent data
 RUN mkdir /secrets
+RUN mkdir /config
 
-CMD ["/usr/bin/multirun", "-v", "faaso-daemon", "caddy run --config Caddyfile"]
+CMD ["/usr/bin/multirun", "-v", "faaso-daemon", "caddy run --config config/Caddyfile"]
