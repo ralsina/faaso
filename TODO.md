@@ -4,6 +4,7 @@
   * Setting up password
   * Setting up hostname for Caddy's automatic HTTPS
 * Config UI in frontend?
+* Polish frontend UI **A LOT**
 * Version checks for consistency between client/server
 * Have 3 runtimes:
   * Crystal + Kemal ✅
