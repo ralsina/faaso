@@ -20,3 +20,4 @@
   or building
 * Make more things configurable / remove hardcoded stuff
 * CD for binaries and images for at least arm64/x86
+* Multi-container docker logs
