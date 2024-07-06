@@ -15,13 +15,4 @@ http://*:8888 {
   handle_path /admin/* {
     reverse_proxy /* http://127.0.0.1:3000
   }
-
-
-      handle_path /faaso/myfunko/* {
-        reverse_proxy /* http://faaso-myfunko-kyfo2v:3000 {
-          health_uri /ping
-          fail_duration 30s
-        }
-      }
-      
 }
