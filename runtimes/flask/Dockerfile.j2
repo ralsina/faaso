@@ -18,5 +18,5 @@ USER app
 
 COPY --from=build /home/app/  .
 
-CMD ["venv/bin/uwsgi", "--http", "0.0.0.0:3000", "--master", "-p", "4", "-w", "funko:app"]
+CMD ["venv/bin/uwsgi", "--http", "0.0.0.0:3000", "--master", "-p", "1", "-w", "funko:app"]
 HEALTHCHECK {{ healthcheck_options }}  CMD {{ healthcheck_command }}
