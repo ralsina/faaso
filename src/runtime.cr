@@ -77,6 +77,8 @@ module Runtime
       # file is like "#{base}/foo"
       # dst is like #{dst_path}/foo
       dst = Path[dst_path] / Path[file].relative_to(base_path)
+      # Make sure we have dest dir
+      Dir.mkdir_p dst.dirname unless File.directory? dst.dirname
       # Render templated files
       if file.ends_with? ".j2"
         dst = dst.sibling(dst.stem)
