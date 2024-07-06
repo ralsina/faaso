@@ -3,6 +3,8 @@
 * User flow for initial proxy setup
   * Setting up password
   * Setting up hostname for Caddy's automatic HTTPS
+* Config UI in frontend?
+* Version checks for consistency between client/server
 * Have 3 runtimes:
   * Crystal + Kemal ✅
   * Python + Flask [WIP]
@@ -15,4 +17,4 @@
 * Sanitize all inputs
 * Streaming responses in slow operations 
   like scaling down or building
-  
+* Make more things configurable / remove hardcoded stuff
