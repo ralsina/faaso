@@ -5,6 +5,11 @@ module Faaso
         funko = Funko::Funko.from_names([name])[0]
         status = funko.docker_status
 
+        if status.images.size == 0
+          Log.error { "Unkown funko: #{name}" }
+          return 1
+        end
+
         Log.info { "Name: #{status.@name}" }
         Log.info { "Scale: #{status.scale}" }
 
@@ -21,16 +26,17 @@ module Faaso
       end
 
       def remote(options, name) : Int32
-        response = Crest.get(
+        Crest.get(
           "#{FAASO_SERVER}funkos/#{name}/status/", \
-             user: "admin", password: "admin")
-        body = JSON.parse(response.body)
-        Log.info { body["output"] }
+             user: "admin", password: "admin") do |response|
+          loop do
+            Log.info { response.body_io.gets }
+            break if response.body_io.closed?
+          end
+        end
         0
       rescue ex : Crest::InternalServerError
-        Log.error { "Error scaling funko #{name}" }
-        body = JSON.parse(ex.response.body)
-        Log.info { body["output"] }
+        Log.error(exception: ex) { "Error scaling funko #{name}" }
         1
       end
 

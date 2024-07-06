@@ -47,14 +47,18 @@ module Faaso
 
             begin
               Log.info { "Uploading funko to #{FAASO_SERVER}" }
-              response = Crest.post(
+              Log.info { "Starting remote build:" }
+              Crest.post(
                 url,
                 {"funko.tgz" => File.open(tmp), "name" => "funko.tgz"},
                 user: "admin", password: "admin"
-              )
+              ) do |response|
+                loop do
+                  Log.info { response.body_io.gets }
+                  break if response.body_io.closed?
+                end
+              end
               Log.info { "Build finished successfully." }
-              body = JSON.parse(response.body)
-              Log.info { body["output"] }
             rescue ex : Crest::InternalServerError
               Log.error(exception: ex) { "Error building funko #{funko.name} from #{funko.path}" }
               return 1

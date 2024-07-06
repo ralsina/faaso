@@ -28,21 +28,27 @@ module Faaso
 
       def remote(options, name, scale) : Int32
         if !scale
-          response = Crest.get(
+          Crest.get(
             "#{FAASO_SERVER}funkos/#{name}/scale/", \
-               user: "admin", password: "admin")
+               user: "admin", password: "admin") do |response|
+            loop do
+              Log.info { response.body_io.gets }
+              break if response.body_io.closed?
+            end
+          end
         else
-          response = Crest.post(
+          Crest.post(
             "#{FAASO_SERVER}funkos/#{name}/scale/",
-            {"scale" => scale}, user: "admin", password: "admin")
+            {"scale" => scale}, user: "admin", password: "admin") do |response|
+            loop do
+              Log.info { response.body_io.gets }
+              break if response.body_io.closed?
+            end
+          end
         end
-        body = JSON.parse(response.body)
-        Log.info { body["output"] }
         0
       rescue ex : Crest::InternalServerError
-        Log.error { "Error scaling funko #{name}" }
-        body = JSON.parse(ex.response.body)
-        Log.info { body["output"] }
+        Log.error(exception: ex) { "Error scaling funko #{name}" }
         1
       end
 

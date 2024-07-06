@@ -8,39 +8,20 @@ module Funko
   # Get the funko's status
   get "/funkos/:name/status/" do |env|
     name = env.params.url["name"]
-    response = run_faaso(["status", name])
-
-    if response["exit_code"] != 0
-      halt env, status_code: 500, response: response.to_json
-    else
-      response.to_json
-    end
+    run_faaso(["status", name], env)
   end
 
   # Get the funko's scale
   get "/funkos/:name/scale/" do |env|
     name = env.params.url["name"]
-    response = run_faaso(["scale", name])
-
-    if response["exit_code"] != 0
-      halt env, status_code: 500, response: response.to_json
-    else
-      response.to_json
-    end
+    run_faaso(["scale", name], env)
   end
 
   # Set the funko's scale
   post "/funkos/:name/scale/" do |env|
     name = env.params.url["name"]
     scale = env.params.body["scale"].as(String)
-    response = run_faaso(["scale", name, scale])
-    if response["exit_code"] != 0
-      Log.error { response }
-      halt env, status_code: 500, response: response.to_json
-    else
-      Log.info { response }
-      response.to_json
-    end
+    run_faaso(["scale", name, scale], env)
   end
 
   # Build image for funko received as "funko.tgz"
@@ -66,13 +47,7 @@ module Funko
     end
 
     # Build the thing
-    response = run_faaso(["build", tmp_dir.to_s, "--no-runtime"])
-
-    if response["exit_code"] != 0
-      halt env, status_code: 500, response: response.to_json
-    else
-      response.to_json
-    end
+    run_faaso(["build", tmp_dir.to_s, "--no-runtime"], env)
   end
 
   # Endpoints for the web frontend
@@ -150,21 +125,23 @@ module Funko
     "<iframe src='terminal/' width='100%' height='100%'></iframe>"
   end
 
-  # Helper to run faaso locally and get a response back
-  def run_faaso(args : Array(String))
+  # Helper to run faaso locally and respond via env
+  def run_faaso(args : Array(String), env) : Bool
     Log.info { "Running faaso [#{args.join(", ")}, -l]" }
-    output = IO::Memory.new
-    status = Process.run(
+    Process.run(
       command: "faaso",
       args: args + ["-l"], # Always local in the server
-      output: output,
-      error: output,
-    )
-    Log.debug { "faaso output: #{output}" }
-    result = {
-      "exit_code" => status.exit_code,
-      "output"    => output.to_s,
-    }
-    result
+    ) do |process|
+      loop do
+        env.response.print process.output.gets(chomp: false)
+        env.response.flush
+        Fiber.yield
+        break if process.terminated?
+      end
+      p! process.error.peek
+      true
+    end
+    # FIXME: find a way to raise an exception on failure
+    # of the faaso process
   end
 end
