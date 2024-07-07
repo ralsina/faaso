@@ -15,4 +15,12 @@ http://*:8888 {
   handle_path /admin/* {
     reverse_proxy /* http://127.0.0.1:3000
   }
+
+      handle_path /faaso/exp/* {
+        reverse_proxy /* http://faaso-exp-6ne49v:3000 {
+          health_uri /ping
+          fail_duration 30s
+        }
+      }
+      
 }

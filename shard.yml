@@ -30,6 +30,8 @@ dependencies:
     github: kemalcr/kemal
   rucksack:
     github: busyloop/rucksack
-
+  inotify:
+    github: petoem/inotify.cr
+    
 scripts:
   postinstall: cat .rucksack >> bin/faaso

@@ -1,10 +1,16 @@
-require "docr"
 require "./funko.cr"
+require "docr"
+require "inotify"
 require "kemal"
 
 module Proxy
   CADDY_CONFIG_PATH = "config/Caddyfile"
   @@current_config = File.read(CADDY_CONFIG_PATH)
+
+  @@watcher = Inotify.watch(CADDY_CONFIG_PATH) do |_|
+    Log.info { "Reloading caddy config" }
+    Process.run(command: "caddy", args: ["reload", "--config", CADDY_CONFIG_PATH])
+  end
 
   # Get current proxy config
   get "/proxy/" do
@@ -69,14 +75,13 @@ CONFIG
         file << config
       end
       # Reload config
-      Process.run(command: "caddy", args: ["reload", "--config", "Caddyfile"])
       @@current_config = config
     end
     config
   end
 end
 
-# Update proxy config once a second
+# Update proxy config every 1 second (if changed)
 spawn do
   loop do
     Proxy.update_proxy_config
