@@ -28,6 +28,7 @@
 * ✅ Direct error and above to stderr, others to stdout,
   while keeping logging level configurable
 * ✅ Fix proxy reload / Make it reload on file changes
+* Implement `faaso help command`
 
 # Things to do but not before release
 

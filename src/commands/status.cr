@@ -28,7 +28,7 @@ module Faaso
       def remote(options, name) : Int32
         Faaso.check_version
         Crest.get(
-          "#{FAASO_SERVER}funkos/#{name}/status/", \
+          "#{Faaso.server}funkos/#{name}/status/", \
              user: "admin", password: "admin") do |response|
           loop do
             Log.info { response.body_io.gets }

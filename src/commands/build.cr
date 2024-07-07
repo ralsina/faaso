@@ -44,10 +44,10 @@ module Faaso
               outf << buf
             end
 
-            url = "#{FAASO_SERVER}funkos/build/"
+            url = "#{Faaso.server}funkos/build/"
 
             begin
-              Log.info { "Uploading funko to #{FAASO_SERVER}" }
+              Log.info { "Uploading funko to #{Faaso.server}" }
               Log.info { "Starting remote build:" }
               Crest.post(
                 url,

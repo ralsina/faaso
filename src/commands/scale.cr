@@ -30,7 +30,7 @@ module Faaso
         Faaso.check_version
         if !scale
           Crest.get(
-            "#{FAASO_SERVER}funkos/#{name}/scale/", \
+            "#{Faaso.server}funkos/#{name}/scale/", \
                user: "admin", password: "admin") do |response|
             loop do
               Log.info { response.body_io.gets }
@@ -39,7 +39,7 @@ module Faaso
           end
         else
           Crest.post(
-            "#{FAASO_SERVER}funkos/#{name}/scale/",
+            "#{Faaso.server}funkos/#{name}/scale/",
             {"scale" => scale}, user: "admin", password: "admin") do |response|
             loop do
               Log.info { response.body_io.gets }

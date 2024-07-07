@@ -1,5 +1,6 @@
 require "./commands/build.cr"
 require "./commands/export.cr"
+require "./commands/login.cr"
 require "./commands/new.cr"
 require "./commands/scale.cr"
 require "./commands/secret.cr"
@@ -10,9 +11,6 @@ require "docr"
 require "docr/utils.cr"
 require "json"
 require "uuid"
-
-# API if you just ran faaso-daemon
-FAASO_SERVER = ENV.fetch("FAASO_SERVER", "http://localhost:3000/")
 
 # Functions as a Service, Ops!
 module Faaso
@@ -30,10 +28,21 @@ module Faaso
     raise ex if ex.status_code != 409 # Network already exists
   end
 
+  def self.server : String
+    url = ENV.fetch("FAASO_SERVER", nil)
+    if url.nil?
+      Log.warn { "FAASO_SERVER not set" }
+      url = "http://localhost:3000/"
+    end
+    url += "/" unless url.ends_with? "/"
+    Log.info { "Using server #{url}" }
+    url
+  end
+
   # Compare version with server's
   def self.check_version
     server_version = Crest.get(
-      "#{FAASO_SERVER}version/", \
+      "#{self.server}version/", \
          user: "admin", password: "admin").body
 
     local_version = "#{version}"

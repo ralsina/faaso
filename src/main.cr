@@ -1,3 +1,4 @@
+require "./config.cr"
 require "./faaso.cr"
 require "./log.cr"
 require "colorize"
@@ -14,11 +15,13 @@ FaaSO CLI tool.
 Usage:
   faaso build  FOLDER ...           [-v <level>] [-l] [--no-runtime]
   faaso export SOURCE DESTINATION   [-v <level>]
+  faaso login                       [-v <level>]
   faaso new -r runtime FOLDER       [-v <level>]
   faaso scale FUNKO [SCALE]         [-v <level>] [-l]
   faaso secret (-d|-a) FUNKO SECRET [-v <level>] [-l]
   faaso status FUNKO                [-v <level>] [-l]
   faaso version
+  faaso help COMMAND
 
 Options:
   -a --add         Add
@@ -40,6 +43,8 @@ when .fetch("build", false)
   status = Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
 when .fetch("export", false)
   status = Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
+when .fetch("login", false)
+  status = Faaso::Commands::Login.new.run(ans)
 when .fetch("new", false)
   status = Faaso::Commands::New.new.run(ans, ans["FOLDER"].as(Array(String))[0])
 when .fetch("scale", false)

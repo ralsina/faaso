@@ -16,7 +16,7 @@ module Faaso
         Faaso.check_version
         if options["--add"]
           Crest.post(
-            "#{FAASO_SERVER}secrets/",
+            "#{Faaso.server}secrets/",
             {
               "funko" => funko,
               "name"  => name,
@@ -25,7 +25,7 @@ module Faaso
           Log.info { "Secret created" }
         elsif options["--delete"]
           Crest.delete(
-            "#{FAASO_SERVER}secrets/#{funko}/#{name}",
+            "#{Faaso.server}secrets/#{funko}/#{name}",
             user: "admin", password: "admin")
         end
         0
