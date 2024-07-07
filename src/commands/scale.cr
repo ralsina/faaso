@@ -27,6 +27,7 @@ module Faaso
       end
 
       def remote(options, name, scale) : Int32
+        Faaso.check_version
         if !scale
           Crest.get(
             "#{FAASO_SERVER}funkos/#{name}/scale/", \

@@ -17,6 +17,7 @@ module Faaso
             Log.info { "Building function... #{funko.name} in #{tmp_dir}" }
             funko.build tmp_dir
           else # Running against a server
+            Faaso.check_version
             # Create a tarball for the funko
             buf = IO::Memory.new
             Compress::Gzip::Writer.open(buf) do |gzip|

@@ -3,6 +3,10 @@ require "colorize"
 require "docopt"
 require "rucksack"
 
+macro version
+  "{{ `grep version shard.yml | cut -d: -f2` }}".strip()
+end
+
 struct LogFormat < Log::StaticFormatter
   @@colors = {
     "FATAL" => :red,
@@ -82,6 +86,8 @@ when .fetch("secret", false)
   status = Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
 when .fetch("status", false)
   status = Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String))
+when .fetch("version", false)
+  Log.info { "#{version}" }
 end
 
 exit(status)

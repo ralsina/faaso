@@ -6,7 +6,7 @@
 * Config UI in frontend?
 * Support tokens besides basic auth
 * Polish frontend UI **A LOT**
-* Version checks for consistency between client/server
+* ✅ Version checks for consistency between client/server
 * Have 3 runtimes:
   * ✅ Crystal + Kemal
   * ✅ Python + Flask

@@ -28,9 +28,18 @@ module Faaso
     ))
   rescue ex : Docr::Errors::DockerAPIError
     raise ex if ex.status_code != 409 # Network already exists
-
   end
 
-  module Commands
+  # Compare version with server's
+  def self.check_version
+    server_version = Crest.get(
+      "#{FAASO_SERVER}version/", \
+         user: "admin", password: "admin").body
+
+    local_version = "#{version}"
+
+    if server_version != local_version
+      Log.warn { "Server is version #{server_version} and client is #{local_version}" }
+    end
   end
 end

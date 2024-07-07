@@ -13,6 +13,7 @@ module Faaso
       end
 
       def remote(options, funko, name, secret) : Int32
+        Faaso.check_version
         if options["--add"]
           Crest.post(
             "#{FAASO_SERVER}secrets/",
