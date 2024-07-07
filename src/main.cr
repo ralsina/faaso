@@ -1,49 +1,11 @@
 require "./faaso.cr"
+require "./log.cr"
 require "colorize"
 require "docopt"
 require "rucksack"
 
 macro version
   "{{ `grep version shard.yml | cut -d: -f2` }}".strip()
-end
-
-struct LogFormat < Log::StaticFormatter
-  @@colors = {
-    "FATAL" => :red,
-    "ERROR" => :red,
-    "WARN"  => :yellow,
-    "INFO"  => :green,
-    "DEBUG" => :blue,
-    "TRACE" => :light_blue,
-  }
-
-  def run
-    string "#{@entry.message}".colorize(@@colors[@entry.severity.label])
-  end
-
-  def self.setup(verbosity)
-    Colorize.on_tty_only!
-    if verbosity < 3
-      _verbosity = [
-        Log::Severity::Fatal,
-        Log::Severity::Error,
-        Log::Severity::Warn,
-      ][[verbosity, 2].min]
-      Log.setup(
-        _verbosity,
-        Log::IOBackend.new(io: STDERR, formatter: LogFormat)
-      )
-    end
-
-    _verbosity = [Log::Severity::Info,
-                  Log::Severity::Debug,
-                  Log::Severity::Trace,
-    ][[verbosity - 3, 3].min]
-    Log.setup(
-      _verbosity,
-      Log::IOBackend.new(io: STDOUT, formatter: LogFormat)
-    )
-  end
 end
 
 doc = <<-DOC
@@ -65,11 +27,11 @@ Options:
   -l --local       Run commands locally instead of against a FaaSO server
   --no-runtime     Don't merge a runtime into the funko
   -r runtime       Runtime for the new funko (use -r list for examples)
-  -v level         Control the logging verbosity, 0 to 5 [default: 3]
+  -v level         Control the logging verbosity, 0 to 6 [default: 4]
 DOC
 
 ans = Docopt.docopt(doc, ARGV)
-LogFormat.setup(ans["-v"].to_s.to_i)
+Logging.setup(ans["-v"].to_s.to_i)
 Log.debug { ans }
 
 status : Int32 = 0

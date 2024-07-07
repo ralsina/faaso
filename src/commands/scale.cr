@@ -13,15 +13,15 @@ module Faaso
       def local(options, name, scale) : Int32
         funko = Funko::Funko.from_names([name])[0]
         # Asked about scale
+        if funko.image_history.empty?
+          Log.error { "Unknown funko #{funko.name}" }
+          return 1
+        end
         if !scale
           Log.info { "Funko #{name} has a scale of #{funko.scale}" }
           return 0
         end
         # Asked to set scale
-        if funko.image_history.empty?
-          Log.error { "Error: no images available for #{funko.name}:latest" }
-          return 1
-        end
         funko.scale(scale.as(String).to_i)
         0
       end

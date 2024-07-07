@@ -22,8 +22,8 @@
 * Make more things configurable / remove hardcoded stuff
 * CD for binaries and images for at least arm64/x86
 * Multi-container docker logs [faaso logs -f FUNKO]
-* Direct error and above to stderr, others to stdout, while
-  keeping logging level configurable
+* ✅ Direct error and above to stderr, others to stdout,
+  while keeping logging level configurable
 * ✅ Fix proxy reload / Make it reload on file changes
 
 # Things to do but not before release
