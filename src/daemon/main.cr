@@ -5,8 +5,11 @@ require "./terminal.cr"
 require "compress/gzip"
 require "crystar"
 require "docr"
+require "kemal-basic-auth"
 require "kemal"
 require "uuid"
+
+basic_auth "admin", "admin"
 
 macro version
   "{{ `grep version shard.yml | cut -d: -f2` }}".strip()

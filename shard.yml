@@ -16,7 +16,7 @@ license: MIT
 
 dependencies:
   crest:
-    github: mamantoha/crest    
+    github: mamantoha/crest
   crinja:
     github: straight-shoota/crinja
   crystar:
@@ -28,10 +28,12 @@ dependencies:
     branch: add_exposed_ports
   kemal:
     github: kemalcr/kemal
+  kemal-basic-auth:
+    github: kemalcr/kemal-basic-auth
   rucksack:
     github: busyloop/rucksack
   inotify:
     github: petoem/inotify.cr
-    
+
 scripts:
   postinstall: cat .rucksack >> bin/faaso

@@ -1,18 +1,21 @@
 {
-  http_port 8888
-  https_port 8887
-  local_certs
+	http_port 8888
+	https_port 8887
+	local_certs
 }
 
 http://*:8888 {
-	basicauth /admin/* {
-		admin {$FAASO_PASSWORD}
+	forward_auth /admin/* http://127.0.0.1:3000 {
+		uri http://127.0.0.1:3000
+		copy_headers {
+			Authorization
+		}
 	}
 
-  handle_path /admin/terminal/* {
-    reverse_proxy /* http://127.0.0.1:7681
-  }
-  handle_path /admin/* {
-    reverse_proxy /* http://127.0.0.1:3000
-  }
+	handle_path /admin/terminal/* {
+		reverse_proxy /* http://127.0.0.1:7681
+	}
+	handle_path /admin/* {
+		reverse_proxy /* http://127.0.0.1:3000
+	}
 }
