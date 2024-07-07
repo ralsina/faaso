@@ -7,7 +7,6 @@ proxy: build
 start-proxy:
 	docker run --name faaso-proxy-one \
 	--rm --network=faaso-net \
-	--env-file=proxy.env \
 	-e FAASO_SECRET_PATH=${PWD}/secrets \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ${PWD}/secrets:/home/app/secrets \
