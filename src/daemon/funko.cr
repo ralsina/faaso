@@ -130,7 +130,8 @@ module Funko
     Log.info { "Running faaso [#{args.join(", ")}, -l]" }
     Process.run(
       command: "faaso",
-      args: args + ["-l"], # Always local in the server
+      args: args + ["-l", "2>&1"], # Always local in the server
+      shell: true,
     ) do |process|
       loop do
         env.response.print process.output.gets(chomp: false)
@@ -138,7 +139,6 @@ module Funko
         Fiber.yield
         break if process.terminated?
       end
-      p! process.error.peek
       true
     end
     # FIXME: find a way to raise an exception on failure
