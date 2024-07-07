@@ -23,6 +23,9 @@ get "/version" do
   "#{version}"
 end
 
+get "/auth" do
+end
+
 get "/reload" do
   Log.info { "Reloading configuration" }
   Config.load

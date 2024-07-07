@@ -20,6 +20,13 @@ class Config
 end
 
 class ConfigAuthHandler < Kemal::BasicAuth::Handler
+  only ["/auth"]
+
+  def call(context)
+    return call_next(context) unless only_match?(context)
+    super
+  end
+
   def initialize
     # Ignored, just make the compiler happy
     @credentials = Kemal::BasicAuth::Credentials.new({"foo" => "bar"})

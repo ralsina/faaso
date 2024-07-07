@@ -37,7 +37,7 @@ module Proxy
 
 http://*:8888 {
 	forward_auth /admin/* http://127.0.0.1:3000 {
-		uri http://127.0.0.1:3000
+		uri /auth
 		copy_headers {
 			Authorization
 		}
