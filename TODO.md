@@ -1,7 +1,7 @@
 # Things that need doing before first release
 
 * User flow for initial proxy setup
-  * Setting up password
+  * ✅ Setting up password
   * Setting up hostname for Caddy's automatic HTTPS
 * Config UI in frontend?
 * Polish frontend UI **A LOT**
@@ -22,7 +22,7 @@
   * ✅ Make server take options from file
   * ✅ Make server take options from environment
   * ✅ Make server password configurable
-  * admin/admin auth
+  * admin/admin auth client side
 * CD for binaries and images for at least arm64/x86
 * Multi-container docker logs [faaso logs -f FUNKO]
 * ✅ Direct error and above to stderr, others to stdout,
