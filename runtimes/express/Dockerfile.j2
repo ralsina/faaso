@@ -1,0 +1,20 @@
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as build
+
+RUN apk update && apk upgrade && apk add nodejs npm {{ ship_packages | join(" ") }} {{ devel_packages | join(" ") }} && apk cache clean
+
+WORKDIR /home/app
+
+COPY ./ ./
+RUN npm i
+
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
+RUN apk update && apk upgrade && apk add nodejs curl {{ ship_packages | join " " }} && apk cache clean
+RUN addgroup -S app && adduser app -S -G app
+
+WORKDIR /home/app
+USER app
+
+COPY --from=build /home/app/  .
+
+CMD ["node", "funko.js"]
+HEALTHCHECK {{ healthcheck_options }}  CMD {{ healthcheck_command }}
