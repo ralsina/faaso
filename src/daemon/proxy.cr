@@ -4,7 +4,7 @@ require "inotify"
 require "kemal"
 
 module Proxy
-  CADDY_CONFIG_PATH = "config/Caddyfile"
+  CADDY_CONFIG_PATH = "config/funkos"
   @@current_config = File.read(CADDY_CONFIG_PATH)
 
   @@watcher = Inotify.watch(CADDY_CONFIG_PATH) do |_|
@@ -28,29 +28,8 @@ module Proxy
   def self.update_proxy_config
     docker_api = Docr::API.new(Docr::Client.new)
     containers = docker_api.containers.list(all: true)
-    config = <<-CONFIG
-{
-	http_port 8888
-	https_port 8887
-	local_certs
-}
 
-http://*:8888 {
-	forward_auth /admin/* http://127.0.0.1:3000 {
-		uri /auth
-		copy_headers {
-			Authorization
-		}
-	}
-
-	handle_path /admin/terminal/* {
-		reverse_proxy /* http://127.0.0.1:7681
-	}
-	handle_path /admin/* {
-		reverse_proxy /* http://127.0.0.1:3000
-	}
-CONFIG
-
+    config = ""
     funkos = Funko::Funko.from_docker
     funkos.each do |funko|
       next if funko.name == "proxy"
@@ -68,7 +47,6 @@ CONFIG
       }
       )
     end
-    config += "\n}"
 
     if @@current_config != config
       Log.info { "Updating proxy config" }

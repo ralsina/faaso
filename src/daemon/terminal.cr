@@ -4,7 +4,7 @@ module Terminal
   @@terminal_process : Process | Nil = nil
 
   def start_terminal(_args = ["sh"], readonly = true)
-    args = ["-p", "7681", "-c", "admin:admin", "-o"]
+    args = ["-p", "7681", "-o"]
     args += ["-W"] unless readonly
     args += _args
     # We have a process there, kill it
