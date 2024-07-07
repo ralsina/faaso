@@ -6,13 +6,10 @@ require "./terminal.cr"
 require "compress/gzip"
 require "crystar"
 require "docr"
-require "kemal-basic-auth"
 require "kemal"
 require "uuid"
 
 Config.load
-
-basic_auth "admin", Config.instance.password
 
 macro version
   "{{ `grep version shard.yml | cut -d: -f2` }}".strip()
@@ -24,6 +21,12 @@ end
 
 get "/version" do
   "#{version}"
+end
+
+get "/reload" do
+  Log.info { "Reloading configuration" }
+  Config.load
+  "Config reloaded"
 end
 
 Kemal.run

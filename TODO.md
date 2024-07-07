@@ -19,6 +19,9 @@
 * ✅ Streaming responses in slow operations like scaling down
   or building
 * Make more things configurable / remove hardcoded stuff
+  * ✅ Make server take options from file
+  * ✅ Make server take options from environment
+  * ✅ Make server password configurable
   * admin/admin auth
 * CD for binaries and images for at least arm64/x86
 * Multi-container docker logs [faaso logs -f FUNKO]
