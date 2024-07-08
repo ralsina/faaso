@@ -30,7 +30,7 @@
   while keeping logging level configurable
 * ✅ Fix proxy reload / Make it reload on file changes
 * Implement `faaso help command`
-* Fix `export examples/hello_crystal` it has a `template/`
+* ✅ Fix `export examples/hello_crystal` it has a `template/`
 * ✅ Implement zero-downtime rollout (`faaso deploy`)
 * Cleanup `tmp/` after use unless `DEBUG` is set
 * `faaso scale` remote is broken

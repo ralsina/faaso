@@ -23,7 +23,9 @@ module Runtime
     if @@known.includes? "./runtimes/#{runtime}"
       Log.info { "Using known runtime #{runtime}" }
       runtime_base = "./runtimes/#{runtime}/"
-      runtime_files = @@filelist.select(&.starts_with?(runtime_base))
+      runtime_files = @@filelist.select(&.starts_with?(runtime_base)).map { |path|
+        Path[path].normalize.to_s
+      }
     elsif File.exists? runtime
       Log.info { "Using directory #{runtime} as runtime" }
       runtime_base = "#{runtime}"
