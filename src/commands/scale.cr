@@ -10,7 +10,7 @@ module Faaso
     # In both cases stopped instances after the required
     # scale is reached are deleted.
     struct Scale
-      def local(options, name, scale) : Int32
+      def local(options, name : String, scale : Int) : Int32
         funko = Funko::Funko.from_names([name])[0]
         # Asked about scale
         if funko.image_history.empty?
@@ -22,31 +22,23 @@ module Faaso
           return 0
         end
         # Asked to set scale
-        funko.scale(scale.as(String).to_i)
+        funko.scale(scale)
         0
       end
 
-      def remote(options, name, scale) : Int32
+      def remote(options, name : String, scale : Int) : Int32
         user, password = Config.auth
         Faaso.check_version
         if !scale
-          Crest.get(
+          response = Crest.get(
             "#{Config.server}funkos/#{name}/scale/", \
-               user: user, password: password) do |response|
-            loop do
-              Log.info { response.body_io.gets }
-              break if response.body_io.closed?
-            end
-          end
+               user: user, password: password)
+          Log.info { " => " + response.body }
         else
-          Crest.post(
+          response = Crest.post(
             "#{Config.server}funkos/#{name}/scale/",
-            {"scale" => scale}, user: user, password: password) do |response|
-            loop do
-              Log.info { response.body_io.gets }
-              break if response.body_io.closed?
-            end
-          end
+            {"scale" => scale}, user: user, password: password)
+          Log.info { " => " + response.body }
         end
         0
       rescue ex : Crest::InternalServerError
@@ -54,7 +46,7 @@ module Faaso
         1
       end
 
-      def run(options, name, scale) : Int32
+      def run(options, name : String, scale : Int) : Int32
         if options["--local"]
           return local(options, name, scale)
         end
