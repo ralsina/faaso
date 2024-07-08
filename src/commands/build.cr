@@ -44,15 +44,16 @@ module Faaso
               outf << buf
             end
 
-            url = "#{Faaso.server}funkos/build/"
+            url = "#{Config.server}funkos/build/"
 
             begin
-              Log.info { "Uploading funko to #{Faaso.server}" }
+              user, password = Config.auth
+              Log.info { "Uploading funko to #{Config.server}" }
               Log.info { "Starting remote build:" }
               Crest.post(
                 url,
                 {"funko.tgz" => File.open(tmp), "name" => "funko.tgz"},
-                user: "admin", password: "admin"
+                user: user, password: password
               ) do |response|
                 loop do
                   Log.info { response.body_io.gets }

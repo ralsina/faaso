@@ -2,7 +2,7 @@ module Faaso
   module Commands
     struct Login
       def run(options) : Int32
-        server = Faaso.server
+        server = Config.server
         Log.info { "Enter password for #{server}" }
         if STDIN.tty?
           password = (STDIN.noecho &.gets.try &.chomp).to_s

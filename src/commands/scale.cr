@@ -27,11 +27,12 @@ module Faaso
       end
 
       def remote(options, name, scale) : Int32
+        user, password = Config.auth
         Faaso.check_version
         if !scale
           Crest.get(
-            "#{Faaso.server}funkos/#{name}/scale/", \
-               user: "admin", password: "admin") do |response|
+            "#{Config.server}funkos/#{name}/scale/", \
+               user: user, password: password) do |response|
             loop do
               Log.info { response.body_io.gets }
               break if response.body_io.closed?
@@ -39,8 +40,8 @@ module Faaso
           end
         else
           Crest.post(
-            "#{Faaso.server}funkos/#{name}/scale/",
-            {"scale" => scale}, user: "admin", password: "admin") do |response|
+            "#{Config.server}funkos/#{name}/scale/",
+            {"scale" => scale}, user: user, password: password) do |response|
             loop do
               Log.info { response.body_io.gets }
               break if response.body_io.closed?

@@ -14,19 +14,20 @@ module Faaso
 
       def remote(options, funko, name, secret) : Int32
         Faaso.check_version
+        user, password = Config.auth
         if options["--add"]
           Crest.post(
-            "#{Faaso.server}secrets/",
+            "#{Config.server}secrets/",
             {
               "funko" => funko,
               "name"  => name,
               "value" => secret,
-            }, user: "admin", password: "admin")
+            }, user: user, password: password)
           Log.info { "Secret created" }
         elsif options["--delete"]
           Crest.delete(
-            "#{Faaso.server}secrets/#{funko}/#{name}",
-            user: "admin", password: "admin")
+            "#{Config.server}secrets/#{funko}/#{name}",
+            user: user, password: password)
         end
         0
       rescue ex : Crest::RequestFailed

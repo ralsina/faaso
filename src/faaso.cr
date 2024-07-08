@@ -28,22 +28,12 @@ module Faaso
     raise ex if ex.status_code != 409 # Network already exists
   end
 
-  def self.server : String
-    url = ENV.fetch("FAASO_SERVER", nil)
-    if url.nil?
-      Log.warn { "FAASO_SERVER not set" }
-      url = "http://localhost:3000/"
-    end
-    url += "/" unless url.ends_with? "/"
-    Log.info { "Using server #{url}" }
-    url
-  end
-
   # Compare version with server's
   def self.check_version
+    user, password = Config.auth
     server_version = Crest.get(
-      "#{self.server}version/", \
-         user: "admin", password: "admin").body
+      "#{Config.server}version/", \
+         user: user, password: password).body
 
     local_version = "#{version}"
 

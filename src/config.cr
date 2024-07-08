@@ -23,4 +23,22 @@ class Config
       outf << CONFIG.to_yaml
     end
   end
+
+  @@already_warned = false
+
+  def self.server : String
+    @@already_warned = true
+    url = ENV.fetch("FAASO_SERVER", nil)
+    if url.nil?
+      Log.warn { "FAASO_SERVER not set" } unless @@already_warned
+      url = "http://localhost:3000/"
+    end
+    url += "/" unless url.ends_with? "/"
+    Log.info { "Using server #{url}" } unless @@already_warned
+    url
+  end
+
+  def self.auth : {String, String}
+    CONFIG.hosts.fetch(server, {"admin", ""})
+  end
 end
