@@ -10,7 +10,7 @@ RUN shards build --release
 RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
-RUN apk update && apk upgrade && apk add openssl pcre2 libgcc gc libevent curl {{ ship_packages | join " " }} && apk cache clean
+RUN apk update && apk upgrade && apk add pcre2 libgcc gc libevent curl {{ ship_packages | join " " }} && apk cache clean
 RUN addgroup -S app && adduser app -S -G app
 
 WORKDIR /home/app
