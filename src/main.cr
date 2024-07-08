@@ -42,6 +42,8 @@ status : Int32 = 0
 case ans
 when .fetch("build", false)
   status = Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
+when .fetch("deploy", false)
+  status = Faaso::Commands::Deploy.new.run(ans, ans["FUNKO"].as(String))
 when .fetch("export", false)
   status = Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
 when .fetch("login", false)

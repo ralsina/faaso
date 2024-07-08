@@ -85,16 +85,18 @@ module Funko
     end
 
     # Set the number of running instances of this funko
-    def scale(new_scale : Int)
+    # Returns the list of IDs started or stopped
+    def scale(new_scale : Int) : Array(String)
       docker_api = Docr::API.new(Docr::Client.new)
       current_scale = self.scale
-      return if current_scale == new_scale
+      result = [] of String
+      return result if current_scale == new_scale
 
       Log.info { "Scaling #{name} from #{current_scale} to #{new_scale}" }
       if new_scale > current_scale
         (current_scale...new_scale).each {
           Log.info { "Adding instance" }
-          id = create_container
+          result << (id = create_container)
           start(id)
           sleep 0.1.seconds
         }
@@ -105,6 +107,7 @@ module Funko
         }.each { |container|
           Log.info { "Removing instance" }
           docker_api.containers.stop(container.@id)
+          result << container.@id
           current_scale -= 1
           break if current_scale == new_scale
           sleep 0.1.seconds
@@ -116,6 +119,8 @@ module Funko
         Log.info { "Pruning dead instance" }
         docker_api.containers.delete(container.@id)
       }
+
+      result
     end
 
     # Setup the target directory `path` with all the files needed
@@ -184,7 +189,7 @@ module Funko
       docker_api.containers.list(all: true).select { |container|
         container.@names.any?(&.starts_with?("/faaso-#{name}-")) &&
           container.@state == "running"
-      }
+      } || [] of Docr::Types::ContainerSummary
     end
 
     # A comprehensive status for the funko:
@@ -207,12 +212,26 @@ module Funko
       end
     end
 
-    # Wait up to `t` seconds for the funko to reach the requested `state`
-    def wait_for(new_scale : Int, t)
+    # Wait up to `t` seconds for the funko to reach the desired scale
+    # If `healthy` is true, it will wait for the container to be declared
+    # healthy by the healthcheck
+    def wait_for(new_scale : Int, t : Int, healthy : Bool = false)
+      docker_api = Docr::API.new(Docr::Client.new)
       channel = Channel(Nil).new
       spawn do
         loop do
-          channel.send(nil) if scale == new_scale
+          if healthy
+            channel.send(nil) if containers.count { |container|
+                                   begin
+                                     container = docker_api.containers.inspect(container.@id)
+                                     channel.send(nil) if !container.nil? && (container.state.health.status == "healthy")
+                                   rescue ex : Docr::Errors::DockerAPIError
+                                     Log.error { "#{ex}" } unless ex.status_code == 304 # This just happens
+                                   end
+                                 } == new_scale
+          else
+            channel.send(nil) if scale == new_scale
+          end
           sleep 0.2.seconds
         end
       end
@@ -221,7 +240,7 @@ module Funko
       when channel.receive
         Log.info { "Funko #{name} reached scale #{new_scale}" }
       when timeout(t.seconds)
-        Log.error { "Funko #{name} did not reach scale #{new_scale} in #{t} seconds" }
+        raise Exception.new("Funko #{name} did not reach scale #{new_scale} in #{t} seconds")
       end
     end
 

@@ -1,4 +1,5 @@
 require "./commands/build.cr"
+require "./commands/deploy.cr"
 require "./commands/export.cr"
 require "./commands/login.cr"
 require "./commands/new.cr"
