@@ -31,7 +31,7 @@
 * ✅ Fix proxy reload / Make it reload on file changes
 * Implement `faaso help command`
 * Fix `export examples/hello_crystal` it has a `template/`
-* Implement zero-downtime rollout 
+* Implement zero-downtime rollout (`faaso deploy`)
 * Cleanup `tmp/` after use unless `DEBUG` is set
 
 # Things to do but not before release
