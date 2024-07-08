@@ -32,6 +32,7 @@
 * Implement `faaso help command`
 * Fix `export examples/hello_crystal` it has a `template/`
 * Implement zero-downtime rollout 
+* Cleanup `tmp/` after use unless `DEBUG` is set
 
 # Things to do but not before release
 
