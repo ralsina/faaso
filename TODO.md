@@ -26,8 +26,7 @@
   * ✅ `faaso login` is not working properly yet with proxy
 * CD for binaries and images for at least arm64/x86
 * Multi-container docker logs [faaso logs -f FUNKO]
-* ✅ Direct error and above to stderr, others to stdout,
-  while keeping logging level configurable
+* ✅ Configurable verbosity, support stderr/stdout split
 * ✅ Fix proxy reload / Make it reload on file changes
 * Implement `faaso help command`
 * ✅ Fix `export examples/hello_crystal` it has a `template/`
