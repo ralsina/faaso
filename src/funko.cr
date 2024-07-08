@@ -99,7 +99,8 @@ module Funko
           sleep 0.1.seconds
         }
       else
-        containers.select { |container| container.@state == "running" }.sort! { |i, j|
+        # Sort them older to newer, so we stop the oldest
+        containers.sort! { |i, j|
           i.@created <=> j.@created
         }.each { |container|
           Log.info { "Removing instance" }
