@@ -16,6 +16,7 @@ module Faaso
           if options["--local"]
             Log.info { "Building function... #{funko.name} in #{tmp_dir}" }
             funko.build tmp_dir
+            FileUtils.rm_rf(tmp_dir)
             next
           end
           Faaso.check_version
@@ -39,7 +40,7 @@ module Faaso
               end
             end
           end
-
+          FileUtils.rm_rf(tmp_dir)
           tmp = File.tempname
           File.open(tmp, "w") do |outf|
             outf << buf

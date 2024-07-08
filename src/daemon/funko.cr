@@ -53,8 +53,9 @@ module Funko
 
     # Build the thing
     run_faaso(["build", tmp_dir.to_s, "--no-runtime"], env)
+  ensure
+    FileUtils.rm_rf(tmp_dir) unless tmp_dir.nil?
   end
-
   # Endpoints for the web frontend
 
   # General status for the front page
