@@ -1,9 +1,7 @@
 module Faaso
   module Commands
     struct Deploy
-      # FIXME: local only for now
-      def run(options, funko_name : String) : Int32
-        Log.info { "Deploying #{funko_name}" }
+      def local(options, funko_name : String) : Int32
         funko = Funko::Funko.from_names([funko_name])[0]
         # Get scale, check for out-of-date containers
         current_scale = funko.scale
@@ -22,9 +20,9 @@ module Faaso
           # Failed to start, rollback
           Log.error(exception: ex) { "Failed to scale, rolling back" }
           docker_api = Docr::API.new(Docr::Client.new)
-          new_containers.each do |container|
-            docker_api.containers.stop(container.id)
-            docker_api.containers.delete(container.id)
+          new_containers.each do |container_id|
+            docker_api.containers.stop(container_id)
+            docker_api.containers.delete(container_id)
           end
           return 1
         end
@@ -35,6 +33,29 @@ module Faaso
         funko.wait_for(current_scale, 30)
         Log.info { "Deployed #{funko_name}" }
         0
+      end
+
+      def remote(options, funko_name : String) : Int32
+        user, password = Config.auth
+        Faaso.check_version
+        Crest.get(
+          "#{Config.server}funkos/#{funko_name}/deploy/", \
+             user: user, password: password) do |response|
+          loop do
+            Log.info { response.body_io.gets }
+            break if response.body_io.closed?
+          end
+        end
+        0
+      end
+
+      def run(options, funko_name : String) : Int32
+        Log.info { "Deploying #{funko_name}" }
+        if options["--local"]
+          local(options, funko_name)
+        else
+          remote(options, funko_name)
+        end
       end
     end
   end

@@ -24,6 +24,11 @@ module Funko
     run_faaso(["scale", name, scale], env)
   end
 
+  get "/funkos/:name/deploy" do |env|
+    name = env.params.url["name"]
+    run_faaso(["deploy", name], env)
+  end
+
   # Build image for funko received as "funko.tgz"
   # TODO: This may take a while, consider using something like
   # mosquito-cr/mosquito to make it a job queue
