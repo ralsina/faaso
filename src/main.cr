@@ -14,6 +14,7 @@ FaaSO CLI tool.
 
 Usage:
   faaso build  FOLDER ...           [-v <level>] [-l] [--no-runtime]
+  faaso deploy FUNKO                [-v <level>] [-l]
   faaso export SOURCE DESTINATION   [-v <level>]
   faaso login                       [-v <level>]
   faaso new -r runtime FOLDER       [-v <level>]
