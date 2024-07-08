@@ -1,8 +1,0 @@
-
-      handle_path /faaso/hello/* {
-        reverse_proxy /* http://faaso-hello-9zth8p:3000 {
-          health_uri /ping
-          fail_duration 30s
-        }
-      }
-      
