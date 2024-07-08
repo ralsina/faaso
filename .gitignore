@@ -7,3 +7,4 @@ export/
 secrets/
 .rucksack
 .rucksack.toc
+.faaso.yml
