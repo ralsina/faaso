@@ -20,7 +20,7 @@ class Config
 end
 
 class ConfigAuthHandler < Kemal::BasicAuth::Handler
-  only ["/auth"]
+  only ["/auth", "/auth/*"]
 
   def call(context)
     return call_next(context) unless only_match?(context)

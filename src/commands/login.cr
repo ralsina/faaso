@@ -9,10 +9,28 @@ module Faaso
         else
           password = STDIN.gets.to_s
         end
-        # Testing with auth/ which is guaranteed locked
-        Crest.get(
-          "#{server}auth/", \
-             user: "admin", password: password).body
+        # This is tricky. If the service is running behind a reverse proxy
+        # then /version is locked, but if it's not, only /auth is locked.
+        # So we try /version first without a password, and if it succeeds
+        # we try /auth with the password. If /version fails, we try /version
+        # with the password
+        #
+        begin
+          # Version without password.
+          Crest.get("#{server}version/")
+          # Auth with password
+          begin
+            Crest.get("#{server}auth/", user: "admin", password: password)
+          rescue ex : Crest::Unauthorized
+            # Failed with auth/
+            Log.error { "Wrong password" }
+            return 1
+          end
+        rescue ex : Crest::Unauthorized
+          # Version with password
+          Crest.get("#{server}version/", user: "admin", password: password)
+        end
+
         # If we got here the password is ok
         CONFIG.hosts[server] = {"admin", password}
         Config.save
