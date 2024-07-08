@@ -127,7 +127,7 @@ module Funko
 
   # Helper to run faaso locally and respond via env
   def run_faaso(args : Array(String), env) : Bool
-    Log.info { "Running faaso [#{args.join(", ")}, -l]" }
+    Log.info { "Running faaso [#{args.join(", ")}, -l, 2>&1]" }
     Process.run(
       command: "faaso",
       args: args + ["-l", "2>&1"], # Always local in the server
