@@ -133,7 +133,7 @@ module Funko
   end
 
   # Helper to run faaso locally and respond via env
-  def run_faaso(args : Array(String), env) : Bool
+  def run_faaso(args : Array(String), env)
     args << "-l" # Always local in the server
     Log.info { "Running faaso [#{args}" }
     Process.run(
@@ -148,7 +148,6 @@ module Funko
         Fiber.yield # Without this the process never ends
         break if process.terminated?
       end
-      true
     end
     # FIXME: find a way to raise an exception on failure
     # of the faaso process
