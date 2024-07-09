@@ -2,8 +2,8 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="https://matcha.mizu.sh/matcha.css" />
-  <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css" />  <script src="https://unpkg.com/htmx.org@2.0.0"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -11,15 +11,20 @@
   <header class="container">
     <h1>FaaSO Admin Interface</h1>
   </header>
-  <main class=container>
-    <h2>Your Funko Collection
-      <button id="update-funkos" style="float:right; display:inline;" hx-trigger="load, click, every 60s"
+  <article>
+    <nav>
+      <ul>
+      <li><strong style="font-size: 200%;">Your Funko Collection</strong></li>
+      </ul>
+      <ul>
+      <li><button id="update-funkos" style="float:right; display:inline;" hx-trigger="load, click, every 60s"
         hx-get="funkos/?format=html" hx-target="#funko-list">
         Refresh
       </button>
-    </h2>
+      </ul>
+    </nav>
     <span id="message"></span>
-    <table hx-target="#message">
+    <table hx-target="#message" class="striped">
       <thead>
         <tr>
           <th>Name</th>
@@ -31,23 +36,27 @@
       </tbody>
     </table>
     <div id="terminal" style="resize: vertical; overflow: auto;"></div>
-  </main>
+  </article>
   <script>
     update_funkos = function () {
       document.getElementById("update-funkos").click()
     }
   </script>
-  <main class=container>
-    <h2>
-      Your Secrets
-      <button id="update-secrets" style="float:right; display:inline;" hx-trigger="load, click, every 60s"
+  <article>
+    <nav>
+    <ul>
+    <li><strong style="font-size: 200%;">Your Secrets</strong>
+    </ul>
+    <ul>
+      <li><button id="update-secrets" style="float:right; display:inline;" hx-trigger="load, click, every 60s"
         hx-get="secrets/?format=html" hx-target="#secret-list">
         Refresh
       </button>
-      <button style="float:right; display:inline;" onclick="show_new_secret()">
+      <li><button style="float:right; display:inline;" onclick="show_new_secret()">
         Add
       </button>
-    </h2>
+    </ul>
+    </nav>
     <span id="message"></span>
     <table hx-target="#message">
       <thead>
@@ -60,14 +69,20 @@
       <tbody id="secret-list">
       </tbody>
       <dialog id="add-secret">
-        <topic>New Secret</topic>
+      <article>
+      <header>
+        New Secret
+      </header>
         <form hx-post="secrets/">
           <input placeholder="funko name" id="new-secret-funko" name="funko">
           <input placeholder="secret name" id="new-secret-name" name="name">
           <input placeholder="secret value" type="password" id="new-secret-password" name="value">
-          <button type="submit" hx-on:htmx:after-request="hide_new_secret()">CREATE</button>
+          <fieldset role="group" style="text-align: right;">
+            <button style="width:9em; display: inline;" type="submit" hx-on:htmx:after-request="hide_new_secret()">CREATE</button>
+            <button style="width:9em; display: inline;" onclick="hide_new_secret(); close();" aria-label="Close" rel="prev">CLOSE</button>
+          </fieldset>
         </form>
-        <button onclick="hide_new_secret(); close();">CLOSE</button>
+      </article>
       </dialog>
       <script>
         update_secrets = function() {
@@ -87,5 +102,5 @@
           update_secrets()
         }
       </script>
-  </main>
+  </article>
 </body>

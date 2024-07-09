@@ -1,39 +1,32 @@
 <%- result.each do |f| -%>
 <tr hx-indicator="#spinner-<%= f["name"] %>">
-  <td>
+  <td style="vertical-align: top;">
     <%= f["name"] %>
     <img id="spinner-<%= f["name"] %>" src="bars.svg"  class="htmx-indicator">
   </td>
-  <td>
-    <table>
-      <thead>
-        <th>ID</th>
-        <th>Current?</th>
-        <th>Actions</th>
-      </thead>
-      <tbody>
-        <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
-          <tr>
-            <td><tt><%= c.@names[0].split("-")[-1] %></tt></td>
-            <td>
+  <td style="vertical-align: top;">
+    <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
+      <div class="grid">
+            <div>
+              <tt><%= c.@names[0].split("-")[-1] %></tt>
+            </div>
+            <div>
               <%- if c.image_id == f["latest_image"] -%>
                 <span style="color:green;""> 🟢</span>
               <%- else -%>
                 <span style="color:red;""> 🟢</span>
               <%- end -%>
-            </td>
-            <td>
+            </div>
+            <div role="group">
               <button hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">Logs</button>
               <button hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">Shell</button>
-            </td>
-          </tr>
-        <%- end -%>
-      </tbody>
-      </p>
+            </div>
+      </div>
+    <%- end -%>
   </td>
 
-    </table>
   <td>
+  <div role="group">
   <%- if f["name"] == "proxy" -%>
   <%- else -%>
     <%- if f["scale"].as(String).to_i > 0 -%>
@@ -47,6 +40,7 @@
     <%- end -%>
       <button hx-get="funkos/<%= f["name"] %>/restart" hx-on:htmx:after-request="update_funkos()">Restart</button>
   <%- end -%>
+  </div>
   </td>
 </tr>
 <%- end -%>
