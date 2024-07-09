@@ -12,11 +12,12 @@
   * ✅ Crystal + Kemal
   * ✅ Python + Flask
   * ✅ Nodejs + Express
-* Document
-  * How to create a runtime
-  * How to create a funko
-  * How to setup the proxy
-  * APIs
+* Create a site
+  * Document
+    * How to create a runtime
+    * How to create a funko
+    * How to setup the proxy
+    * APIs
 * Sanitize all inputs
 * ✅ Streaming responses in slow operations like scaling down
   or building
@@ -34,7 +35,7 @@
 * ✅ Fix `export examples/hello_crystal` it has a `template/`
 * ✅ Implement zero-downtime rollout (`faaso deploy`)
 * ✅ Cleanup `tmp/whatever` after use
-* `faaso scale` remote is broken
+* ✅ `faaso scale` remote is broken
 * ✅ Setup linters/pre-commit/etc
 
 ## Things to do but not before release
