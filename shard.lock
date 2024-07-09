@@ -4,6 +4,10 @@ shards:
     git: https://github.com/sija/backtracer.cr.git
     version: 1.2.2
 
+  base58:
+    git: https://github.com/crystal-china/base58.cr.git
+    version: 0.1.0+git.commit.d1150d4a6f086013a475640ad00e561a2fe1082a
+
   cr-config:
     git: https://github.com/crystal-community/cr-config.git
     version: 5.1.0+git.commit.5eae3dfbf97da7dfa7c6e64a2a508069948518d3

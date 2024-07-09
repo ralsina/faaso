@@ -15,6 +15,8 @@ crystal: ">= 1.12.2"
 license: MIT
 
 dependencies:
+  base58:
+    github: crystal-china/base58.cr
   crest:
     github: mamantoha/crest
   crinja:
