@@ -309,7 +309,7 @@ module Funko
       )
 
       docker_api = Docr::API.new(Docr::Client.new)
-      response = docker_api.containers.create(name: "faaso-#{name}-#{randstr}", config: conf)
+      response = docker_api.containers.create(name: "faaso-#{name}-#{Random.base58(6)}", config: conf)
       response.@warnings.each { |msg| Log.warn { msg } }
       docker_api.containers.start(response.@id) if autostart
       response.@id
@@ -348,9 +348,4 @@ module Funko
       from_names(names.to_set.to_a.sort!)
     end
   end
-end
-
-def randstr(length = 6) : String
-  chars = "abcdefghijklmnopqrstuvwxyz0123456789"
-  String.new(Bytes.new(chars.to_slice.sample(length).to_unsafe, length))
 end

@@ -1,3 +1,5 @@
+require "base58"
+
 module Faaso
   module Commands
     # Build images for one or more funkos from source
@@ -7,7 +9,7 @@ module Faaso
         # Create temporary build location
 
         funkos.each do |funko|
-          tmp_dir = Path.new("tmp", UUID.random.to_s)
+          tmp_dir = Path.new("tmp", Random.base58(8))
           Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
 
           funko.runtime = nil if options["--no-runtime"]

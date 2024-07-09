@@ -1,3 +1,4 @@
+require "base58"
 require "docr"
 require "kemal"
 require "../funko.cr"
@@ -34,7 +35,7 @@ module Funko
   # mosquito-cr/mosquito to make it a job queue
   post "/funkos/build/" do |env|
     # Create place to build funko
-    tmp_dir = Path.new("tmp", UUID.random.to_s)
+    tmp_dir = Path.new("tmp", Random.base58(8))
     Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
 
     # Expand tarball in there
