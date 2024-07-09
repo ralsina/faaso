@@ -34,6 +34,8 @@ dependencies:
     github: kemalcr/kemal
   kemal-basic-auth:
     github: kemalcr/kemal-basic-auth
+  oplog:
+    github: ralsina/oplog
   rucksack:
     github: busyloop/rucksack
 

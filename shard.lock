@@ -52,6 +52,10 @@ shards:
     git: https://github.com/kemalcr/kemal-basic-auth.git
     version: 1.0.0
 
+  oplog:
+    git: https://github.com/ralsina/oplog.git
+    version: 0.1.0+git.commit.70e3a7bbc2f1f4d75cf4e142244b263ee2844ba1
+
   radix:
     git: https://github.com/luislavena/radix.git
     version: 0.4.1

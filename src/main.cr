@@ -1,8 +1,8 @@
 require "./config.cr"
 require "./faaso.cr"
-require "./log.cr"
 require "colorize"
 require "docopt"
+require "oplog"
 require "rucksack"
 
 macro version
@@ -35,7 +35,7 @@ Options:
 DOC
 
 ans = Docopt.docopt(doc, ARGV)
-Logging.setup(ans["-v"].to_s.to_i)
+Oplog.setup(ans["-v"].to_s.to_i)
 Log.debug { ans }
 
 status : Int32 = 0
