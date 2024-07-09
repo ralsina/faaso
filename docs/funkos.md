@@ -49,10 +49,12 @@ faaso-net.
 The proxy is the only container exposed to the host network, everything
 else needs to be accessed through it.
 
-The faaso-proxy container will automatically proxy all requests so if you access the URL `http://faaso-proxy:8888/funko/hello/foo` that will be
+The faaso-proxy container will automatically proxy all requests so if
+you access the URL `http://faaso-proxy:8888/funko/hello/foo` that will be
 proxied to `/foo` in the `hello` funko.
 
-This is all done via naming conventions. You can create your own `faaso-whatever` container, add it to the `faaso-net` and faaso will
+This is all done via naming conventions. You can create your own
+`faaso-whatever` container, add it to the `faaso-net` and faaso will
 happily consider it a funko.
 
 In the same way all funkos are simply docker containers running in that
@@ -78,4 +80,3 @@ faaso-proxy -- GET /bar --> faaso-funko1
 The dynamic proxying is achieved by reading the current state of
 Docker and just adapt to it using the naming conventions mentioned
 above.
-

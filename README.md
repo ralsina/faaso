@@ -50,22 +50,25 @@ This will give you:
 You need a server, with docker. In that server, build it as explained above.
 You can run the `faaso-proxy` with something like this:
 
-```
-docker run --network=faaso-net -v /var/run/docker.sock:/var/run/docker.sock -p 8888:8888 faaso-proxy
+```shell
+docker run --network=faaso-net \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-p 8888:8888 faaso-proxy
 ```
 
-That will give `faaso-proxy` access to your docker, and expose the functionality in
-port 8888.
+That will give `faaso-proxy` access to your docker, and expose the functionality
+in port 8888.
 
 ## What it Does
 
 ### Funkos
 
-In FaaSO you (the user) can create Funkos. Funkos are the moral equivalent of AWS 
+In FaaSO you (the user) can create Funkos. Funkos are the moral equivalent of AWS
 lambdas and whatever they are called in other systems. In short, they are simple
 programs that handle web requests.
 
-For example, here is a `hello world` level funko written using Crystal, a file called `funko.cr`:
+For example, here is a `hello world` level funko written using Crystal,
+a file called `funko.cr`:
 
 ```crystal
 get "/" do
@@ -82,24 +85,26 @@ runtime: crystal
 ```
 
 If you have those two files in a folder, that folder is a funko, which is called
-`hello` and FaaSO knows it's written in Crystal. In fact, it knows (because the crystal runtime explains that, don't worry about it yet) that it's part of an
+`hello` and FaaSO knows it's written in Crystal. In fact, it knows (because the
+crystal runtime explains that, don't worry about it yet) that it's part of an
 application written in the [Kemal framework](https://kemalcr.com/) and it knows
 how to create a whole container which runs the app, and how to check its health,
 and so on.
 
 But the funko has *the interesting bits* of the app.
 
-The full details of how to write funkos are still in flux, so not documenting 
-it for now. Eventually, you will be able to just write the parts you 
+The full details of how to write funkos are still in flux, so not documenting
+it for now. Eventually, you will be able to just write the parts you
 need to write to create funkos in different languages. It's easy!
 
-### So what can a funko do?
+### So what can a funko do
 
 Once you have a funko, you can *build* it, which will give you a docker image.
 
 ```faaso build --local myfunko/```
 
-Or you can export it and get rid of all the mistery of how your funko **really** works:
+Or you can export it and get rid of all the mistery of how your funko
+**really** works:
 
 ```faaso export myfunko/ myfuko-exported```
 
@@ -116,9 +121,9 @@ than one, although currently only one is used by the proxy.
 The proxy has a few goals:
 
 1) You can connect to it using `faaso` and have it build/run/etc your funkos.
-
    * This builds the funko in your machine: `faaso build -l myfunko/`
-   * This builds the funko in the server pointed at by FAASO_SERVER: `faaso build myfunko/`
+   * This builds the funko in the server pointed at by FAASO_SERVER:
+     `faaso build myfunko/`
 
    Yes, they are exactly the same thing. In fact, if you don't use the `-l` flag,
    faaso just tells the proxy "hey proxy, run *your* copy of faaso over there and
@@ -127,10 +132,10 @@ The proxy has a few goals:
 2) It automatically reverse-proxies to all funkos.
 
    If you deployed a funko called `hello` and your faaso proxy is at
-   `http://myserver:8888` then the `/` path in your funko is at 
+   `http://myserver:8888` then the `/` path in your funko is at
    `http://myserver:8888/funko/hello/`
 
-   This proxying is automatic, you don't need to do anything. As long as you 
+   This proxying is automatic, you don't need to do anything. As long as you
    build the image for your funko in the server and then start the funko in the
    server? It should work.
 
@@ -145,4 +150,4 @@ beyond bugfixes, since I am redesigning things all the time.
 
 ## Contributors
 
-- [Roberto Alsina](https://github.com/ralsina) - creator and maintainer
+* [Roberto Alsina](https://github.com/ralsina) - creator and maintainer

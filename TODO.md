@@ -1,4 +1,6 @@
-# Things that need doing before first release
+# TODO LIST
+
+## Things that need doing before first release
 
 * User flow for initial proxy setup
   * ✅ Setting up password
@@ -34,6 +36,6 @@
 * ✅ Cleanup `tmp/whatever` after use
 * `faaso scale` remote is broken
 
-# Things to do but not before release
+## Things to do but not before release
 
-* Propagate errors from `run_faaso` to the remote client 
+* Propagate errors from `run_faaso` to the remote client

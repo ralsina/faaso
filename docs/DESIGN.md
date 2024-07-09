@@ -38,7 +38,7 @@ up/downscaling, no multiple versions routed by header.
 Specifically: no downscaling to zero. It makes everything MUCH
 more complicated.
 
-# Function structure
+## Function structure
 
 Example using crystal, but it could be anything. Any function has
 an associated runtime, for example "crystal" or "python".
@@ -69,7 +69,9 @@ Probably some `metadata.yml` that is *not* in the template.
 * Files that should be copied along the function
 * Whatever
 
-# Implementation Ideas
+## Implementation Ideas
 
 * caddy for proxy? It's simple, fast, API-configurable.
-* Local docker registry for images? See https://www.docker.com/blog/how-to-use-your-own-registry-2/ (maybe later)
+* Local docker registry for images? See
+  [use own registry](https://www.docker.com/blog/how-to-use-your-own-registry-2/)
+  (maybe later)

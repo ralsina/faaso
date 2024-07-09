@@ -31,7 +31,7 @@ So, the proxy can periodically examine its secret store and populate a folder
 If on starting a funko we always do a bind mount of `/secrets/foo` to `/secrets`
 then it will always have its secrets in place.
 
-## Problem 2: how can the proxy know the secrets without keeping them in the image?
+## Problem 2: how can the proxy know the secrets without keeping them in the image
 
 They can't be shipped via the image, so they need to be injected via the admin API.
 

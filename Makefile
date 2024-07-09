@@ -2,8 +2,11 @@ build: shard.yml $(wildcard src/**/*) $(runtimes/**/*)
 	shards build -d --error-trace
 	cat .rucksack >> bin/faaso
 	cat .rucksack >> bin/faaso-daemon
-proxy: build
+proxy:
 	docker build . -t faaso-proxy
+
+all: build proxy
+
 start-proxy:
 	docker run --name faaso-proxy-one \
 	--rm --network=faaso-net \
@@ -13,5 +16,10 @@ start-proxy:
 	-v ${PWD}/config:/home/app/config \
 	-p 8888:8888 faaso-proxy
 
+test:
+	crystal spec
 
-.PHONY: build proxy-image start-proxy
+clean:
+	rm bin/*
+
+.PHONY: all build proxy-image start-proxy test clean
