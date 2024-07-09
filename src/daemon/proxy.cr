@@ -1,16 +1,11 @@
 require "./funko.cr"
 require "docr"
-require "inotify"
 require "kemal"
 
 module Proxy
-  CADDY_CONFIG_PATH = "config/funkos"
-  @@current_config = File.read(CADDY_CONFIG_PATH)
-
-  @@watcher = Inotify.watch(CADDY_CONFIG_PATH) do |_|
-    Log.info { "Reloading caddy config" }
-    Process.run(command: "caddy", args: ["reload", "--config", CADDY_CONFIG_PATH])
-  end
+  CADDY_CONFIG_PATH = "config/Caddyfile"
+  CADDY_CONFIG_FUNKOS = "config/funkos"
+  @@current_config = File.read(CADDY_CONFIG_FUNKOS)
 
   # Get current proxy config
   get "/proxy/" do
@@ -25,7 +20,7 @@ module Proxy
     update_proxy_config
   end
 
-  def self.update_proxy_config
+  def self.update_proxy_config : Nil
     docker_api = Docr::API.new(Docr::Client.new)
     containers = docker_api.containers.list(all: true)
 
@@ -50,13 +45,13 @@ module Proxy
 
     if @@current_config != config
       Log.info { "Updating proxy config" }
-      File.open(CADDY_CONFIG_PATH, "w") do |file|
+      File.open(CADDY_CONFIG_FUNKOS, "w") do |file|
         file << config
       end
       # Reload config
       @@current_config = config
+      Process.run(command: "caddy", args: ["reload", "--config", CADDY_CONFIG_PATH])
     end
-    config
   end
 end
 

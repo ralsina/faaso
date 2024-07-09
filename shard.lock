@@ -44,10 +44,6 @@ shards:
     git: https://github.com/mamantoha/http_proxy.git
     version: 0.10.3
 
-  inotify:
-    git: https://github.com/petoem/inotify.cr.git
-    version: 1.0.3
-
   kemal:
     git: https://github.com/kemalcr/kemal.git
     version: 1.5.0

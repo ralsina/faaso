@@ -14,9 +14,9 @@
   * ✅ Nodejs + Express
 * Create a site
   * Document
-    * How to create a runtime
-    * How to create a funko
-    * How to setup the proxy
+    * FaaSO for app developers
+    * FaaSO for runtime developers
+    * FaaSO server setup
     * APIs
 * Sanitize all inputs
 * ✅ Streaming responses in slow operations like scaling down

@@ -30,8 +30,6 @@ dependencies:
   docr:
     github: ralsina/docr
     branch: add_exposed_ports
-  inotify:
-    github: petoem/inotify.cr
   kemal:
     github: kemalcr/kemal
   kemal-basic-auth:
