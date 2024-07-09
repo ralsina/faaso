@@ -134,16 +134,18 @@ module Funko
 
   # Helper to run faaso locally and respond via env
   def run_faaso(args : Array(String), env) : Bool
-    Log.info { "Running faaso [#{args.join(", ")}, -l, 2>&1]" }
+    args << "-l" # Always local in the server
+    Log.info { "Running faaso [#{args}" }
     Process.run(
       command: "faaso",
-      args: args + ["-l", "2>&1"], # Always local in the server
-      shell: true,
+      args: args,
+      env: {"FAASO_SERVER_SIDE" => "true"},
     ) do |process|
       loop do
-        env.response.print process.output.gets(chomp: false)
+        data = process.output.gets(chomp: false)
+        env.response.print data
         env.response.flush
-        Fiber.yield
+        Fiber.yield # Without this the process never ends
         break if process.terminated?
       end
       true

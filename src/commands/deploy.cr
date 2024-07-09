@@ -41,10 +41,7 @@ module Faaso
         Crest.get(
           "#{Config.server}funkos/#{funko_name}/deploy/", \
              user: user, password: password) do |response|
-          loop do
-            Log.info { response.body_io.gets }
-            break if response.body_io.closed?
-          end
+          IO.copy(response.body_io, STDOUT)
         end
         0
       end

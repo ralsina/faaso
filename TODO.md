@@ -35,6 +35,7 @@
 * ✅ Implement zero-downtime rollout (`faaso deploy`)
 * ✅ Cleanup `tmp/whatever` after use
 * `faaso scale` remote is broken
+* ✅ Setup linters/pre-commit/etc
 
 ## Things to do but not before release
 

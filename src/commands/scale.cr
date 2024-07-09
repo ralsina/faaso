@@ -10,14 +10,14 @@ module Faaso
     # In both cases stopped instances after the required
     # scale is reached are deleted.
     struct Scale
-      def local(options, name : String, scale : Int) : Int32
+      def local(options, name : String, scale : Int | Nil) : Int32
         funko = Funko::Funko.from_names([name])[0]
         # Asked about scale
         if funko.image_history.empty?
           Log.error { "Unknown funko #{funko.name}" }
           return 1
         end
-        if !scale
+        if scale.nil?
           Log.info { "Funko #{name} has a scale of #{funko.scale}" }
           return 0
         end
@@ -26,19 +26,21 @@ module Faaso
         0
       end
 
-      def remote(options, name : String, scale : Int) : Int32
+      def remote(options, name : String, scale : Int | Nil) : Int32
         user, password = Config.auth
         Faaso.check_version
-        if !scale
-          response = Crest.get(
+        if scale.nil?
+          Crest.get(
             "#{Config.server}funkos/#{name}/scale/", \
-               user: user, password: password)
-          Log.info { " => " + response.body }
-        else
-          response = Crest.post(
-            "#{Config.server}funkos/#{name}/scale/",
-            {"scale" => scale}, user: user, password: password)
-          Log.info { " => " + response.body }
+               user: user, password: password) do |response|
+            IO.copy(response.body_io, STDOUT)
+          end
+          return 0
+        end
+        Crest.post(
+          "#{Config.server}funkos/#{name}/scale/",
+          {"scale" => scale}, user: user, password: password) do |response|
+          IO.copy(response.body_io, STDOUT)
         end
         0
       rescue ex : Crest::InternalServerError
@@ -46,7 +48,8 @@ module Faaso
         1
       end
 
-      def run(options, name : String, scale : Int) : Int32
+      def run(options, name : String, scale) : Int32
+        scale = scale.try &.to_s.to_i
         if options["--local"]
           return local(options, name, scale)
         end

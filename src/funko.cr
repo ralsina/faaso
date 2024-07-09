@@ -90,7 +90,11 @@ module Funko
       docker_api = Docr::API.new(Docr::Client.new)
       current_scale = self.scale
       result = [] of String
-      return result if current_scale == new_scale
+
+      if current_scale == new_scale
+        Log.info { "Funko #{name} already at scale #{new_scale}" }
+        return result
+      end
 
       Log.info { "Scaling #{name} from #{current_scale} to #{new_scale}" }
       if new_scale > current_scale

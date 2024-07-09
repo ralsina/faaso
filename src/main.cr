@@ -35,29 +35,28 @@ Options:
 DOC
 
 ans = Docopt.docopt(doc, ARGV)
-Oplog.setup(ans["-v"].to_s.to_i)
+Oplog.setup(ans["-v"].to_s.to_i) unless ENV.fetch("FAASO_SERVER_SIDE", nil)
 Log.debug { ans }
 
-status : Int32 = 0
 case ans
 when .fetch("build", false)
-  status = Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
+  exit Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
 when .fetch("deploy", false)
-  status = Faaso::Commands::Deploy.new.run(ans, ans["FUNKO"].as(String))
+  exit Faaso::Commands::Deploy.new.run(ans, ans["FUNKO"].as(String))
 when .fetch("export", false)
-  status = Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
+  exit Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
 when .fetch("login", false)
-  status = Faaso::Commands::Login.new.run(ans)
+  exit Faaso::Commands::Login.new.run(ans)
 when .fetch("new", false)
-  status = Faaso::Commands::New.new.run(ans, ans["FOLDER"].as(Array(String))[0])
+  exit Faaso::Commands::New.new.run(ans, ans["FOLDER"].as(Array(String))[0])
 when .fetch("scale", false)
-  status = Faaso::Commands::Scale.new.run(ans, ans["FUNKO"].as(String), ans["SCALE"].as(String).to_i)
+  exit Faaso::Commands::Scale.new.run(ans, ans["FUNKO"].as(String), ans["SCALE"])
 when .fetch("secret", false)
-  status = Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
+  exit Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
 when .fetch("status", false)
-  status = Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String))
+  exit Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String))
 when .fetch("version", false)
   Log.info { "#{version}" }
 end
 
-exit(status)
+exit 0

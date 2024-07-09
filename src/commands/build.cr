@@ -58,10 +58,7 @@ module Faaso
             {"funko.tgz" => File.open(tmp), "name" => "funko.tgz"},
             user: user, password: password
           ) do |response|
-            loop do
-              Log.info { response.body_io.gets }
-              break if response.body_io.closed?
-            end
+            IO.copy(response.body_io, STDOUT)
           end
           Log.info { "Build finished successfully." }
         rescue ex : Crest::InternalServerError
