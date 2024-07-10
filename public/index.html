@@ -8,10 +8,11 @@
 </head>
 
 <body>
-  <header class="container">
+<main class="container">
+  <header>
     <h1>FaaSO Admin Interface</h1>
   </header>
-  <article>
+  <section>
     <nav>
       <ul>
       <li><strong style="font-size: 200%;">Your Funko Collection</strong></li>
@@ -36,24 +37,24 @@
       </tbody>
     </table>
     <div id="terminal" style="resize: vertical; overflow: auto;"></div>
-  </article>
+  </section>
   <script>
     update_funkos = function () {
       document.getElementById("update-funkos").click()
     }
   </script>
-  <article>
+  <section>
     <nav>
     <ul>
     <li><strong style="font-size: 200%;">Your Secrets</strong>
     </ul>
     <ul>
+      <li><button style="float:right; display:inline;" onclick="show_new_secret()">
+        Add
+      </button>
       <li><button id="update-secrets" style="float:right; display:inline;" hx-trigger="load, click, every 60s"
         hx-get="secrets/?format=html" hx-target="#secret-list">
         Refresh
-      </button>
-      <li><button style="float:right; display:inline;" onclick="show_new_secret()">
-        Add
       </button>
     </ul>
     </nav>
@@ -69,20 +70,29 @@
       <tbody id="secret-list">
       </tbody>
       <dialog id="add-secret">
-      <article>
+      <section>
       <header>
-        New Secret
+        <h3>New Secret</h3>
       </header>
         <form hx-post="secrets/">
+        <label>
+          Funko name:
           <input placeholder="funko name" id="new-secret-funko" name="funko">
+        </label>
+        <label>
+          Secret name:
           <input placeholder="secret name" id="new-secret-name" name="name">
+        </label>
+        <label>
+          Secret contents:
           <input placeholder="secret value" type="password" id="new-secret-password" name="value">
+        </label>
           <fieldset role="group" style="text-align: right;">
             <button style="width:9em; display: inline;" type="submit" hx-on:htmx:after-request="hide_new_secret()">CREATE</button>
             <button style="width:9em; display: inline;" onclick="hide_new_secret(); close();" aria-label="Close" rel="prev">CLOSE</button>
           </fieldset>
         </form>
-      </article>
+      </section>
       </dialog>
       <script>
         update_secrets = function() {
@@ -102,5 +112,6 @@
           update_secrets()
         }
       </script>
-  </article>
+    </section>
+  </main>
 </body>

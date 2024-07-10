@@ -13,8 +13,8 @@
           <span style="color:red;""> 🟢</span>
         <%- end -%>
           <tt><%= c.@names[0].split("-")[-1] %></tt>
-        <span role="button" hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">📜</span>
-        <span role="button" hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">🐚</span>
+        <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">📜</span>
+        <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">🐚</span>
       </div>
     <%- end -%>
   </td>
