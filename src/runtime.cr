@@ -3,8 +3,8 @@ require "rucksack"
 module Runtime
   extend self
 
-  @@known : Array(String) = {{`find ./runtimes -type d -mindepth 1`.split('\n').reject(&.empty?)}}
-  @@filelist : Array(String) = {{`find ./runtimes -type f -mindepth 1`.split('\n').reject(&.empty?)}}
+  @@known : Array(String) = {{`find ./runtimes -mindepth 1 -type d`.split('\n').reject(&.empty?)}}
+  @@filelist : Array(String) = {{`find ./runtimes -mindepth 1 -type f`.split('\n').reject(&.empty?)}}
 
   Log.debug { "@@known: #{@@known}" }
   Log.debug { "@@filelist: #{@@filelist}" }
