@@ -1,0 +1,30 @@
+body {
+  max-width: 60em;
+  margin: 0 auto;
+  padding: 1em;
+}
+div.lightbox {
+  width: 100%;
+  text-align: center;
+}
+html,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: montserrat, sans-serif;
+  margin-block-end: 0.9em;
+}
+
+header.container, main.container {
+  padding: 0;
+}
+
+div.grid>div {
+  padding: 1em;
+  margin-top: .5em;
+  margin-left: -.5em;
+  border-radius: .5em;
+}
