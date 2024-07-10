@@ -70,9 +70,10 @@
       <tbody id="secret-list">
       </tbody>
       <dialog id="add-secret">
-      <section>
+      <article>
       <header>
         <h3>New Secret</h3>
+        <p>Enter your new secret below.</p>
       </header>
         <form hx-post="secrets/">
         <label>
@@ -92,7 +93,7 @@
             <button style="width:9em; display: inline;" onclick="hide_new_secret(); close();" aria-label="Close" rel="prev">CLOSE</button>
           </fieldset>
         </form>
-      </section>
+      </article>
       </dialog>
       <script>
         update_secrets = function() {
