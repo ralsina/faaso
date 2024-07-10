@@ -6,39 +6,33 @@
   </td>
   <td style="vertical-align: top;">
     <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
-      <div class="grid">
-            <div>
-              <tt><%= c.@names[0].split("-")[-1] %></tt>
-            </div>
-            <div>
-              <%- if c.image_id == f["latest_image"] -%>
-                <span style="color:green;""> 🟢</span>
-              <%- else -%>
-                <span style="color:red;""> 🟢</span>
-              <%- end -%>
-            </div>
-            <div role="group">
-              <button hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">Logs</button>
-              <button hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">Shell</button>
-            </div>
+      <div>
+        <%- if c.image_id == f["latest_image"] -%>
+          <span style="color:green;""> 🟢</span>
+        <%- else -%>
+          <span style="color:red;""> 🟢</span>
+        <%- end -%>
+          <tt><%= c.@names[0].split("-")[-1] %></tt>
+        <span role="button" hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">📜</span>
+        <span role="button" hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">🐚</span>
       </div>
     <%- end -%>
   </td>
 
   <td>
-  <div role="group">
+  <div">
   <%- if f["name"] == "proxy" -%>
   <%- else -%>
     <%- if f["scale"].as(String).to_i > 0 -%>
-      <button disabled hx-get="funkos/<%= f["name"] %>/start">Start</button>
-      <button hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">Stop</button>
-      <button disabled hx-delete="funkos/<%= f["name"] %>/" hx-on:htmx:after-request="update_funkos()">Delete</button>
+      <span role="button" disabled hx-get="funkos/<%= f["name"] %>/start">▶</span>
+      <span role="button" hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">⏹</span>
+      <span role="button" disabled hx-delete="funkos/<%= f["name"] %>/" hx-on:htmx:after-request="update_funkos()">❎</span>
     <%- else -%>
-      <button hx-get="funkos/<%= f["name"] %>/start" hx-on:htmx:after-request="update_funkos()">Start</button>
-      <button disabled hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">Stop</button>
-      <button hx-delete="funkos/<%= f["name"] %>/" hx-on:htmx:after-request="update_funkos()">Delete</button>
+      <span role="button" hx-get="funkos/<%= f["name"] %>/start" hx-on:htmx:after-request="update_funkos()">▶️</span>
+      <span role="button" disabled hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">⏹</span>
+      <span role="button" hx-delete="funkos/<%= f["name"] %>/" hx-on:htmx:after-request="update_funkos()">❎</span>
     <%- end -%>
-      <button hx-get="funkos/<%= f["name"] %>/restart" hx-on:htmx:after-request="update_funkos()">Restart</button>
+      <span role="button" hx-get="funkos/<%= f["name"] %>/restart" hx-on:htmx:after-request="update_funkos()">🔃</span>
   <%- end -%>
   </div>
   </td>
