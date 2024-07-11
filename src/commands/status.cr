@@ -1,7 +1,7 @@
 module Faaso
   module Commands
     struct Status
-      def local(options, name) : Int32
+      def run(options, name) : Int32
         funko = Funko::Funko.from_names([name])[0]
         status = funko.docker_status
 
@@ -23,27 +23,6 @@ module Faaso
           Log.info { "  #{image.repo_tags} #{Time.unix(image.created)}" }
         end
         0
-      end
-
-      def remote(options, name) : Int32
-        Faaso.check_version
-        user, password = Config.auth
-        Crest.get(
-          "#{Config.server}funkos/#{name}/status/", \
-             user: user, password: password) do |response|
-          IO.copy(response.body_io, STDOUT)
-        end
-        0
-      rescue ex : Crest::InternalServerError
-        Log.error(exception: ex) { "Error scaling funko #{name}" }
-        1
-      end
-
-      def run(options, name) : Int32
-        if options["--local"]
-          return local(options, name)
-        end
-        remote(options, name)
       end
     end
   end

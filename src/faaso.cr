@@ -42,4 +42,15 @@ module Faaso
       Log.warn { "Server is version #{server_version} and client is #{local_version}" }
     end
   end
+
+  def self.rpc_call(args : Array(String))
+    user, password = Config.auth
+    Crest.post(
+      "#{Config.server}rpc/",
+      {"args" => args},
+      user: user, password: password,
+      json: true) do |response|
+      IO.copy(response.body_io, STDOUT)
+    end
+  end
 end
