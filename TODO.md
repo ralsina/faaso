@@ -4,15 +4,13 @@
 
 * User flow for initial proxy setup
   * ✅ Setting up password
-  * Setting up hostname for Caddy's automatic HTTPS
-* Config UI in frontend?
 * Polish frontend UI **A LOT**
 * ✅ Version checks for consistency between client/server
 * ✅ Have 3 runtimes:
   * ✅ Crystal + Kemal
   * ✅ Python + Flask
   * ✅ Nodejs + Express
-* Create a site
+* ✅ Create a site
   * Document
     * FaaSO for app developers
     * FaaSO for runtime developers
@@ -41,3 +39,5 @@
 ## Things to do but not before release
 
 * Propagate errors from `run_faaso` to the remote client
+* Setting up hostname for Caddy's automatic HTTPS
+* Config UI in frontend?
