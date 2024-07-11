@@ -26,7 +26,6 @@
   * ✅ admin/admin auth client side
   * ✅ `faaso login` is not working properly yet with proxy
 * CD for binaries and images for at least arm64/x86
-* Multi-container docker logs [faaso logs -f FUNKO]
 * ✅ Configurable verbosity, support stderr/stdout split
 * ✅ Fix proxy reload / Make it reload on file changes
 * Implement `faaso help command`
@@ -35,9 +34,15 @@
 * ✅ Cleanup `tmp/whatever` after use
 * ✅ `faaso scale` remote is broken
 * ✅ Setup linters/pre-commit/etc
+* Check secret editing
+* Check secret permissions (maybe run proxy as non-root)
+* Check if deploy is working correctly in different scenarios
+  (gets stuck when all instances are current)
+* Implement static site vhost proxying
 
 ## Things to do but not before release
 
 * Propagate errors from `run_faaso` to the remote client
 * Setting up hostname for Caddy's automatic HTTPS
 * Config UI in frontend?
+* Multi-container docker logs [faaso logs -f FUNKO]

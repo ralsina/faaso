@@ -1,7 +1,8 @@
 module Faaso
   module Commands
     struct Deploy
-      def local(options, funko_name : String) : Int32
+      def run(options, funko_name : String) : Int32
+        Log.info { "Deploying #{funko_name}" }
         funko = Funko::Funko.from_names([funko_name])[0]
         # Get scale, check for out-of-date containers
         current_scale = funko.scale
@@ -33,26 +34,6 @@ module Faaso
         funko.wait_for(current_scale, 30)
         Log.info { "Deployed #{funko_name}" }
         0
-      end
-
-      def remote(options, funko_name : String) : Int32
-        user, password = Config.auth
-        Faaso.check_version
-        Crest.get(
-          "#{Config.server}funkos/#{funko_name}/deploy/", \
-             user: user, password: password) do |response|
-          IO.copy(response.body_io, STDOUT)
-        end
-        0
-      end
-
-      def run(options, funko_name : String) : Int32
-        Log.info { "Deploying #{funko_name}" }
-        if options["--local"]
-          local(options, funko_name)
-        else
-          remote(options, funko_name)
-        end
       end
     end
   end

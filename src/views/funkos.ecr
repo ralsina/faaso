@@ -1,26 +1,26 @@
 <%- result.each do |f| -%>
 <tr hx-indicator="#spinner-<%= f["name"] %>">
-  <td style="vertical-align: top;">
+  <td>
     <%= f["name"] %>
     <img id="spinner-<%= f["name"] %>" src="bars.svg"  class="htmx-indicator">
   </td>
   <td style="vertical-align: top;">
     <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
-      <div>
+      <div style="margin-bottom: .2em;">
         <%- if c.image_id == f["latest_image"] -%>
-          <span style="color:green;""> 🟢</span>
+          <span class="pico-color-green-600">🟢
         <%- else -%>
-          <span style="color:red;""> 🟢</span>
+          <span class="pico-color-red-600">🟢
         <%- end -%>
-          <tt><%= c.@names[0].split("-")[-1] %></tt>
-        <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">📜</span>
-        <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">🐚</span>
+          <%= c.@names[0].split("-")[-1]%></span>
+        <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">🖨</span>
+        <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">🖥</span>
       </div>
     <%- end -%>
   </td>
 
-  <td>
-  <div">
+  <td style="vertical-align:top;text-align:right;padding-right:0;">
+  <div>
   <%- if f["name"] == "proxy" -%>
   <%- else -%>
     <%- if f["scale"].as(String).to_i > 0 -%>
@@ -32,7 +32,7 @@
       <span role="button" disabled hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">⏹</span>
       <span role="button" hx-delete="funkos/<%= f["name"] %>/" hx-on:htmx:after-request="update_funkos()">❎</span>
     <%- end -%>
-      <span role="button" hx-get="funkos/<%= f["name"] %>/restart" hx-on:htmx:after-request="update_funkos()">🔃</span>
+      <span role="button" hx-get="funkos/<%= f["name"] %>/deploy" hx-on:htmx:after-request="update_funkos()">🔃</span>
   <%- end -%>
   </div>
   </td>

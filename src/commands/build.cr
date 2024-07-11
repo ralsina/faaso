@@ -34,7 +34,7 @@ module Faaso
                 file_info = File.info(path)
                 hdr = Crystar::Header.new(
                   name: rel_path.to_s,
-                  mode: file_info.permissions.to_u32,
+                  mode: file_info.permissions.to_i64,
                   size: file_info.size,
                 )
                 tw.write_header(hdr)

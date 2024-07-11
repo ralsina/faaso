@@ -1,5 +1,5 @@
 build: shard.yml $(wildcard src/**/*) $(runtimes/**/*)
-	shards build -d --error-trace
+	shards build -d --error-trace -Dstrict_multi_assign -Dno_number_autocast
 	cat .rucksack >> bin/faaso
 	cat .rucksack >> bin/faaso-daemon
 proxy:
@@ -9,7 +9,7 @@ all: build proxy
 
 start-proxy:
 	docker network create faaso-net || true
-	docker run --name faaso-proxy-one \
+	docker run --name faaso-proxy-fadmin \
 	--rm --network=faaso-net \
 	-e FAASO_SECRET_PATH=${PWD}/secrets \
 	-v /var/run/docker.sock:/var/run/docker.sock \

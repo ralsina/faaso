@@ -1,34 +1,11 @@
 require "base58"
+require "crystar"
 require "docr"
 require "kemal"
 require "../funko.cr"
 
 module Funko
   extend self
-
-  # Get the funko's status
-  get "/funkos/:name/status/" do |env|
-    name = env.params.url["name"]
-    run_faaso(["status", name], env)
-  end
-
-  # Get the funko's scale
-  get "/funkos/:name/scale/" do |env|
-    name = env.params.url["name"]
-    run_faaso(["scale", name], env)
-  end
-
-  # Set the funko's scale
-  post "/funkos/:name/scale/" do |env|
-    name = env.params.url["name"]
-    scale = env.params.body["scale"].as(String)
-    run_faaso(["scale", name, scale], env)
-  end
-
-  get "/funkos/:name/deploy" do |env|
-    name = env.params.url["name"]
-    run_faaso(["deploy", name], env)
-  end
 
   # Build image for funko received as "funko.tgz"
   # TODO: This may take a while, consider using something like
@@ -122,14 +99,25 @@ module Funko
   get "/funkos/terminal/logs/:instance/" do |env|
     instance = env.params.url["instance"]
     Terminal.start_terminal(["docker", "logs", "-f", instance])
-    "<iframe src='terminal/' width='100%' height='100%'></iframe>"
+    %(
+      <strong style="font-size: 200%;">Logs for #{instance}</strong>
+    <iframe src='terminal/' width='100%' height='100%'></iframe>
+)
   end
 
   # Get an iframe with a shell into the container
   get "/funkos/terminal/shell/:instance/" do |env|
     instance = env.params.url["instance"]
     Terminal.start_terminal(["docker", "exec", "-ti", instance, "/bin/sh"], readonly: false)
-    "<iframe src='terminal/' width='100%' height='100%'></iframe>"
+    %(
+      <strong style="font-size: 200%;">Shell for #{instance}</strong>
+	<iframe src='terminal/' width='100%' height='100%'></iframe>
+)
+  end
+
+  post "/rpc/" do |env|
+    args = env.params.json["args"].as(Array).map &.to_s
+    run_faaso(args, env)
   end
 
   # Helper to run faaso locally and respond via env

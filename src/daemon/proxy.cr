@@ -3,7 +3,7 @@ require "docr"
 require "kemal"
 
 module Proxy
-  CADDY_CONFIG_PATH = "config/Caddyfile"
+  CADDY_CONFIG_PATH   = "config/Caddyfile"
   CADDY_CONFIG_FUNKOS = "config/funkos"
   @@current_config = File.read(CADDY_CONFIG_FUNKOS)
 
