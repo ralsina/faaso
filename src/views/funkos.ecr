@@ -1,6 +1,6 @@
 <%- result.each do |f| -%>
 <tr hx-indicator="#spinner-<%= f["name"] %>">
-  <td style="vertical-align: top;">
+  <td>
     <%= f["name"] %>
     <img id="spinner-<%= f["name"] %>" src="bars.svg"  class="htmx-indicator">
   </td>
@@ -12,14 +12,14 @@
         <%- else -%>
           <span class="pico-color-red-600">🟢
         <%- end -%>
-          <tt><%= c.@names[0].split("-")[-1].ljust(10) %></tt></span>
+          <%= c.@names[0].split("-")[-1]%></span>
         <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">🖨</span>
         <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">🖥</span>
       </div>
     <%- end -%>
   </td>
 
-  <td style="vertical-align: top;">
+  <td style="vertical-align:top;text-align:right;padding-right:0;">
   <div>
   <%- if f["name"] == "proxy" -%>
   <%- else -%>

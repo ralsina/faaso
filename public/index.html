@@ -4,14 +4,14 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css" />  <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body>
+<body style="font-family:Kode mono;">
 <main class="container">
-  <header>
-    <h1>FaaSO Admin Interface</h1>
-  </header>
   <section>
     <nav>
       <ul>
@@ -30,7 +30,7 @@
         <tr>
           <th>Name</th>
           <th>Instances</th>
-          <th>Actions</th>
+          <th style="text-align:right;padding-right:0;">Actions</th>
         </tr>
       </thead>
       <tbody id="funko-list">
@@ -64,7 +64,7 @@
         <tr>
           <th>Funko</th>
           <th>Name</th>
-          <th>Actions</th>
+          <th style="text-align:right;padding-right:0;">Actions</th>
         </tr>
       </thead>
       <tbody id="secret-list">
