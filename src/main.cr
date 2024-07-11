@@ -42,7 +42,8 @@ case ans
 when .fetch("build", false)
   exit Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
 when .fetch("deploy", false)
-  exit Faaso::Commands::Deploy.new.run(ans, ans["FUNKO"].as(String))
+  exit Faaso::Commands::Deploy.new.run(ans, ans["FUNKO"].as(String)) if ans["--local"]
+  Faaso.rpc_call(ARGV)
 when .fetch("export", false)
   exit Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
 when .fetch("login", false)
