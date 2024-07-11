@@ -9,6 +9,10 @@ module Faaso
         latest_image = funko.latest_image
         containers = funko.containers
         out_of_date = containers.count { |container| container.image_id != latest_image }
+        if out_of_date == 0
+          Log.info { "All containers are up-to-date" }
+          return 0
+        end
         Log.info { "Need to update #{out_of_date} containers" }
         Log.info { "Scaling from #{current_scale} to #{current_scale + out_of_date}" }
         # Increase scale to get enough up-to-date containers
@@ -16,6 +20,7 @@ module Faaso
 
         # Wait for them to be healthy
         begin
+          Log.info { "Waiting for #{current_scale + out_of_date} containers to be healthy" }
           funko.wait_for(current_scale + out_of_date, 120, healthy: true)
         rescue ex : Exception
           # Failed to start, rollback

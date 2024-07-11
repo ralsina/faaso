@@ -225,28 +225,22 @@ module Funko
       spawn do
         loop do
           if healthy
-            channel.send(nil) if containers.select { |container|
-                                   begin
-                                     details = docker_api.containers.inspect(container.@id)
-                                     if details.nil?
-                                       false
-                                     elsif details.state.nil?
-                                       false
-                                     elsif details.state.as(Docr::Types::ContainerState).health.nil?
-                                       false
-                                     elsif details.state.as(Docr::Types::ContainerState).health.as(Docr::Types::Health).status == "healthy"
-                                       true
-                                     end
-                                     false
-                                   rescue ex : Docr::Errors::DockerAPIError
-                                     Log.error { "#{ex}" } unless ex.status_code == 304 # This just happens
-                                     false
-                                   end
-                                 } == new_scale
+            healthy_count = containers.count { |container|
+              begin
+                details = docker_api.containers.inspect(container.@id)
+                details.state.as(Docr::Types::ContainerState).health.as(Docr::Types::Health).status == "healthy"
+              rescue ex : Docr::Errors::DockerAPIError
+                Log.error { "#{ex}" } unless ex.status_code == 304 # This just happens
+                false
+              end
+            }
+            Log.info { "Funko #{name} has #{healthy_count}/#{new_scale} healthy containers" }
+            channel.send(nil) if healthy_count == new_scale
           else
+            Log.info { "Funko #{name} has #{scale}/#{new_scale} running containers" }
             channel.send(nil) if scale == new_scale
           end
-          sleep 0.2.seconds
+          sleep 1.seconds
         end
       end
 
