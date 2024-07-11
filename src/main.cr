@@ -53,7 +53,9 @@ when .fetch("export", false)
 when .fetch("login", false)
   exit Faaso::Commands::Login.new.run(ans)
 when .fetch("logs", false)
-  exit Faaso::Commands::Logs.new.run(ans, ans["FUNKO"].as(String))
+  exit Faaso::Commands::Logs.new.run(
+    ans, ans["FUNKO"].as(String)) if ans["--local"]
+  Faaso.rpc_call(ARGV)
 when .fetch("new", false)
   exit Faaso::Commands::New.new.run(
     ans, ans["FOLDER"].as(Array(String))[0])

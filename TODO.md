@@ -37,10 +37,10 @@
 * Check secret permissions (maybe run proxy as non-root)
 * ✅ Check if deploy is working correctly in different scenarios
 * Implement static site vhost proxying
+* ✅ Multi-container docker logs [faaso logs -f FUNKO]
 
 ## Things to do but not before release
 
 * Propagate errors from `run_faaso` to the remote client
 * Setting up hostname for Caddy's automatic HTTPS
 * Config UI in frontend?
-* Multi-container docker logs [faaso logs -f FUNKO]

@@ -26,7 +26,7 @@ module Faaso
         loop do
           select
           when data = channel.receive?
-            puts data
+            Log.info { data }
           end
         end
       end
