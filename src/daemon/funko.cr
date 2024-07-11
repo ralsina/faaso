@@ -6,12 +6,6 @@ require "../funko.cr"
 module Funko
   extend self
 
-  # Get the funko's status
-  get "/funkos/:name/status/" do |env|
-    name = env.params.url["name"]
-    run_faaso(["status", name], env)
-  end
-
   # Get the funko's scale
   get "/funkos/:name/scale/" do |env|
     name = env.params.url["name"]
