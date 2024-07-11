@@ -17,6 +17,7 @@ Usage:
   faaso deploy FUNKO                [-v <level>] [-l]
   faaso export SOURCE DESTINATION   [-v <level>]
   faaso login                       [-v <level>]
+  faaso logs FUNKO                  [-v <level>] [-l]
   faaso new -r runtime FOLDER       [-v <level>]
   faaso scale FUNKO [SCALE]         [-v <level>] [-l]
   faaso secret (-d|-a) FUNKO SECRET [-v <level>] [-l]
@@ -51,6 +52,8 @@ when .fetch("export", false)
     ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
 when .fetch("login", false)
   exit Faaso::Commands::Login.new.run(ans)
+when .fetch("logs", false)
+  exit Faaso::Commands::Logs.new.run(ans, ans["FUNKO"].as(String))
 when .fetch("new", false)
   exit Faaso::Commands::New.new.run(
     ans, ans["FOLDER"].as(Array(String))[0])

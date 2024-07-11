@@ -2,7 +2,7 @@
 
 ## Things that need doing before first release
 
-* User flow for initial proxy setup
+* ✅ User flow for initial proxy setup
   * ✅ Setting up password
 * Polish frontend UI **A LOT**
 * ✅ Version checks for consistency between client/server
@@ -17,8 +17,7 @@
     * FaaSO server setup
     * APIs
 * Sanitize all inputs
-* ✅ Streaming responses in slow operations like scaling down
-  or building
+* ✅ Streaming responses in slow operations
 * ✅ Make more things configurable / remove hardcoded stuff
   * ✅ Make server take options from file
   * ✅ Make server take options from environment
