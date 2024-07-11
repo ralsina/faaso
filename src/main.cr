@@ -40,23 +40,30 @@ Log.debug { ans }
 
 case ans
 when .fetch("build", false)
-  exit Faaso::Commands::Build.new.run(ans, ans["FOLDER"].as(Array(String)))
+  exit Faaso::Commands::Build.new.run(
+    ans, ans["FOLDER"].as(Array(String)))
 when .fetch("deploy", false)
-  exit Faaso::Commands::Deploy.new.run(ans, ans["FUNKO"].as(String)) if ans["--local"]
+  exit Faaso::Commands::Deploy.new.run(
+    ans, ans["FUNKO"].as(String)) if ans["--local"]
   Faaso.rpc_call(ARGV)
 when .fetch("export", false)
-  exit Faaso::Commands::Export.new.run(ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
+  exit Faaso::Commands::Export.new.run(
+    ans, ans["SOURCE"].as(String), ans["DESTINATION"].as(String))
 when .fetch("login", false)
   exit Faaso::Commands::Login.new.run(ans)
 when .fetch("new", false)
-  exit Faaso::Commands::New.new.run(ans, ans["FOLDER"].as(Array(String))[0])
+  exit Faaso::Commands::New.new.run(
+    ans, ans["FOLDER"].as(Array(String))[0])
 when .fetch("scale", false)
-  exit Faaso::Commands::Scale.new.run(ans, ans["FUNKO"].as(String), ans["SCALE"]) if ans["--local"]
+  exit Faaso::Commands::Scale.new.run(
+    ans, ans["FUNKO"].as(String), ans["SCALE"]) if ans["--local"]
   Faaso.rpc_call(ARGV)
 when .fetch("secret", false)
-  exit Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
+  exit Faaso::Commands::Secret.new.run(
+    ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
 when .fetch("status", false)
-  exit Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String)) if ans["--local"]
+  exit Faaso::Commands::Status.new.run(
+    ans, ans["FUNKO"].as(String)) if ans["--local"]
   Faaso.rpc_call(ARGV)
 when .fetch("version", false)
   Log.info { "#{version}" }
