@@ -1,4 +1,5 @@
 require "base58"
+require "crystar"
 require "docr"
 require "kemal"
 require "../funko.cr"
