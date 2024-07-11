@@ -33,7 +33,7 @@
 * ✅ Cleanup `tmp/whatever` after use
 * ✅ `faaso scale` remote is broken
 * ✅ Setup linters/pre-commit/etc
-* Check secret editing
+* Implement secret editing
 * Check secret permissions (maybe run proxy as non-root)
 * ✅ Check if deploy is working correctly in different scenarios
 * Implement static site vhost proxying
