@@ -54,7 +54,8 @@ when .fetch("scale", false)
 when .fetch("secret", false)
   exit Faaso::Commands::Secret.new.run(ans, ans["FUNKO"].as(String), ans["SECRET"].as(String))
 when .fetch("status", false)
-  exit Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String))
+  exit Faaso::Commands::Status.new.run(ans, ans["FUNKO"].as(String)) if ans["--local"]
+  Faaso.rpc_call(ARGV)
 when .fetch("version", false)
   Log.info { "#{version}" }
 end
