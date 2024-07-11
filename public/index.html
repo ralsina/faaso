@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body style="font-family:Kode mono;">
 <main class="container">
   <section>
@@ -18,7 +17,7 @@
       <li><strong style="font-size: 200%;">Your Funko Collection</strong></li>
       </ul>
       <ul>
-      <li><button id="update-funkos" style="float:right; display:inline;" hx-trigger="load, click, every 60s"
+      <li><button id="update-funkos" hx-trigger="load, click, every 60s"
         hx-get="funkos/?format=html" hx-target="#funko-list">
         Refresh
       </button>
@@ -49,10 +48,10 @@
     <li><strong style="font-size: 200%;">Your Secrets</strong>
     </ul>
     <ul>
-      <li><button style="float:right; display:inline;" onclick="show_new_secret()">
+      <li><button onclick="show_new_secret()">
         Add
       </button>
-      <li><button id="update-secrets" style="float:right; display:inline;" hx-trigger="load, click, every 60s"
+      <li><button id="update-secrets" hx-trigger="load, click, every 60s"
         hx-get="secrets/?format=html" hx-target="#secret-list">
         Refresh
       </button>
