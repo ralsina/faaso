@@ -138,6 +138,11 @@ module Funko
 )
   end
 
+  post "/rpc/" do |env|
+    args = env.params.json["args"].as(Array).map &.to_s
+    run_faaso(args, env)
+  end
+
   # Helper to run faaso locally and respond via env
   def run_faaso(args : Array(String), env)
     args << "-l" # Always local in the server
