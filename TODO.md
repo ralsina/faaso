@@ -39,6 +39,8 @@
 * Check secret editing
 * Check secret permissions (maybe run proxy as non-root)
 * Check if deploy is working correctly in different scenarios
+  (gets stuck when all instances are current)
+* Implement static site vhost proxying
 
 ## Things to do but not before release
 

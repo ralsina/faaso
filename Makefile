@@ -1,5 +1,5 @@
 build: shard.yml $(wildcard src/**/*) $(runtimes/**/*)
-	shards build -d --error-trace
+	shards build -d --error-trace -Dstrict_multi_assign -Dno_number_autocast
 	cat .rucksack >> bin/faaso
 	cat .rucksack >> bin/faaso-daemon
 proxy:
