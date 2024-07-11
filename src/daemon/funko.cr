@@ -6,19 +6,6 @@ require "../funko.cr"
 module Funko
   extend self
 
-  # Get the funko's scale
-  get "/funkos/:name/scale/" do |env|
-    name = env.params.url["name"]
-    run_faaso(["scale", name], env)
-  end
-
-  # Set the funko's scale
-  post "/funkos/:name/scale/" do |env|
-    name = env.params.url["name"]
-    scale = env.params.body["scale"].as(String)
-    run_faaso(["scale", name, scale], env)
-  end
-
   get "/funkos/:name/deploy" do |env|
     name = env.params.url["name"]
     run_faaso(["deploy", name], env)
