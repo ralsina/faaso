@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FaaSO Admin Panel</title>
 </head>
 <body style="font-family:Kode mono;">
 <main class="container">
@@ -19,10 +20,10 @@
       <li><strong style="font-size: 200%;">Your Funko Collection</strong></li>
       </ul>
       <ul>
-      <li><button id="update-funkos" hx-trigger="load, click, every 60s"
+      <li><span role="button" id="update-funkos" hx-trigger="load, click, every 60s"
         hx-get="funkos/?format=html" hx-target="#funko-list">
         Refresh
-      </button>
+      </span>
       </ul>
     </nav>
     <span id="message"></span>
@@ -50,13 +51,15 @@
     <li><strong style="font-size: 200%;">Your Secrets</strong>
     </ul>
     <ul>
-      <li><button onclick="show_new_secret()">
-        Add
-      </button>
-      <li><button id="update-secrets" hx-trigger="load, click, every 60s"
+      <li><span role="button"
+            hx-get="secrets/-/-/?format=html"
+            hx-target="#add-secret"
+            hx-on:htmx:before-request="show_secret();">Add
+          </span>
+      <li><span role="button" id="update-secrets" hx-trigger="load, click, every 60s"
         hx-get="secrets/?format=html" hx-target="#secret-list">
         Refresh
-      </button>
+      </span>
     </ul>
     </nav>
     <span id="message"></span>
@@ -71,47 +74,26 @@
       <tbody id="secret-list">
       </tbody>
       <dialog id="add-secret">
-      <article>
-      <header>
-        <h3>New Secret</h3>
-        <p>Enter your new secret below.</p>
-      </header>
-        <form hx-post="secrets/">
-        <label>
-          Funko name:
-          <input placeholder="funko name" id="new-secret-funko" name="funko">
-        </label>
-        <label>
-          Secret name:
-          <input placeholder="secret name" id="new-secret-name" name="name">
-        </label>
-        <label>
-          Secret contents:
-          <input placeholder="secret value" type="password" id="new-secret-password" name="value">
-        </label>
-          <fieldset role="group" style="text-align: right;">
-            <button style="width:9em; display: inline;" type="submit" hx-on:htmx:after-request="hide_new_secret()">CREATE</button>
-            <button style="width:9em; display: inline;" onclick="hide_new_secret(); close();" aria-label="Close" rel="prev">CLOSE</button>
-          </fieldset>
-        </form>
-      </article>
       </dialog>
       <script>
         update_secrets = function() {
           document.getElementById("update-secrets").click()
         }
-        show_new_secret = function() {
-          document.getElementById('new-secret-funko').value=""
-          document.getElementById('new-secret-name').value=""
-          document.getElementById('new-secret-password').value=""
+        add_secret = function() {
+          clean_secret()
           document.getElementById('add-secret').show()
         }
-        hide_new_secret = function() {
+        show_secret = function() {
+          document.getElementById('add-secret').show()
+        }
+        clean_secret = function() {
           document.getElementById('new-secret-funko').value=""
           document.getElementById('new-secret-name').value=""
           document.getElementById('new-secret-password').value=""
-          document.getElementById('add-secret').close()
-          update_secrets()
+        }
+        hide_secret = function() {
+          document.getElementById('add-secret').close();
+          update_secrets();
         }
       </script>
     </section>
