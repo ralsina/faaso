@@ -6,7 +6,7 @@
   </td>
   <td style="vertical-align: top;">
     <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
-      <div style="margin-bottom: .2em;">
+      <div style="margin-bottom: .75Rem;">
         <%- if c.image_id == f["latest_image"] -%>
           <span class="pico-color-green-600">🟢
         <%- else -%>
