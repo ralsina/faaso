@@ -44,3 +44,6 @@
 * Propagate errors from `run_faaso` to the remote client
 * Setting up hostname for Caddy's automatic HTTPS
 * Config UI in frontend?
+* Add multi-container logs to web frontend. It's close but
+  haven't figured out how to make HTMX append the log into
+  an element and show newlines correctly.
