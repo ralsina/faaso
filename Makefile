@@ -23,4 +23,9 @@ test:
 clean:
 	rm bin/*
 
-.PHONY: all build proxy-image start-proxy test clean
+static:
+	shards build faaso --static --release --no-debug -Dstrict_multi_assign -Dno_number_autocast
+	cat .rucksack >> bin/faaso
+	strip bin/faaso
+
+.PHONY: all build proxy-image start-proxy test clean static

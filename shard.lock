@@ -6,7 +6,7 @@ shards:
 
   base58:
     git: https://github.com/crystal-china/base58.cr.git
-    version: 0.1.0+git.commit.d1150d4a6f086013a475640ad00e561a2fe1082a
+    version: 0.1.0+git.commit.4c521350c6358b6c04f64dc625e26a8f782a699d
 
   cr-config:
     git: https://github.com/crystal-community/cr-config.git
@@ -54,7 +54,7 @@ shards:
 
   oplog:
     git: https://github.com/ralsina/oplog.git
-    version: 0.1.0+git.commit.70e3a7bbc2f1f4d75cf4e142244b263ee2844ba1
+    version: 0.1.0+git.commit.6419ac30e4a8cfc7beb57b2b01d9d6f5efc7b389
 
   radix:
     git: https://github.com/luislavena/radix.git
