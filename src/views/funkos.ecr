@@ -8,16 +8,16 @@
     <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
       <div style="margin-bottom: .75Rem;">
         <%- if c.image_id == f["latest_image"] -%>
-          <span class="pico-color-green-600"><i class="icono-check"></i>
+          <span class="pico-color-jade-450"><i class="icono-check"></i>
         <%- else -%>
-          <span class="pico-color-red-600"><i class="icono-clock"></i>
+          <span class="pico-color-orange-450"><i class="icono-clock"></i>
         <%- end -%>
           <%= c.@names[0].split("-")[-1]%></span>
         <span role="button"
            class="secondary"
            hx-target="#terminal"
            hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">
-            <i class="icono-list"></i>
+            <i class="icono-textAlignLeft"></i>
         </span>
         <span role="button"
           class="secondary"
