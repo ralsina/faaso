@@ -10,7 +10,6 @@
   * Add tooltips where appropriate
   * ✅ Nicer icons
   * ✅ Maybe tabbed UI?
-  * Don't use CDNs
 * ✅ Version checks for consistency between client/server
 * ✅ Have 3 runtimes:
   * ✅ Crystal + Kemal
