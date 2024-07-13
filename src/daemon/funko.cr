@@ -8,8 +8,6 @@ module Funko
   extend self
 
   # Build image for funko received as "funko.tgz"
-  # TODO: This may take a while, consider using something like
-  # mosquito-cr/mosquito to make it a job queue
   post "/funkos/build/" do |env|
     # Create place to build funko
     tmp_dir = Path.new("tmp", Random.base58(8))
@@ -39,7 +37,7 @@ module Funko
   # General status for the front page
   get "/funkos/" do |env|
     funkos = Funko.from_docker
-    funkos.sort! { |a, b| a.name <=> b.name }
+    funkos.sort! { |i, j| i.name <=> j.name }
     result = [] of Hash(String, String | Array(Docr::Types::ContainerSummary))
 
     funkos.each do |funko|

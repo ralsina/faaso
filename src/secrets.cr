@@ -3,8 +3,6 @@ module Secrets
   SECRETS     = Hash(String, String).new
   SECRET_PATH = "./secrets/"
 
-  # TODO: sanitize all inputs
-
   # Store secrets in a tree of files
   def update_secrets
     # Save new secrets

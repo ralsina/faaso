@@ -4,6 +4,7 @@ require "kemal-basic-auth"
 class Config
   include CrConfig
 
+  # ameba:disable Lint/UselessAssign
   option password : String, default: "admin"
 
   def self.load
