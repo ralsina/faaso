@@ -9,6 +9,7 @@
   * Add UI for scaling funkos rather than "play/stop"
   * Add tooltips where appropriate
   * Nicer icons
+  * Maybe tabbed UI?
 * ✅ Version checks for consistency between client/server
 * ✅ Have 3 runtimes:
   * ✅ Crystal + Kemal
