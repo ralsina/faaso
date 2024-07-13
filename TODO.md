@@ -56,3 +56,4 @@
   an element and show newlines correctly.
 * Polish secret dialog to show correct wording in title and buttons,
   maybe disable funko/name inputs when editing?
+* Metrics from Caddy using Prometheus (or something)
