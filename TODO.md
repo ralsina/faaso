@@ -61,3 +61,5 @@
 * Implement static site vhost proxying
 * Switch from rucksack to something else because it's flaky
 * Add UI for scaling funkos rather than "play/stop"
+* Explore swarm integration for horizontal scaling
+* Check compatibility with podman
