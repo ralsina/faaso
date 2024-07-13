@@ -58,14 +58,18 @@ module Funko
       }
     end
 
-    def to_json(json : JSON::Builder)
-      json.object do
-        json.field("name", name)
-        json.field("ship_packages", ship_packages)
-        json.field("devel_packages", devel_packages)
-        json.field("healthcheck_options", healthcheck_options)
-        json.field("healthcheck_command", healthcheck_command)
-      end
+    # def to_json(json : JSON::Builder)
+    #   json.object do
+    #     json.field("name", name)
+    #     json.field("ship_packages", ship_packages)
+    #     json.field("devel_packages", devel_packages)
+    #     json.field("healthcheck_options", healthcheck_options)
+    #     json.field("healthcheck_command", healthcheck_command)
+    #   end
+    # end
+
+    def after_initialize
+      raise Exception.new("Invalid funko name: #{name}") unless valid?
     end
 
     # Create an Array of funkos from an Array of folders containing definitions
@@ -344,6 +348,10 @@ module Funko
         }
       }
       from_names(names.to_set.to_a.sort!)
+    end
+
+    def valid? : Bool
+      (name =~ /^[A-Za-z0-9]+$/) == 0
     end
   end
 end
