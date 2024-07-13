@@ -10,6 +10,7 @@
   * Add tooltips where appropriate
   * Nicer icons
   * Maybe tabbed UI?
+  * Add UI for vhosts when ready
 * ✅ Version checks for consistency between client/server
 * ✅ Have 3 runtimes:
   * ✅ Crystal + Kemal
