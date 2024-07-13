@@ -10,7 +10,7 @@ end
 
 Oplog.setup(4) unless ENV.fetch("FAASO_SERVER_SIDE", nil)
 
-if ARGV.empty? || !Faaso::Commands::COMMANDS.has_key?(ARGV[0])
+if (ARGV.empty? || !Faaso::Commands::COMMANDS.has_key?(ARGV[0])) && ARGV[0] != "version"
   Log.info { "FaaSO CLI tool, version #{version}" }
   Log.info { "Usage: faaso COMMAND [ARGS]" }
   Log.info { "Try 'faaso help' for a list of commands." }
@@ -19,6 +19,11 @@ if ARGV.empty? || !Faaso::Commands::COMMANDS.has_key?(ARGV[0])
 end
 
 cmdname = ARGV[0]
+
+if cmdname == "version"
+  Log.info { version }
+  exit 0
+end
 
 options = Docopt.docopt(Faaso::Commands::COMMANDS[cmdname].doc, ARGV)
 
@@ -29,4 +34,3 @@ rescue ex : Exception
   Log.debug { ex.backtrace.join("\n") } if ex.backtrace?
   exit 1
 end
-# TODO: version command
