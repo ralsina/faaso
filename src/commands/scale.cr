@@ -1,17 +1,27 @@
 module Faaso
   module Commands
-    # Controls a funko's scale
-    #
-    # Scale is how many instances are running.
-    #
-    # If it's increased, more instances are created.
-    # It it's decreased, instances are destroyed.
-    #
-    # In both cases stopped instances after the required
-    # scale is reached are deleted.
-    struct Scale
-      def run(options, name : String, scale) : Int32
-        scale = scale.try &.to_s.to_i
+    struct Scale < Command
+      @@doc : String = <<-DOC
+FaaSO CLI tool, scale command.
+
+A funko's scale is how many instances are running.
+
+* Given a funko name, it will print the current scale.
+* Given a funko name and a number, it will start or stop instances
+  to reach that new scale.
+
+Usage:
+  faaso scale FUNKO [SCALE]         [-v <level>] [-l]
+
+Options:
+  -h --help        Show this screen
+  -l --local       Run commands locally instead of against a FaaSO server
+  -v level         Control the logging verbosity, 0 to 6 [default: 4]
+DOC
+
+      def run : Int32
+        scale = options["SCALE"].try &.to_s.to_i
+        name = options["FUNKO"].as(String)
         funko = Funko::Funko.from_names([name])[0]
         # Asked about scale
         if funko.image_history.empty?
@@ -29,3 +39,5 @@ module Faaso
     end
   end
 end
+
+Faaso::Commands::COMMANDS["scale"] = Faaso::Commands::Scale

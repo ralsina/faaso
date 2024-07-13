@@ -1,7 +1,24 @@
 module Faaso
   module Commands
-    struct Login
-      def run(options) : Int32
+    struct Login < Command
+      @@doc : String = <<-DOC
+      FaaSO CLI tool, login command.
+
+      Logs into the FaaSO server declared in the FAASO_SERVER environment
+      variable.
+
+      IMPORTANT: Credentials are stored in plain text in .faaso.yml in the
+      current folder!
+
+      Usage:
+        faaso login                       [-v <level>]
+
+      Options:
+        -h --help        Show this screen
+        -v level         Control the logging verbosity, 0 to 6 [default: 4]
+      DOC
+
+      def run : Int32
         server = Config.server
         Log.info { "Enter password for #{server}" }
         if STDIN.tty?
@@ -45,3 +62,5 @@ module Faaso
     end
   end
 end
+
+Faaso::Commands::COMMANDS["login"] = Faaso::Commands::Login

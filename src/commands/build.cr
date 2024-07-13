@@ -1,10 +1,27 @@
+require "./command.cr"
 require "base58"
 
 module Faaso
   module Commands
     # Build images for one or more funkos from source
-    struct Build
-      def run(options, folders : Array(String)) : Int32
+    struct Build < Command
+      @@doc : String = <<-DOC
+FaaSO CLI tool, build command.
+
+Builds docker images out of funkos defined in one or more folders.
+
+Usage:
+  faaso build  FOLDER ...           [-v <level>] [-l] [--no-runtime]
+
+Options:
+  -h --help        Show this screen
+  -l --local       Run commands locally instead of against a FaaSO server
+  -v level         Control the logging verbosity, 0 to 6 [default: 4]
+  --no-runtime     Don't merge a runtime into the funko before building
+DOC
+
+      def run : Int32
+        folders = options["FOLDER"].as(Array(String))
         funkos = Funko::Funko.from_paths(folders)
         # Create temporary build location
 
@@ -70,3 +87,5 @@ module Faaso
     end
   end
 end
+
+Faaso::Commands::COMMANDS["build"] = Faaso::Commands::Build

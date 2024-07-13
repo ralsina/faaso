@@ -1,7 +1,24 @@
 module Faaso
   module Commands
-    struct Secret
-      def local(options, funko, name, secret) : Int32
+    struct Secret < Command
+      @@doc : String = <<-DOC
+FaaSO CLI tool, secret command.
+
+Sores a secret called SECRET for a funko called FUNKO. This secret
+is made available in runtime for the funko container in a file
+called /secrets/SECRET
+
+Usage:
+  faaso secret (-d|-a) FUNKO SECRET [-v <level>] [-l]
+
+Options:
+  -a --add         Add new secret
+  -d --delete      Delete existing secret
+  -h --help        Show this screen
+  -l --local       Run commands locally instead of against a FaaSO server
+  -v level         Control the logging verbosity, 0 to 6 [default: 4]
+DOC
+      def local(funko, name, secret) : Int32
         if options["--add"]
           dst_dir = "secrets/#{funko}"
           Dir.mkdir_p(dst_dir) unless Dir.exists?(dst_dir)
@@ -12,7 +29,8 @@ module Faaso
         0
       end
 
-      def remote(options, funko, name, secret) : Int32
+      def remote(funko, name, secret) : Int32
+        # Can't use generic RPC because it needs to process terminal input
         Faaso.check_version
         user, password = Config.auth
         if options["--add"]
@@ -35,7 +53,9 @@ module Faaso
         1
       end
 
-      def run(options, funko, name) : Int32
+      def run : Int32
+        funko = options["FUNKO"].as(String)
+        name = options["SECRET"].as(String)
         if options["--add"]
           Log.info { "Enter the secret, end with Ctrl-D" } if STDIN.tty?
           secret = STDIN.gets_to_end
@@ -44,10 +64,12 @@ module Faaso
         end
 
         if options["--local"]
-          return local(options, funko, name, secret)
+          return local(funko, name, secret)
         end
-        remote(options, funko, name, secret)
+        remote(funko, name, secret)
       end
     end
   end
 end
+
+Faaso::Commands::COMMANDS["secret"] = Faaso::Commands::Secret

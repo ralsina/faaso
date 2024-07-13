@@ -1,7 +1,25 @@
 module Faaso
   module Commands
-    struct Deploy
-      def run(options, funko_name : String) : Int32
+    struct Deploy < Command
+      @@doc : String = <<-DOC
+FaaSO CLI tool, deploy command.
+
+Looks at the current number of running containers for a funko and if any
+are out of date (running an image that is not the latest) it will scale
+up with new containers, wait for them to be healthy, then scale back down
+to the original number of containers.
+
+Usage:
+  faaso deploy FUNKO                [-v <level>] [-l]
+
+Options:
+  -h --help        Show this screen
+  -l --local       Run commands locally instead of against a FaaSO server
+  -v level         Control the logging verbosity, 0 to 6 [default: 4]
+DOC
+
+      def run : Int32
+        funko_name = options["FUNKO"].as(String)
         Log.info { "Deploying #{funko_name}" }
         funko = Funko::Funko.from_names([funko_name])[0]
         # Get scale, check for out-of-date containers
@@ -43,3 +61,5 @@ module Faaso
     end
   end
 end
+
+Faaso::Commands::COMMANDS["deploy"] = Faaso::Commands::Deploy

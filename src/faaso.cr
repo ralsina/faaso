@@ -18,6 +18,12 @@ require "uuid"
 module Faaso
   VERSION = "0.1.0"
 
+  module Commands
+    # Base for command structs
+    struct Command
+    end
+  end
+
   # Ensure the faaso-net network exists
   def self.setup_network
     docker_api = Docr::API.new(Docr::Client.new)
