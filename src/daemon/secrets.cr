@@ -3,18 +3,23 @@ require "../secrets.cr"
 
 module Secrets
   extend self
-  # TODO: sanitize all inputs
+  VALID_NAMES = /^[A-Za-z0-9]+$/
 
   # Gets a secret in form {"name": "funko_name-secret_name", "value": "secret_value"}
   post "/secrets/" do |env|
-    pp! env.params
-    funko = env.params.body["funko"].as(String)
-    name = env.params.body["name"].as(String)
-    value = env.params.body["value"].as(String)
-    Log.info { "Creating secret #{funko}-#{name}" }
-    if funko.empty? || name.empty? || value.empty?
+    funko = env.params.body.fetch("funko", "").as(String)
+    name = env.params.body.fetch("name", "").as(String)
+    value = env.params.body.fetch("value", "").as(String)
+
+    if funko.empty? ||
+       name.empty? ||
+       value.empty? ||
+       !name.match(VALID_NAMES) ||
+       !funko.match(VALID_NAMES)
       halt env, status_code: 400, response: "Bad request"
     end
+
+    Log.info { "Creating secret #{funko}-#{name}" }
     SECRETS["#{funko}-#{name}"] = value
     Secrets.update_secrets
     halt env, status_code: 201, response: "Created"

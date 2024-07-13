@@ -23,7 +23,7 @@
     * FaaSO for runtime developers
     * FaaSO server setup
     * APIs
-* Sanitize all inputs
+* ✅ Sanitize inputs
 * ✅ Streaming responses in slow operations
 * ✅ Make more things configurable / remove hardcoded stuff
   * ✅ Make server take options from file
@@ -41,7 +41,7 @@
 * ✅ `faaso scale` remote is broken
 * ✅ Setup linters/pre-commit/etc
 * ✅ Implement secret editing
-* Check secret permissions (maybe run proxy as non-root)
+* ✅ Check secret permissions (maybe run proxy as non-root)
 * ✅ Check if deploy is working correctly in different scenarios
 * Implement static site vhost proxying
 * ✅ Multi-container docker logs [faaso logs -f FUNKO]

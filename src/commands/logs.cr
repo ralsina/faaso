@@ -3,9 +3,8 @@ module Faaso
     struct Logs
       def run(options, funko_name : String) : Int32
         funko = Funko::Funko.from_names([funko_name])[0]
-        containers = funko.containers.map { |c|
-          p! c.@names
-          {c.@id, c.@names[0].split("-",2)[-1]}
+        containers = funko.containers.map { |container|
+          {container.@id, container.@names[0].split("-", 2)[-1]}
         }
 
         channel = Channel(String).new
@@ -19,7 +18,7 @@ module Faaso
               stderr: true,
               tail: "10")
             while !body_io.closed?
-              body_io.gets.try { |s| channel.send("#{name} >> #{s}") }
+              body_io.gets.try { |data| channel.send("#{name} >> #{data}") }
             end
           end
         end
