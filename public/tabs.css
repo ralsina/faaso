@@ -1,3 +1,5 @@
+/* From https://erikpoehler.com/2022/12/15/picocss-content-tabs/ */
+
 [role="tabs"] {
   display: flex;
 }

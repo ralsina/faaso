@@ -10,7 +10,6 @@
   * Add tooltips where appropriate
   * ✅ Nicer icons
   * ✅ Maybe tabbed UI?
-  * Add UI for vhosts when ready
   * Don't use CDNs
 * ✅ Version checks for consistency between client/server
 * ✅ Have 3 runtimes:
@@ -47,7 +46,6 @@
 * ✅ Implement secret editing
 * ✅ Check secret permissions (maybe run proxy as non-root)
 * ✅ Check if deploy is working correctly in different scenarios
-* Implement static site vhost proxying
 * ✅ Multi-container docker logs [faaso logs -f FUNKO]
 * Switch from rucksack to something else because it's flaky
 
@@ -62,3 +60,4 @@
 * Polish secret dialog to show correct wording in title and buttons,
   maybe disable funko/name inputs when editing?
 * Metrics from Caddy using Prometheus (or something)
+* Implement static site vhost proxying
