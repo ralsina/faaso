@@ -1,0 +1,28 @@
+[role="tabs"] {
+  display: flex;
+}
+
+[role="tabs"] section {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+[role="tabs"] figure {
+  flex-grow: 1;
+  width: 100%;
+  height: 100%;
+  display: none;
+  overflow: hidden;
+}
+
+[role="tabs"] [type="radio"]:checked + figure {
+  display: block;
+}
+
+nav[role="tab-control"] label.active {
+  border: 2px solid var(--primary);
+  cursor: pointer;
+  padding: 1em;
+  border-radius: 0.5em;
+}

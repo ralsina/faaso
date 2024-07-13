@@ -9,7 +9,7 @@
   * Add UI for scaling funkos rather than "play/stop"
   * Add tooltips where appropriate
   * ✅ Nicer icons
-  * Maybe tabbed UI?
+  * ✅ Maybe tabbed UI?
   * Add UI for vhosts when ready
   * Don't use CDNs
 * ✅ Version checks for consistency between client/server
@@ -23,6 +23,7 @@
     * FaaSO for runtime developers
     * FaaSO server setup
     * APIs
+    * One tutorial with a non-trivial app
 * ✅ Sanitize inputs
 * ✅ Streaming responses in slow operations
 * ✅ Make more things configurable / remove hardcoded stuff

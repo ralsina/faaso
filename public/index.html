@@ -11,93 +11,126 @@
   <link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://icono-49d6.kxcdn.com/icono.min.css">
+  <link rel="stylesheet" href="tabs.css">
   <title>FaaSO Admin Panel</title>
 </head>
 <body style="font-family:Kode mono;">
 <main class="container">
-  <section>
-    <nav>
-      <ul>
-      <li><strong style="font-size: 200%;">Your Funko Collection</strong></li>
-      </ul>
-      <ul>
-      <li><span role="button" id="update-funkos" hx-trigger="load, click, every 60s"
-        hx-get="funkos/?format=html" hx-target="#funko-list">
-        <i class="icono-sync"></i>
-      </span>
-      </ul>
-    </nav>
-    <span id="message"></span>
-    <table hx-target="#message" class="striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Instances</th>
-          <th style="text-align:right;padding-right:0;">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="funko-list">
-      </tbody>
-    </table>
-    <div id="terminal" style="resize: vertical; overflow: auto;"></div>
-  </section>
+
+  <nav role="tab-control">
+    <ul>
+      <li><label for="tab1">Funkos</label></li>
+      <li><label for="tab2">Secrets</label></li>
+    </ul>
+  </nav>
+  <div role="tabs">
+    <section>
+      <input hidden="hidden" type="radio" name="tabs" id="tab1" checked="checked" />
+      <figure>
+        <nav>
+          <ul>
+          <li><strong style="font-size: 200%;">Your Funko Collection</strong></li>
+          </ul>
+          <ul>
+          <li><span role="button" id="update-funkos" hx-trigger="load, click, every 60s"
+            hx-get="funkos/?format=html" hx-target="#funko-list">
+            <i class="icono-sync"></i>
+          </span>
+          </ul>
+        </nav>
+        <span id="message"></span>
+        <table hx-target="#message" class="striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Instances</th>
+              <th style="text-align:right;padding-right:0;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="funko-list">
+          </tbody>
+        </table>
+        <div id="terminal" style="resize: vertical; overflow: auto;"></div>
+      </figure>
+      <input hidden="hidden" type="radio" name="tabs" id="tab2" />
+      <figure>
+        <nav>
+        <ul>
+        <li><strong style="font-size: 200%;">Your Secrets</strong>
+        </ul>
+        <ul>
+          <li><span role="button"
+                hx-get="secrets/-/-/?format=html"
+                hx-target="#add-secret"
+                hx-on:htmx:before-request="show_secret();">
+                <i class="icono-plus"></i>
+              </span>
+          <li><span role="button" id="update-secrets" hx-trigger="load, click, every 60s"
+            hx-get="secrets/?format=html" hx-target="#secret-list">
+          <i class="icono-sync"></i>
+          </span>
+        </ul>
+        </nav>
+        <span id="message"></span>
+        <table hx-target="#message">
+          <thead>
+            <tr>
+              <th>Funko</th>
+              <th>Name</th>
+              <th style="text-align:right;padding-right:0;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="secret-list">
+          </tbody>
+          <dialog id="add-secret">
+          </dialog>
+      </figure>
+    </section>
+  </div>
+
   <script>
     update_funkos = function () {
       document.getElementById("update-funkos").click()
     }
   </script>
-  <section>
-    <nav>
-    <ul>
-    <li><strong style="font-size: 200%;">Your Secrets</strong>
-    </ul>
-    <ul>
-      <li><span role="button"
-            hx-get="secrets/-/-/?format=html"
-            hx-target="#add-secret"
-            hx-on:htmx:before-request="show_secret();">
-            <i class="icono-plus"></i>
-          </span>
-      <li><span role="button" id="update-secrets" hx-trigger="load, click, every 60s"
-        hx-get="secrets/?format=html" hx-target="#secret-list">
-      <i class="icono-sync"></i>
-      </span>
-    </ul>
-    </nav>
-    <span id="message"></span>
-    <table hx-target="#message">
-      <thead>
-        <tr>
-          <th>Funko</th>
-          <th>Name</th>
-          <th style="text-align:right;padding-right:0;">Actions</th>
-        </tr>
-      </thead>
-      <tbody id="secret-list">
-      </tbody>
-      <dialog id="add-secret">
-      </dialog>
-      <script>
-        update_secrets = function() {
-          document.getElementById("update-secrets").click()
-        }
-        add_secret = function() {
-          clean_secret()
-          document.getElementById('add-secret').show()
-        }
-        show_secret = function() {
-          document.getElementById('add-secret').show()
-        }
-        clean_secret = function() {
-          document.getElementById('new-secret-funko').value=""
-          document.getElementById('new-secret-name').value=""
-          document.getElementById('new-secret-password').value=""
-        }
-        hide_secret = function() {
-          document.getElementById('add-secret').close();
-          update_secrets();
-        }
-      </script>
-    </section>
+  <script>
+    update_secrets = function() {
+      document.getElementById("update-secrets").click()
+    }
+    add_secret = function() {
+      clean_secret()
+      document.getElementById('add-secret').show()
+    }
+    show_secret = function() {
+      document.getElementById('add-secret').show()
+    }
+    clean_secret = function() {
+      document.getElementById('new-secret-funko').value=""
+      document.getElementById('new-secret-name').value=""
+      document.getElementById('new-secret-password').value=""
+    }
+    hide_secret = function() {
+      document.getElementById('add-secret').close();
+      update_secrets();
+    }
+  </script>
+  <script>
+    const nodeList = document.querySelectorAll('nav[role="tab-control"] label');
+    const eventListenerCallback = setActiveState.bind(null, nodeList);
+
+    nodeList[0].classList.add('active'); /** add active class to first node  */
+
+    nodeList.forEach((node) => {
+      node.addEventListener("click", eventListenerCallback); /** add click event listener to all nodes */
+    });
+
+    /** the click handler */
+    function setActiveState(nodeList, event) {
+      nodeList.forEach((node) => {
+        node.classList.remove("active"); /** remove active class from all nodes */
+      });
+      event.target.classList.add("active"); /* set active class on current node */
+    }
+  </script>
   </main>
 </body>
