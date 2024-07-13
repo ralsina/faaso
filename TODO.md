@@ -8,7 +8,7 @@
   * ✅ Make secrets work correctly
   * Add UI for scaling funkos rather than "play/stop"
   * Add tooltips where appropriate
-  * Nicer icons
+  * ✅ Nicer icons
   * Maybe tabbed UI?
   * Add UI for vhosts when ready
 * ✅ Version checks for consistency between client/server

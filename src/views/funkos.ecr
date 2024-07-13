@@ -8,13 +8,23 @@
     <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
       <div style="margin-bottom: .75Rem;">
         <%- if c.image_id == f["latest_image"] -%>
-          <span class="pico-color-green-600">🟢
+          <span class="pico-color-green-600"><i class="icono-check"></i>
         <%- else -%>
-          <span class="pico-color-red-600">🟢
+          <span class="pico-color-red-600"><i class="icono-clock"></i>
         <%- end -%>
           <%= c.@names[0].split("-")[-1]%></span>
-        <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">🖨</span>
-        <span role="button" class="secondary" hx-target="#terminal" hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">🖥</span>
+        <span role="button"
+           class="secondary"
+           hx-target="#terminal"
+           hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">
+            <i class="icono-list"></i>
+        </span>
+        <span role="button"
+          class="secondary"
+          hx-target="#terminal"
+          hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">
+            <i class="icono-keyboard"></i>
+        </span>
       </div>
     <%- end -%>
   </td>
@@ -24,15 +34,40 @@
   <%- if f["name"] == "proxy" -%>
   <%- else -%>
     <%- if f["scale"].as(String).to_i > 0 -%>
-      <span role="button" disabled hx-get="funkos/<%= f["name"] %>/start">▶</span>
-      <span role="button" hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">⏹</span>
-      <span role="button" disabled hx-delete="funkos/<%= f["name"] %>/" hx-on:htmx:after-request="update_funkos()">❎</span>
+      <span role="button"
+        disabled
+        hx-get="funkos/<%= f["name"] %>/start">
+          <i class="icono-play"></i>
+      </span>
+      <span role="button"
+        hx-get="funkos/<%= f["name"] %>/stop"
+        hx-on:htmx:after-request="update_funkos()">
+          <i class="icono-stop"></i>
+      </span>
+      <span role="button"
+        disabled hx-delete="funkos/<%= f["name"] %>/"
+        hx-on:htmx:after-request="update_funkos()">
+          <i class="icono-crossCircle"></i>
+      </span>
     <%- else -%>
-      <span role="button" hx-get="funkos/<%= f["name"] %>/start" hx-on:htmx:after-request="update_funkos()">▶️</span>
-      <span role="button" disabled hx-get="funkos/<%= f["name"] %>/stop" hx-on:htmx:after-request="update_funkos()">⏹</span>
-      <span role="button" hx-delete="funkos/<%= f["name"] %>/" hx-on:htmx:after-request="update_funkos()">❎</span>
+      <span role="button"
+        hx-get="funkos/<%= f["name"] %>/start"
+        hx-on:htmx:after-request="update_funkos()">
+          <i class="icono-play"></i>
+      </span>
+      <span role="button"
+        disabled
+        hx-get="funkos/<%= f["name"] %>/stop"
+        hx-on:htmx:after-request="update_funkos()">
+          <i class="icono-stop"></i>
+      </span>
+      <span role="button"
+        hx-delete="funkos/<%= f["name"] %>/"
+        hx-on:htmx:after-request="update_funkos()">
+          <i class="icono-crossCircle"></i>
+      </span>
     <%- end -%>
-      <span role="button" hx-get="funkos/<%= f["name"] %>/deploy" hx-on:htmx:after-request="update_funkos()">🔃</span>
+      <span role="button" hx-get="funkos/<%= f["name"] %>/deploy" hx-on:htmx:after-request="update_funkos()"><i class="icono-sync"></i></span>
   <%- end -%>
   </div>
   </td>
