@@ -50,7 +50,7 @@ module Faaso
     end
   end
 
-  def self.rpc_call(args : Array(String))
+  def self.rpc_call(args : Array(String)) : Int32
     user, password = Config.auth
     Crest.post(
       "#{Config.server}rpc/",
@@ -59,5 +59,6 @@ module Faaso
       json: true) do |response|
       IO.copy(response.body_io, STDOUT)
     end
+    0
   end
 end

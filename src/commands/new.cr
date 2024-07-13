@@ -24,7 +24,7 @@ Options:
   -v level         Control the logging verbosity, 0 to 6 [default: 4]
 DOC
 
-def run : Int32
+      def run : Int32
         runtime = options["-r"].as(String)
         # Give a list of known runtimes
         if runtime == "list"

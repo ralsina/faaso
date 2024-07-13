@@ -18,6 +18,7 @@ Options:
   -l --local       Run commands locally instead of against a FaaSO server
   -v level         Control the logging verbosity, 0 to 6 [default: 4]
 DOC
+
       def local(funko, name, secret) : Int32
         if options["--add"]
           dst_dir = "secrets/#{funko}"

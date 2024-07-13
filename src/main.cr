@@ -13,7 +13,7 @@ Oplog.setup(4) unless ENV.fetch("FAASO_SERVER_SIDE", nil)
 if ARGV.empty? || !Faaso::Commands::COMMANDS.has_key?(ARGV[0])
   Log.info { "FaaSO CLI tool, version #{version}" }
   Log.info { "Usage: faaso COMMAND [ARGS]" }
-  Log.info { "Try 'faaso help' for a list of commands."}
+  Log.info { "Try 'faaso help' for a list of commands." }
   Log.info { "Try 'faaso help COMMAND' for more information on a command." }
   exit 1
 end

@@ -17,7 +17,8 @@ module Faaso
       -h --help        Show this screen
       -v level         Control the logging verbosity, 0 to 6 [default: 4]
     DOC
-        struct Export < Command
+
+    struct Export < Command
       def run(options, source : String, destination : String) : Int32
         funko = Funko::Funko.from_paths([source])[0]
         # Create temporary build location

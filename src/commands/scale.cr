@@ -20,6 +20,9 @@ Options:
 DOC
 
       def run : Int32
+        if !options["--local"]
+          return Faaso.rpc_call(ARGV)
+        end
         scale = options["SCALE"].try &.to_s.to_i
         name = options["FUNKO"].as(String)
         funko = Funko::Funko.from_names([name])[0]
