@@ -73,6 +73,7 @@
         data-tooltip="Delete the Funko"
         data-placement="left"
         hx-delete="funkos/<%= f["name"] %>/"
+        hx-confirm="Are you sure you want to delete this funko?"
         hx-on:htmx:after-request="update_funkos()">
           <i class="icono-crossCircle"></i>
       </span>

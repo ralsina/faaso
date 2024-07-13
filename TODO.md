@@ -10,7 +10,7 @@
   * ✅ Add tooltips where appropriate
   * ✅ Nicer icons
   * ✅ Maybe tabbed UI?
-  * Confirmation before destructive actions
+  * ✅ Confirmation before destructive actions
 * ✅ Version checks for consistency between client/server
 * ✅ Have 3 runtimes:
   * ✅ Crystal + Kemal
