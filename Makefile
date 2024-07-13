@@ -3,7 +3,7 @@ build: shard.yml $(wildcard src/**/*) $(runtimes/**/*)
 	cat .rucksack >> bin/faaso
 	cat .rucksack >> bin/faaso-daemon
 proxy:
-	docker build . -t faaso-proxy
+	docker build . -t faaso
 
 all: build proxy
 
@@ -15,7 +15,7 @@ start-proxy:
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v ${PWD}/secrets:/home/app/secrets \
 	-v ${PWD}/config:/home/app/config \
-	-p 8888:8888 faaso-proxy
+	-p 8888:8888 faaso
 
 test:
 	crystal spec
