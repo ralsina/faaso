@@ -5,6 +5,10 @@
 * ✅ User flow for initial proxy setup
   * ✅ Setting up password
 * Polish frontend UI **A LOT**
+  * ✅ Make secrets work correctly
+  * Add UI for scaling funkos rather than "play/stop"
+  * Add tooltips where appropriate
+  * Nicer icons
 * ✅ Version checks for consistency between client/server
 * ✅ Have 3 runtimes:
   * ✅ Crystal + Kemal
@@ -33,7 +37,7 @@
 * ✅ Cleanup `tmp/whatever` after use
 * ✅ `faaso scale` remote is broken
 * ✅ Setup linters/pre-commit/etc
-* Implement secret editing
+* ✅ Implement secret editing
 * Check secret permissions (maybe run proxy as non-root)
 * ✅ Check if deploy is working correctly in different scenarios
 * Implement static site vhost proxying
@@ -47,3 +51,5 @@
 * Add multi-container logs to web frontend. It's close but
   haven't figured out how to make HTMX append the log into
   an element and show newlines correctly.
+* Polish secret dialog to show correct wording in title and buttons,
+  maybe disable funko/name inputs when editing?
