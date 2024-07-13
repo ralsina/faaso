@@ -45,6 +45,7 @@
 * ✅ Check if deploy is working correctly in different scenarios
 * Implement static site vhost proxying
 * ✅ Multi-container docker logs [faaso logs -f FUNKO]
+* Switch from rucksack to something else because it's flaky
 
 ## Things to do but not before release
 
