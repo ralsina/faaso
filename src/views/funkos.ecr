@@ -8,9 +8,9 @@
     <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
       <div style="margin-bottom: .75Rem;">
         <%- if c.image_id == f["latest_image"] -%>
-          <span class="pico-color-jade-450"><i class="icono-check" tooltip-data="OK"></i>
+          <span class="pico-color-jade-450"><i class="icono-check"></i>
         <%- else -%>
-          <span class="pico-color-orange-450"><i class="icono-clock" tooltip-data="Out of Date"></i>
+          <span class="pico-color-orange-450"><i class="icono-clock"></i>
         <%- end -%>
           <%= c.@names[0].split("-")[-1]%></span>
         <span role="button"

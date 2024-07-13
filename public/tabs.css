@@ -28,3 +28,7 @@ nav[role="tab-control"] label.active {
   padding: 1em;
   border-radius: 0.5em;
 }
+
+[role="button"] {
+  margin-bottom: .5em
+}
