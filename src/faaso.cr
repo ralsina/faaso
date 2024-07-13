@@ -1,6 +1,7 @@
 require "./commands/build.cr"
 require "./commands/deploy.cr"
 require "./commands/export.cr"
+require "./commands/help.cr"
 require "./commands/login.cr"
 require "./commands/logs.cr"
 require "./commands/new.cr"

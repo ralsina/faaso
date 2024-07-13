@@ -10,7 +10,7 @@ module Faaso
       class_property doc : String = ""
 
       def initialize(@options)
-        Oplog.setup(@options["-v"].to_s.to_i) unless ENV.fetch("FAASO_SERVER_SIDE", nil)
+        Oplog.setup(@options.fetch("-v", 4).to_s.to_i) unless ENV.fetch("FAASO_SERVER_SIDE", nil)
       end
 
       def run : Int32

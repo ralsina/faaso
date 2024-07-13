@@ -21,7 +21,12 @@ end
 cmdname = ARGV[0]
 
 options = Docopt.docopt(Faaso::Commands::COMMANDS[cmdname].doc, ARGV)
-exit Faaso::Commands::COMMANDS[cmdname].new(options).run
 
+begin
+  exit Faaso::Commands::COMMANDS[cmdname].new(options).run
+rescue ex : Exception
+  Log.error { ex.message }
+  Log.debug { ex.backtrace.join("\n") } if ex.backtrace?
+  exit 1
+end
 # TODO: version command
-# TODO: help command
