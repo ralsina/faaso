@@ -34,10 +34,16 @@
           <li><strong style="font-size: 200%;">Your Funko Collection</strong></li>
           </ul>
           <ul>
-          <li><span role="button" id="update-funkos" hx-trigger="load, click, every 60s"
-            hx-get="funkos/?format=html" hx-target="#funko-list">
-            <i class="icono-sync"></i>
-          </span>
+          <li>
+            <span role="button"
+            id="update-funkos"
+            data-tooltip="Update list of funkos"
+            data-placement="left"
+            hx-trigger="load, click, every 60s"
+            hx-get="funkos/?format=html"
+            hx-target="#funko-list">
+              <i class="icono-sync"></i>
+            </span>
           </ul>
         </nav>
         <span id="message"></span>
@@ -62,15 +68,22 @@
         </ul>
         <ul>
           <li><span role="button"
+                data-tooltip="Create a new secret"
+                data-placement="left"
                 hx-get="secrets/-/-/?format=html"
                 hx-target="#add-secret"
                 hx-on:htmx:before-request="show_secret();">
-                <i class="icono-plus"></i>
+                  <i class="icono-plus"></i>
               </span>
-          <li><span role="button" id="update-secrets" hx-trigger="load, click, every 60s"
-            hx-get="secrets/?format=html" hx-target="#secret-list">
-          <i class="icono-sync"></i>
-          </span>
+          <li><span role="button"
+                data-tooltip="Update list of secrets"
+                data-placement="left"
+                id="update-secrets"
+                hx-trigger="load, click, every 60s"
+                hx-get="secrets/?format=html"
+                hx-target="#secret-list">
+                  <i class="icono-sync"></i>
+              </span>
         </ul>
         </nav>
         <span id="message"></span>

@@ -8,18 +8,22 @@
     <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
       <div style="margin-bottom: .75Rem;">
         <%- if c.image_id == f["latest_image"] -%>
-          <span class="pico-color-jade-450"><i class="icono-check"></i>
+          <span class="pico-color-jade-450"><i class="icono-check" tooltip-data="OK"></i>
         <%- else -%>
-          <span class="pico-color-orange-450"><i class="icono-clock"></i>
+          <span class="pico-color-orange-450"><i class="icono-clock" tooltip-data="Out of Date"></i>
         <%- end -%>
           <%= c.@names[0].split("-")[-1]%></span>
         <span role="button"
-           class="secondary"
-           hx-target="#terminal"
-           hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">
+          data-tooltip="View Logs"
+          data-placement="left"
+          class="secondary"
+          hx-target="#terminal"
+          hx-get="funkos/terminal/logs/<%= c.@names[0].lstrip("/") %>/">
             <i class="icono-textAlignLeft"></i>
         </span>
         <span role="button"
+          data-tooltip="Open Terminal"
+          data-placement="left"
           class="secondary"
           hx-target="#terminal"
           hx-get="funkos/terminal/shell/<%= c.@names[0].lstrip("/") %>/">
@@ -40,6 +44,8 @@
           <i class="icono-play"></i>
       </span>
       <span role="button"
+        data-tooltip="Stop all instances"
+        data-placement="left"
         hx-get="funkos/<%= f["name"] %>/stop"
         hx-on:htmx:after-request="update_funkos()">
           <i class="icono-stop"></i>
@@ -51,6 +57,8 @@
       </span>
     <%- else -%>
       <span role="button"
+        data-tooltip="Start an instance"
+        data-placement="left"
         hx-get="funkos/<%= f["name"] %>/start"
         hx-on:htmx:after-request="update_funkos()">
           <i class="icono-play"></i>
@@ -62,12 +70,20 @@
           <i class="icono-stop"></i>
       </span>
       <span role="button"
+        data-tooltip="Delete the Funko"
+        data-placement="left"
         hx-delete="funkos/<%= f["name"] %>/"
         hx-on:htmx:after-request="update_funkos()">
           <i class="icono-crossCircle"></i>
       </span>
     <%- end -%>
-      <span role="button" hx-get="funkos/<%= f["name"] %>/deploy" hx-on:htmx:after-request="update_funkos()"><i class="icono-sync"></i></span>
+      <span role="button"
+        data-tooltip="Update to latest image"
+        data-placement="left"
+        hx-get="funkos/<%= f["name"] %>/deploy"
+        hx-on:htmx:after-request="update_funkos()">
+          <i class="icono-sync"></i>
+      </span>
   <%- end -%>
   </div>
   </td>
