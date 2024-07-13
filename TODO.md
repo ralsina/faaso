@@ -32,6 +32,9 @@
   * ✅ admin/admin auth client side
   * ✅ `faaso login` is not working properly yet with proxy
 * CD for binaries and images for at least arm64/x86
+  * ✅ Script to build static binaries
+  * ✅ Script to build docker images and upload to registry
+  * Run it on release
 * ✅ Configurable verbosity, support stderr/stdout split
 * ✅ Fix proxy reload / Make it reload on file changes
 * Implement `faaso help command`
