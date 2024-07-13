@@ -45,7 +45,7 @@
 * ✅ Check secret permissions (maybe run proxy as non-root)
 * ✅ Check if deploy is working correctly in different scenarios
 * ✅ Multi-container docker logs [faaso logs -f FUNKO]
-* Implement `faaso help command`
+* ✅ Implement `faaso help command`
 
 ## Things to do for NEXT release
 
