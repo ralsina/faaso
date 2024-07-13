@@ -4,9 +4,8 @@
 
 * ✅ User flow for initial proxy setup
   * ✅ Setting up password
-* Polish frontend UI **A LOT**
+* ✅ Polish frontend UI **A LOT**
   * ✅ Make secrets work correctly
-  * Add UI for scaling funkos rather than "play/stop"
   * ✅ Add tooltips where appropriate
   * ✅ Nicer icons
   * ✅ Maybe tabbed UI?
@@ -37,7 +36,6 @@
   * Run it on release
 * ✅ Configurable verbosity, support stderr/stdout split
 * ✅ Fix proxy reload / Make it reload on file changes
-* Implement `faaso help command`
 * ✅ Fix `export examples/hello_crystal` it has a `template/`
 * ✅ Implement zero-downtime rollout (`faaso deploy`)
 * ✅ Cleanup `tmp/whatever` after use
@@ -47,9 +45,9 @@
 * ✅ Check secret permissions (maybe run proxy as non-root)
 * ✅ Check if deploy is working correctly in different scenarios
 * ✅ Multi-container docker logs [faaso logs -f FUNKO]
-* Switch from rucksack to something else because it's flaky
+* Implement `faaso help command`
 
-## Things to do but not before release
+## Things to do for NEXT release
 
 * Propagate errors from `run_faaso` to the remote client
 * Setting up hostname for Caddy's automatic HTTPS
@@ -61,3 +59,5 @@
   maybe disable funko/name inputs when editing?
 * Metrics from Caddy using Prometheus (or something)
 * Implement static site vhost proxying
+* Switch from rucksack to something else because it's flaky
+* Add UI for scaling funkos rather than "play/stop"
