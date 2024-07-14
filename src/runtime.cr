@@ -5,7 +5,7 @@ module Runtime
 
   class FileStorage
     extend BakedFileSystem
-    bake_folder "runtimes", "/home/ralsina/code/faaso"
+    bake_folder "runtimes", "."
   end
 
   @@known : Array(String) = {{
@@ -85,10 +85,17 @@ module Runtime
     Dir.mkdir_p dst_path
     files.each do |file|
       content = IO::Memory.new
-      # Paths in FileStorage are like "/crystal/template/foo.j2
-      # and `file` is runtime/crystal/template/foo.j2
-      # so, convert to that
-      content << FileStorage.get(file[8..]).gets_to_end
+
+      # Try FileStorage first
+      begin
+        # Paths in FileStorage are like "/crystal/template/foo.j2
+        # and `file` is runtime/crystal/template/foo.j2
+        # so, convert to that
+        handle = FileStorage.get(file[8..])
+      rescue ex : BakedFileSystem::NoSuchFileError
+        handle = File.open(file)
+      end
+      content << handle.gets_to_end
       if content.nil?
         raise Exception.new("Can't find file #{file}")
         return 1

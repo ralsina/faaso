@@ -48,7 +48,7 @@ module Funko
     property healthcheck_options : String = "--interval=1m --timeout=2s --start-period=2s --retries=3"
     property healthcheck_command : String = "curl --fail http://localhost:3000/ping || exit 1"
 
-    def _to_context
+    private def to_context
       {
         "name"                => name,
         "ship_packages"       => ship_packages,
@@ -143,7 +143,7 @@ module Funko
           runtime_base,
           runtime_files,
           path.to_s,
-          _to_context
+          to_context
         )
       end
 
