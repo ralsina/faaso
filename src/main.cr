@@ -2,7 +2,6 @@ require "./config.cr"
 require "./faaso.cr"
 require "colorize"
 require "docopt"
-require "rucksack"
 
 macro version
   "{{ `grep version shard.yml | cut -d: -f2` }}".strip()

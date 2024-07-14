@@ -1,7 +1,5 @@
 build: shard.yml $(wildcard src/**/*) $(runtimes/**/*)
 	shards build -d --error-trace -Dstrict_multi_assign -Dno_number_autocast
-	cat .rucksack >> bin/faaso
-	cat .rucksack >> bin/faaso-daemon
 proxy:
 	docker build . -t faaso
 
@@ -25,7 +23,6 @@ clean:
 
 static:
 	shards build faaso --static --release --no-debug -Dstrict_multi_assign -Dno_number_autocast
-	cat .rucksack >> bin/faaso
 	strip bin/faaso
 
 .PHONY: all build proxy-image start-proxy test clean static

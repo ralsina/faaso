@@ -4,6 +4,10 @@ shards:
     git: https://github.com/sija/backtracer.cr.git
     version: 1.2.2
 
+  baked_file_system:
+    git: https://github.com/schovi/baked_file_system.git
+    version: 0.10.0
+
   base58:
     git: https://github.com/crystal-china/base58.cr.git
     version: 0.1.0+git.commit.4c521350c6358b6c04f64dc625e26a8f782a699d
@@ -59,7 +63,3 @@ shards:
   radix:
     git: https://github.com/luislavena/radix.git
     version: 0.4.1
-
-  rucksack:
-    git: https://github.com/busyloop/rucksack.git
-    version: 2.0.0
