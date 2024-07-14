@@ -37,7 +37,8 @@ RUN mkdir /secrets /config
 # Unprivileged user
 RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
-USER app
+# Run as root because of docker socket permissions for now
+# USER app
 RUN mkdir /home/app/tmp && chown app /home/app/tmp
 
 COPY public/ public/
