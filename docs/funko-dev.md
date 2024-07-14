@@ -53,7 +53,7 @@ Now you have a new folder called `historico` with the basic structure of a
 funko ready for editing. We can actually just deploy it now, to verify our
 whole setup works.
 
-```bash
+```text
 $ cd historico
 
 $ faaso login
