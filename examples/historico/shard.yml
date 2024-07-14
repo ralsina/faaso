@@ -1,0 +1,12 @@
+name: historico
+version: 0.1.0
+
+targets:
+  funko:
+    main: main.cr
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+  pg:
+    github: will/crystal-pg
