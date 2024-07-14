@@ -10,7 +10,7 @@ module Funko
   # Build image for funko received as "funko.tgz"
   post "/funkos/build/" do |env|
     # Create place to build funko
-    tmp_dir = Path.new("tmp", Random.base58(8))
+    tmp_dir = Path.new(Dir.tempdir, Random.base58(8))
     Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
 
     # Expand tarball in there

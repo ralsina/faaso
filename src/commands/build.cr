@@ -26,7 +26,7 @@ DOC
         # Create temporary build location
 
         funkos.each do |funko|
-          tmp_dir = Path.new("tmp", Random.base58(8))
+          tmp_dir = Path.new(Dir.tempdir, Random.base58(8))
           Dir.mkdir_p(tmp_dir) unless File.exists? tmp_dir
 
           funko.runtime = nil if options["--no-runtime"]

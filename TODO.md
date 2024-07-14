@@ -46,6 +46,7 @@
 * ✅ Check if deploy is working correctly in different scenarios
 * ✅ Multi-container docker logs [faaso logs -f FUNKO]
 * ✅ Implement `faaso help command`
+* ✅ Switch from rucksack to something else because it's flaky
 
 ## Things to do for NEXT release
 
@@ -59,7 +60,6 @@
   maybe disable funko/name inputs when editing?
 * Metrics from Caddy using Prometheus (or something)
 * Implement static site vhost proxying
-* Switch from rucksack to something else because it's flaky
 * Add UI for scaling funkos rather than "play/stop"
 * Explore swarm integration for horizontal scaling
 * Check compatibility with podman

@@ -150,6 +150,7 @@ module Funko
       # Copy funko on top of runtime
       raise Exception.new("Internal error: empty funko path for #{name}") if self.path.empty?
       Dir.glob("#{self.path}/*").each { |src|
+        Log.debug { "Copying #{src} to #{path}" }
         FileUtils.cp_r(src, path)
       }
     end
