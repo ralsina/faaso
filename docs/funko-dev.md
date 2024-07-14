@@ -12,9 +12,7 @@ It uses a database with names and information you can get from the
 Argentine government, which I have cleaned up and made available
 in a convenient format [in DoltHub](https://www.dolthub.com/repositories/ralsina/nombres_argentina_1922_2005/doc/main)
 
-**TODO:** provide a dummy version of the data so user can follow along
-
-## Prerequisited
+## Prerequisites
 
 * Setup a [FaaSO server](server-setup.md)
 * Get the [Faaso CLI](cli.md)
@@ -24,8 +22,6 @@ in a convenient format [in DoltHub](https://www.dolthub.com/repositories/ralsina
 Assuming you have a working FaaSO environment, we need to create a new
 funko, let's call it `historico` and you can create it based on any of the
 available runtimes which you can see running `faaso new -r list`
-
-**TODO:** improve runtimes CLI, make it possible to see descriptions for runtimes
 
 ```bash
 $ faaso new -r list
@@ -166,7 +162,19 @@ Of course that involves a series of things:
 * Writing the code to connect to the database and run the query
 * Formatting the output as JSON and returning it
 
-**TODO:** Show how to get *this* database up and running
+If you **really** want to see this in action for yourself on your hardware,
+you can make this database accessible to your funko by running this command
+*in the same machine where you have the FaaSO server running*:
+
+```bash
+$ docker run -ti --rm -p 5432:5432 \
+  --network faaso-net --name database \
+  ghcr.io/ralsina/postgres-nombres:latest
+
+[ ... lots of output, takes a minute or five ... ]
+
+LOG:  database system is ready to accept connections
+```
 
 Since we now have a database, let's get the Crystal client library for
 PostgreSQL. In Crystal, you add dependencies to a `shard.yml` file,
@@ -213,9 +221,41 @@ case, `/secrets/user` and `/secrets/pass`).
 The code to connect to the database and run the query is pretty simple
 but beyond the scope of this tutorial:
 
-**TODO** add the code once it's done
-
 ```crystal
+require "json"
+require "kemal"
+require "pg"
+
+# get credentials from secrets
+
+USER = File.read("/secrets/user").strip
+PASS = File.read("/secrets/pass").strip
+
+# Connect to the database and get information about
+# the requested names
+get "/" do |env|
+  # Names are query parameters
+  names = env.params.query["names"].split(",")
+  # Connect using credentials provided
+
+  results = {} of String => Array({Int32, Int32})
+  DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres") do |cursor|
+    # Get the information for each name
+    names.map do |name|
+      results[name] = Array({Int32, Int32}).new
+      cursor.query("
+      SELECT anio::integer, contador::integer
+        FROM nombres WHERE nombre = $1
+      ORDER BY anio", name) do |result_set|
+        result_set.each do
+          results[name] << {result_set.read(Int32), result_set.read(Int32)}
+        end
+      end
+    end
+  end
+  results.to_json
+end
+
 ```
 
 After updating the code we have to rebuild the funko and deploy it again:
@@ -257,3 +297,26 @@ Deployed historico
 The new `faaso deploy` command looks for instances of the funko running old code
 and replaces them with new instances running the latest and greatest. So now we
 should be able to use it!
+
+```bash
+$ curl 'http://localhost:8888/faaso/historico/?names=juan,pedro' | jq . | head -10
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  2335  100  2335    0     0   144k      0 --:--:-- --:--:-- --:--:--  152k
+{
+  "juan": [
+    [
+      1922,
+      403
+    ],
+    [
+      1923,
+      612
+    ],
+
+[... lots more output]
+```
+
+And that's it! You have a funko that connects to a database, gets data, and
+creates a response. This can be combined with a static frontend to display
+the data in a nice chart. You can see it working in **TODO** add URL.
