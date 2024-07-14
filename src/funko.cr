@@ -165,7 +165,7 @@ module Funko
       docker_api.images.build(
         context: path.to_s,
         tags: tags,
-        no_cache: true) { |x| Log.info { x } }
+        no_cache: false) { |x| Log.info { x } }
     end
 
     def images
@@ -325,6 +325,7 @@ module Funko
         # Port in the container side
         host_config: Docr::Types::HostConfig.new(
           network_mode: "faaso-net",
+          auto_remove: true,
           mounts: [
             Docr::Types::Mount.new(
               source: secrets_mount,
