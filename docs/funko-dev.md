@@ -123,3 +123,137 @@ OK⏎
 
 By convention, funkos are always visible in `/faaso/funkoname/` and they
 come with a secondary `/ping/` endpoint that should return `OK`.
+
+Where is the code that is *doing* that? It depends on the runtime, but
+usually it's called "funko" with the extension for the language of the
+runtime. In this case, it's `funko.cr`:
+
+```crystal
+require "kemal"
+
+# This is a kemal app, you can add handlers, middleware, etc.
+
+# A basic hello world get endpoint
+get "/" do
+  "Hello World Crystal!"
+end
+
+# The `/ping/` endpoint is configured in the container as a healthcheck
+# You can make it better by checking that your database is responding
+# or whatever checks you think are important
+#
+get "/ping/" do
+  "OK"
+end
+```
+
+Now, that's not really a very interesting app. Let's make it do what we want
+it to do. What I want is to run this query against my PostgreSQL database and
+return the results as JSON:
+
+```sql
+SELECT year::integer, counter::integer
+  FROM names WHERE name = '#{nombre}'
+ORDER BY year
+```
+
+Of course that involves a series of things:
+
+* Have a PostgreSQL database with the data
+* A user/password to connect to it
+* Install the PostgreSQL client library for Crystal
+* Get the name/names I want data on as a parameter
+* Writing the code to connect to the database and run the query
+* Formatting the output as JSON and returning it
+
+**TODO:** Show how to get *this* database up and running
+
+Since we now have a database, let's get the Crystal client library for
+PostgreSQL. In Crystal, you add dependencies to a `shard.yml` file,
+and your funko has one. Here, I added the `pg` shard:
+
+```yaml
+name: historico
+version: 0.1.0
+
+targets:
+  funko:
+    main: main.cr
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+  pg:
+    github: will/crystal-pg
+```
+
+What about the user/password for the database? Well, those are *secrets*.
+
+FaaSO has a very basic secrets management system. You can add secrets
+using the CLI and they are available to the funkos on runtime.
+
+**FIXME RELEASE BLOCKER** input of secrets unless via pipe is pretty broken.
+
+```bash
+$ faaso secret -a historico pass
+Enter the secret, end with Ctrl-D
+[...]
+Secret created
+
+faaso/historico on  main [!?] is 📦 v0.1.0 via 🔮 v1.13.0 took 2s
+> faaso secret -a historico user
+Enter the secret, end with Ctrl-D
+[...]
+Secret created
+```
+
+To access those secrets, the funko should read '/secrets/secretname' (in this
+case, `/secrets/user` and `/secrets/pass`).
+
+The code to connect to the database and run the query is pretty simple
+but beyond the scope of this tutorial:
+
+**TODO** add the code once it's done
+
+```crystal
+```
+
+After updating the code we have to rebuild the funko and deploy it again:
+
+```bash
+$ faaso build .
+
+[ ... Lots of output]
+
+$ faaso status historico
+2024-07-14T19:31:40.321545Z   INFO - Name: historico
+2024-07-14T19:31:40.321553Z   INFO - Scale: 1
+2024-07-14T19:31:40.324341Z   INFO - Containers: 1
+2024-07-14T19:31:40.324352Z   INFO -   /faaso-historico-D2YfXw Up
+  11 minutes (healthy) (Out of date)
+2024-07-14T19:31:40.324358Z   INFO - Images: 1
+2024-07-14T19:31:40.324387Z   INFO -   ["faaso-historico:latest"]
+
+$ faaso deploy historico
+Deploying historico
+Need to update 1 containers
+Scaling from 1 to 2
+Scaling historico from 1 to 2
+Adding instance
+Waiting for 2 containers to be healthy
+Funko historico has 1/2 healthy containers
+[ ... repeated ... ]
+Funko historico has 2/2 healthy containers
+Funko historico reached scale 2
+Scaling down to 1
+Scaling historico from 2 to 1
+Removing instance
+Funko historico has 2/2 healthy containers
+Funko historico has 2/1 running containers
+Funko historico reached scale 1
+Deployed historico
+```
+
+The new `faaso deploy` command looks for instances of the funko running old code
+and replaces them with new instances running the latest and greatest. So now we
+should be able to use it!
