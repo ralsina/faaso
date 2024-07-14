@@ -105,6 +105,7 @@ module Funko
         (current_scale...new_scale).each {
           Log.info { "Adding instance" }
           result << (id = create_container)
+          Log.debug { "Started container #{id}" }
           start(id)
           sleep 0.1.seconds
         }
@@ -221,6 +222,29 @@ module Funko
       end
     end
 
+    def wait_for_container_started(id : String, t : Int)
+      docker_api = Docr::API.new(Docr::Client.new)
+      channel = Channel(Nil).new
+      spawn do
+        loop do
+          begin
+            details = docker_api.containers.inspect(id)
+            channel.send(nil) if details.state.as(Docr::Types::ContainerState).status == "running"
+          rescue ex : Docr::Errors::DockerAPIError
+            Log.error { "#{ex}" } unless ex.status_code == 304 # This just happens
+          end
+          sleep 1.seconds
+        end
+      end
+
+      select
+      when channel.receive
+        Log.info { "Container #{id[..8]} is running" }
+      when timeout(t.seconds)
+        raise Exception.new("Container #{id[..8]} did not start in #{t} seconds")
+      end
+    end
+
     # Wait up to `t` seconds for the funko to reach the desired scale
     # If `healthy` is true, it will wait for the container to be declared
     # healthy by the healthcheck
@@ -284,14 +308,14 @@ module Funko
     end
 
     # Create a container for this funko
-    def create_container(autostart : Bool = true) : String
+    def create_container : String
       # The path to secrets is tricky. On the server it will be in
       # ./secrets/ BUT when you call on the Docker API you need to
       # pass the path in the HOST SYSTEM WHERE DOCKER IS RUNNING
       # so allow for a FAASO_SECRET_PATH override which will
       # be set for the proxy container
       secrets_mount = ENV.fetch(
-        "FAASO_SECRET_PATH",
+        "FAASO_SECRET_PATH/#{name}",
         "#{Dir.current}/secrets/#{name}"
       )
       Dir.mkdir_p(secrets_mount)
@@ -314,7 +338,8 @@ module Funko
       docker_api = Docr::API.new(Docr::Client.new)
       response = docker_api.containers.create(name: "faaso-#{name}-#{Random.base58(6)}", config: conf)
       response.@warnings.each { |msg| Log.warn { msg } }
-      docker_api.containers.start(response.@id) if autostart
+      docker_api.containers.start(response.@id)
+      wait_for_container_started(response.@id, 10)
       response.@id
     end
 
