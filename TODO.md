@@ -17,11 +17,15 @@
   * ✅ Nodejs + Express
 * ✅ Create a site
   * Document
-    * FaaSO for app developers
+    * Tutorial with a non-trivial app
+      * ✅ Kemal
+      * Express
+      * Flask
     * FaaSO for runtime developers
-    * FaaSO server setup
+    * ✅ FaaSO server setup
     * APIs
-    * One tutorial with a non-trivial app
+    * ✅ CLI
+    * Front End
 * ✅ Sanitize inputs
 * ✅ Streaming responses in slow operations
 * ✅ Make more things configurable / remove hardcoded stuff
@@ -47,6 +51,7 @@
 * ✅ Multi-container docker logs [faaso logs -f FUNKO]
 * ✅ Implement `faaso help command`
 * ✅ Switch from rucksack to something else because it's flaky
+* Fix `faaso secret` input issues
 
 ## Things to do for NEXT release
 
