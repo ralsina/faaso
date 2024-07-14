@@ -63,3 +63,4 @@
 * Add UI for scaling funkos rather than "play/stop"
 * Explore swarm integration for horizontal scaling
 * Check compatibility with podman
+* Remove the docker dependency in the proxy image (saves about 250MB!)

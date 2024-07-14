@@ -7,7 +7,6 @@ RUN apk add --no-cache \
     zlib-dev \
     libxml2-dev \
     make
-RUN rm -rf /var/cache/apk/*
 RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
 COPY shard.yml Makefile ./
@@ -32,17 +31,17 @@ RUN apk add --no-cache \
     libgcc \
     libxml2 \
     ttyd
-RUN rm -rf /var/cache/apk/*
+# Mount points for persistent data
+RUN mkdir /secrets /config
 
 # Unprivileged user
 RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
+USER app
 RUN mkdir /home/app/tmp && chown app /home/app/tmp
 
 COPY public/ public/
 COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
 
-# Mount points for persistent data
-RUN mkdir /secrets /config
 
 CMD ["/usr/bin/multirun", "-v", "faaso-daemon", "caddy run --config config/Caddyfile"]

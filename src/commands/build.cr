@@ -21,9 +21,6 @@ Options:
 DOC
 
       def run : Int32
-        if !options["--local"]
-          return Faaso.rpc_call(ARGV)
-        end
         folders = options["FOLDER"].as(Array(String))
         funkos = Funko::Funko.from_paths(folders)
         # Create temporary build location
