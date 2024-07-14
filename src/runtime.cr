@@ -11,6 +11,7 @@ module Runtime
   @@known : Array(String) = {{
                               `find runtimes -mindepth 1 -maxdepth 1 -type d`
                                 .split('\n')
+                                .sort
                                 .reject(&.empty?).map { |x| x.split("/")[-1] }
                             }}
   @@filelist : Array(String) = {{
@@ -25,7 +26,8 @@ module Runtime
   def list
     Log.info { "FaaSO has some included runtimes:\n" }
     @@known.each do |i|
-      Log.info { "  * #{Path[i].basename}" }
+      description = FileStorage.get("/#{i}/README.md").gets
+      Log.info { "  * #{Path[i].basename.ljust(12)}  - #{description}" }
     end
     Log.info { "\nOr if you have your own, use a folder name" }
   end
