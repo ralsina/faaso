@@ -84,9 +84,9 @@ and configures it as needed when funkos are started or stopped.
 
 ## What else
 
-There is not much more to FaaSO. It's a simple platform that lets you run code
-in a simple way. It's not meant to be a replacement for AWS Lambda or Google Cloud
-Functions. It's meant to be a simple way to run your own code on your own hardware.
+There is not much more to FaaSO. It's not meant to be a replacement for
+AWS Lambda or Google Cloud Functions. It's meant to be a simple way to
+run your own code on your own hardware.
 
 Your next steps are probably to [set up a faaso proxy](server-setup.md),
 and learn how to [write code to run on it](funko-dev.md).
