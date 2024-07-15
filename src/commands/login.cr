@@ -1,3 +1,5 @@
+require "../utils.cr"
+
 module Faaso
   module Commands
     struct Login < Command
@@ -20,11 +22,18 @@ module Faaso
 
       def run : Int32
         server = Config.server
-        Log.info { "Enter password for #{server}" }
         if STDIN.tty?
-          password = (STDIN.noecho &.gets.try &.chomp).to_s
+          Log.info { "Enter password for #{server}" }
+          sleep 0.1.seconds # Otherwise info is not shown
+          password = Utils.get_secret(
+            echo_stars: true, one_line: true
+          )
         else
           password = STDIN.gets.to_s
+        end
+        if password.nil? || password.empty?
+          Log.error { "No password entered" }
+          return 1
         end
         # This is tricky. If the service is running behind a reverse proxy
         # then /version is locked, but if it's not, only /auth is locked.
