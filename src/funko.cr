@@ -58,16 +58,6 @@ module Funko
       }
     end
 
-    # def to_json(json : JSON::Builder)
-    #   json.object do
-    #     json.field("name", name)
-    #     json.field("ship_packages", ship_packages)
-    #     json.field("devel_packages", devel_packages)
-    #     json.field("healthcheck_options", healthcheck_options)
-    #     json.field("healthcheck_command", healthcheck_command)
-    #   end
-    # end
-
     def after_initialize
       raise Exception.new("Invalid funko name: #{name}") unless valid?
     end
@@ -165,6 +155,7 @@ module Funko
       docker_api.images.build(
         context: path.to_s,
         tags: tags,
+        version: "2",
         no_cache: true) { |x| Log.info { x } }
     end
 
@@ -257,7 +248,7 @@ module Funko
             healthy_count = containers.count { |container|
               begin
                 details = docker_api.containers.inspect(container.@id)
-                details.state.as(Docr::Types::ContainerState).health.as(Docr::Types::Health).status == "healthy"
+                details.state.try &.as(Docr::Types::ContainerState).health.try &.as(Docr::Types::Health).status == "healthy"
               rescue ex : Docr::Errors::DockerAPIError
                 Log.error { "#{ex}" } unless ex.status_code == 304 # This just happens
                 false
@@ -314,11 +305,13 @@ module Funko
       # pass the path in the HOST SYSTEM WHERE DOCKER IS RUNNING
       # so allow for a FAASO_SECRET_PATH override which will
       # be set for the proxy container
-      secrets_mount = ENV.fetch(
-        "FAASO_SECRET_PATH/#{name}",
-        "#{Dir.current}/secrets/#{name}"
-      )
-      Dir.mkdir_p(secrets_mount)
+      secrets_src = Path[ENV.fetch(
+        "FAASO_SECRET_PATH",
+        "#{Dir.current}/secrets/"
+      ), name].to_s
+      secrets_dst = "/secrets"
+      secrets_local = Path["secrets/", name].to_s
+      Dir.mkdir_p(secrets_local)
       conf = Docr::Types::CreateContainerConfig.new(
         image: "faaso-#{name}:latest",
         hostname: "#{name}",
@@ -328,8 +321,8 @@ module Funko
           auto_remove: true,
           mounts: [
             Docr::Types::Mount.new(
-              source: secrets_mount,
-              target: "/secrets",
+              source: secrets_src,
+              target: secrets_dst,
               type: "bind"
             ),
           ]
