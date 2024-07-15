@@ -14,7 +14,7 @@ module Faaso
       end
 
       def run : Int32
-        1
+        raise Exception.new ("Not implemented")
       end
     end
 

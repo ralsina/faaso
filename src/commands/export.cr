@@ -19,7 +19,9 @@ module Faaso
         -v level         Control the logging verbosity, 0 to 6 [default: 4]
       DOC
 
-      def run(options, source : String, destination : String) : Int32
+      def run : Int32
+        source = options["SOURCE"].as(String)
+        destination = options["DESTINATION"].as(String)
         funko = Funko::Funko.from_paths([source])[0]
         # Create temporary build location
         dst_path = destination
