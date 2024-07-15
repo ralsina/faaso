@@ -16,7 +16,7 @@ get "/" do |env|
 
   results = [] of Array(String)
   results << ["Año"] + names
-  (1922..2016).each do |anio|
+  (1922..2015).each do |anio|
     results << [anio.to_s]
   end
   DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres") do |cursor|
