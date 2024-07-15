@@ -145,7 +145,7 @@ end
 
 Now, that's not really a very interesting app. Let's make it do what we want
 it to do. What I want is to run this query against my PostgreSQL database and
-return the results as JSON:
+return the results as JSON in the form of a table:
 
 ```sql
 SELECT year::integer, counter::integer
@@ -238,24 +238,27 @@ get "/" do |env|
   names = env.params.query["names"].split(",")
   # Connect using credentials provided
 
-  results = {} of String => Array({Int32, Int32})
-  DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres") do |cursor|
+  results = [] of Array(String)
+  results << ["Año"] + names
+  (1922..2016).each do |anio|
+    results << [anio.to_s]
+  end
+  DB.open("postgres://#{USER}:#{PASS}@localhost:5432/nombres") do |cursor|
     # Get the information for each name
     names.map do |name|
-      results[name] = Array({Int32, Int32}).new
       cursor.query("
       SELECT anio::integer, contador::integer
         FROM nombres WHERE nombre = $1
       ORDER BY anio", name) do |result_set|
         result_set.each do
-          results[name] << {result_set.read(Int32), result_set.read(Int32)}
+          anio, contador = {result_set.read(Int32), result_set.read(Int32)}
+          results[anio - 1921] << contador.to_s
         end
       end
     end
   end
   results.to_json
 end
-
 ```
 
 After updating the code we have to rebuild the funko and deploy it again:
@@ -299,21 +302,28 @@ and replaces them with new instances running the latest and greatest. So now we
 should be able to use it!
 
 ```bash
-$ curl 'http://localhost:8888/faaso/historico/?names=juan,pedro' | jq . | head -10
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100  2335  100  2335    0     0   144k      0 --:--:-- --:--:-- --:--:--  152k
-{
-  "juan": [
-    [
-      1922,
-      403
-    ],
-    [
-      1923,
-      612
-    ],
+$ curl 'http://localhost:8888/faaso/historico/?names=juan,pedro' | jq .
 
+[
+  [
+    "Año",
+    "juan",
+    "pedro"
+  ],
+  [
+    "1922",
+    "403",
+    "149"
+  ],
+  [
+    "1923",
+    "612",
+    "240"
+  ],
+  [
+    "1924",
+    "790",
+    "311"
 [... lots more output]
 ```
 
