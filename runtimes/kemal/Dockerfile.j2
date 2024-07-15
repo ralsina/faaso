@@ -1,22 +1,33 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as build
-
-RUN apk update && apk upgrade && apk add crystal shards openssl-dev zlib-dev {{ ship_packages | join(" ") }} {{ devel_packages | join(" ") }} && apk cache clean
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine AS build
+RUN apk add --no-cache \
+    crystal \
+    shards \
+    openssl-dev \
+    zlib-dev {{ ship_packages | join(" ") }} {{ devel_packages | join(" ") }}
 
 WORKDIR /home/app
 
-COPY shard.yml *.cr ./
+COPY ./ ./
 RUN shards install
-RUN shards build --release
+RUN shards build
 RUN strip bin/*
+CMD ["./bin/funko"]
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
-RUN apk update && apk upgrade && apk add pcre2 libgcc gc libevent curl {{ ship_packages | join " " }} && apk cache clean
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine AS ship
+RUN apk add --no-cache \
+    pcre2 \
+    libgcc \
+    gc \
+    libevent \
+    curl {{ ship_packages | join " " }}
+
 RUN addgroup -S app && adduser app -S -G app
 
 WORKDIR /home/app
+RUN mkdir /home/app/public/
+COPY --from=build /home/app/bin/funko .
+COPY --from=build /home/app/index.html /home/app/public/index.html
 USER app
-
-COPY --from=build /home/app/bin/funko  .
 
 CMD ["./funko"]
 HEALTHCHECK {{ healthcheck_options }}  CMD {{ healthcheck_command }}
