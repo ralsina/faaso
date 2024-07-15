@@ -1,21 +1,21 @@
 module Faaso
   module Commands
-    @@doc : String = <<-DOC
-    FaaSO CLI tool, logs command.
-
-    Given a funko name, this command will tail the logs of all containers
-    associated with that funko.
-
-    Usage:
-      faaso logs FUNKO                  [-v <level>] [-l]
-
-    Options:
-      -h --help        Show this screen
-      -l --local       Run commands locally instead of against a FaaSO server
-      -v level         Control the logging verbosity, 0 to 6 [default: 4]
-    DOC
-
     struct Logs < Command
+      @@doc : String = <<-DOC
+      FaaSO CLI tool, logs command.
+
+      Given a funko name, this command will tail the logs of all containers
+      associated with that funko.
+
+      Usage:
+        faaso logs FUNKO                  [-v <level>] [-l]
+
+      Options:
+        -h --help        Show this screen
+        -l --local       Run commands locally instead of against a FaaSO server
+        -v level         Control the logging verbosity, 0 to 6 [default: 4]
+      DOC
+
       def run : Int32
         funko_name = options["FUNKO"].as(String)
         funko = Funko::Funko.from_names([funko_name])[0]
