@@ -21,6 +21,8 @@
       * ✅ Kemal
       * Express
       * Flask
+      * Document static index.html in example
+      * Fix problem with names missing rows (lionel)
     * FaaSO for runtime developers
     * ✅ FaaSO server setup
     * APIs
