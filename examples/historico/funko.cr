@@ -4,8 +4,8 @@ require "pg"
 
 # get credentials from secrets
 
-USER = "postgres" # File.read("/secrets/user").strip
-PASS = "postgres" # File.read("/secrets/pass").strip
+USER = File.read("/secrets/user").strip
+PASS = File.read("/secrets/pass").strip
 
 # Connect to the database and get information about
 # the requested names
