@@ -7,6 +7,8 @@ all: build proxy
 
 start-proxy:
 	docker network create faaso-net || true
+	docker stop faaso-proxy-fadmin || true
+	docker rm faaso-proxy-fadmin || true
 	docker run --name faaso-proxy-fadmin \
 	--rm --network=faaso-net \
 	-e FAASO_SECRET_PATH=${PWD}/secrets \
