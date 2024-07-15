@@ -165,7 +165,7 @@ module Funko
       docker_api.images.build(
         context: path.to_s,
         tags: tags,
-        no_cache: false) { |x| Log.info { x } }
+        no_cache: true) { |x| Log.info { x } }
     end
 
     def images
