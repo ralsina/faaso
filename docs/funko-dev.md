@@ -1,8 +1,8 @@
 # Writing your First Funko for FaaSO
 
 This is a tutorial showing how to develop your own application
-for FaaSO. It's not a *large* application, but it uses most
-of the capabilities of the platform.
+for FaaSO. It's not a *large* application, but it uses many
+of the platform's capabilities.
 
 ## The Application
 
@@ -144,13 +144,12 @@ end
 ```
 
 Now, that's not really a very interesting app. Let's make it do what we want
-it to do. What I want is to run this query against my PostgreSQL database and
-return the results as JSON in the form of a table:
+it to do. What I want is to run some queries against my PostgreSQL database
+and do some aggregations to create a data table I can use to draw a chart.
 
 ```sql
-SELECT year::integer, counter::integer
-  FROM names WHERE name = '#{nombre}'
-ORDER BY year
+SELECT anio::integer, contador::integer
+  FROM nombres WHERE nombre = 'juan'
 ```
 
 Of course that involves a series of things:
@@ -195,12 +194,12 @@ dependencies:
     github: will/crystal-pg
 ```
 
+## Connecting to the Database (Using Secrets!)
+
 What about the user/password for the database? Well, those are *secrets*.
 
 FaaSO has a very basic secrets management system. You can add secrets
 using the CLI and they are available to the funkos on runtime.
-
-**FIXME RELEASE BLOCKER** input of secrets unless via pipe is pretty broken.
 
 ```bash
 $ faaso secret -a historico pass
@@ -208,8 +207,7 @@ Enter the secret, end with Ctrl-D
 [...]
 Secret created
 
-faaso/historico on  main [!?] is 📦 v0.1.0 via 🔮 v1.13.0 took 2s
-> faaso secret -a historico user
+$ faaso secret -a historico user
 Enter the secret, end with Ctrl-D
 [...]
 Secret created
@@ -217,6 +215,8 @@ Secret created
 
 To access those secrets, the funko should read '/secrets/secretname' (in this
 case, `/secrets/user` and `/secrets/pass`).
+
+## The Working Code
 
 The code to connect to the database and run the query is pretty simple
 but beyond the scope of this tutorial:
@@ -227,7 +227,6 @@ require "kemal"
 require "pg"
 
 # get credentials from secrets
-
 USER = File.read("/secrets/user").strip
 PASS = File.read("/secrets/pass").strip
 
@@ -238,28 +237,34 @@ get "/" do |env|
   names = env.params.query["names"].split(",")
   # Connect using credentials provided
 
+  # Create result table
   results = [] of Array(String)
   results << ["Año"] + names
-  (1922..2016).each do |anio|
+  (1922..2015).each do |anio|
     results << [anio.to_s]
   end
-  DB.open("postgres://#{USER}:#{PASS}@localhost:5432/nombres") do |cursor|
-    # Get the information for each name
+  DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres") do |cursor|
+    # Get the information for each name anda aggregate on the results table
     names.map do |name|
+      counter_per_year = {} of Int32 => Int32
       cursor.query("
       SELECT anio::integer, contador::integer
-        FROM nombres WHERE nombre = $1
-      ORDER BY anio", name) do |result_set|
+        FROM nombres WHERE nombre = $1", name) do |result_set|
         result_set.each do
-          anio, contador = {result_set.read(Int32), result_set.read(Int32)}
-          results[anio - 1921] << contador.to_s
+          counter_per_year[result_set.read(Int32)] = result_set.read(Int32)
         end
+      end
+      (1922..2015).each do |anio|
+        results[anio-1921] << counter_per_year.fetch(anio,0).to_s
       end
     end
   end
   results.to_json
 end
+
 ```
+
+## Redeploying and Testing
 
 After updating the code we have to rebuild the funko and deploy it again:
 
@@ -285,7 +290,6 @@ Scaling historico from 1 to 2
 Adding instance
 Waiting for 2 containers to be healthy
 Funko historico has 1/2 healthy containers
-[ ... repeated ... ]
 Funko historico has 2/2 healthy containers
 Funko historico reached scale 2
 Scaling down to 1
@@ -297,13 +301,12 @@ Funko historico reached scale 1
 Deployed historico
 ```
 
-The new `faaso deploy` command looks for instances of the funko running old code
+The `faaso deploy` command looks for instances of the funko running old code
 and replaces them with new instances running the latest and greatest. So now we
-should be able to use it!
+should be able to use it! The easiest way to test is using `curl`:
 
 ```bash
-$ curl 'http://localhost:8888/faaso/historico/?names=juan,pedro' | jq .
-
+> curl 'http://localhost:8888/faaso/historico/?names=juan,pedro' | jq .
 [
   [
     "Año",
@@ -324,9 +327,117 @@ $ curl 'http://localhost:8888/faaso/historico/?names=juan,pedro' | jq .
     "1924",
     "790",
     "311"
+  ]
+
 [... lots more output]
 ```
 
+## Frontend
+
+Now, what can we do with the data? We can make a webpage!
+
+FaaSO includes for convenience a very limited static file server. You can
+serve `/index.html` from your funko by putting that file in a folder called
+'public/' in your funko's root.
+
+Here is some *very* basic HTML and JS fragments that uses the data we are
+generating to show a chart:
+
+```html
+<html>
+  <head>
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script type="text/javascript">
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      async function drawChart() {
+        fetch(`http://localhost:8888/faaso/historico/?names=${document.getElementById("nombres").value}`)
+          .then((response) => response.json())
+          .then((json) => {
+            var data = [json[0]]
+            data.push(...json.slice(1).map((item) => item.map((value) => parseInt(value))));
+            console.log(data)
+            data = google.visualization.arrayToDataTable(data)
+            var options = {
+              title: "Popularidad de los nombres",
+              curveType: "function",
+              legend: { position: "bottom" },
+            };
+
+            var chart = new google.visualization.LineChart(
+              document.getElementById("curve_chart")
+            );
+
+            chart.draw(data, options);
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <input id="nombres"></input>
+    <input type="submit" onClick="drawChart()"></input>
+    <div id="curve_chart" style="width: 900px; height: 500px"></div>
+  </body>
+</html>
+```
+
+And yes, it does work, although of course in real life it would need
+to be much nicer:
+
+![Chart (No, I don't know what happened with Leonel in 1975)](chart.png)
+
+## Funko Options
+
+FaaSO funkos can have a few options that can be set in the `funko.yml` file.
+These options vary depending on your runtime, and should be already set
+to their default values. Here is the `funko.yml` file for this funko:
+
+```yaml
+name: historico
+runtime: kemal
+options:
+  shard_build_options: ""
+  ship_packages: []
+  devel_packages: []
+  healthcheck_options: "--interval=1m --timeout=2s --start-period=2s --retries=3"
+  healthcheck_command: "curl --fail http://localhost:3000/ping || exit 1"
+```
+
+They should be explained in the documentation for each runtime, but the gist
+should be more or less clear, here are some details:
+
+The funkos are shipped in docker containers. Sometimes your code needs special
+packages either to build itself (the `devel_packages` option) or to run
+(the `ship_packages` option).
+
+The `shard_build_options` is specific to Crystal and is used to pass options
+to the `shards` command that compiles the code. For example `--release` will
+create a smaller, faster binary ... but takes longer to compile.
+
+## The Healthcheck
+
+By default runtimes should include a `/ping` endpoint that returns `OK` and
+the funko should have a healthcheck that uses that endpoint. This is important
+because docker and FaaSO use this to make sure your funko is running correctly.
+
+While the default `/ping` endpoint is very simple, you can make it more
+useful by doing meaningful healthchecks. For example in historico we could
+check that the database is responding:
+
+```crystal
+get "/ping/" do
+  DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres")
+    .exec("SELECT 42")
+  "OK"
+end
+```
+
+## Conclusion
+
 And that's it! You have a funko that connects to a database, gets data, and
-creates a response. This can be combined with a static frontend to display
+creates a response and can be combined with a static frontend to display
 the data in a nice chart. You can see it working in **TODO** add URL.
