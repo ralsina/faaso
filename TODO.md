@@ -74,3 +74,5 @@
 * Explore swarm integration for horizontal scaling
 * Check compatibility with podman
 * Remove the docker dependency in the proxy image (saves about 250MB!)
+* Save state in the server
+* Docker registry support (needs design!)
