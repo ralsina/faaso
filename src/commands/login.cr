@@ -25,12 +25,10 @@ module Faaso
         if STDIN.tty?
           Log.info { "Enter password for #{server}" }
           sleep 0.1.seconds # Otherwise info is not shown
-          password = Utils.get_secret(
-            echo_stars: true, one_line: true
-          )
-        else
-          password = STDIN.gets.to_s
         end
+        password = Utils.get_secret(
+          echo_stars: true, one_line: true
+        )
         if password.nil? || password.empty?
           Log.error { "No password entered" }
           return 1

@@ -1,3 +1,5 @@
+require "../utils.cr"
+
 module Faaso
   module Commands
     struct Secret < Command
@@ -58,8 +60,11 @@ DOC
         funko = options["FUNKO"].as(String)
         name = options["SECRET"].as(String)
         if options["--add"]
-          Log.info { "Enter the secret, end with Ctrl-D" } if STDIN.tty?
-          secret = STDIN.gets_to_end
+          if STDIN.tty?
+            Log.info { "Enter the secret, end with Ctrl-D" }
+            sleep 0.1.seconds
+          end
+          secret = Utils.get_secret(echo_stars: true, one_line: false)
         else
           secret = ""
         end

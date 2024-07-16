@@ -6,7 +6,9 @@ module Utils
   def get_secret(echo_stars = false, one_line = true) : String | Nil
     # Not a tty, no problem.
     if !STDIN.tty?
-      return STDIN.gets_to_end
+      password = STDIN.gets_to_end
+      password = password.rstrip "\n" if one_line
+      return password
     end
 
     # Fix for crystal bug
@@ -21,6 +23,7 @@ module Utils
           case char
           when '\r'
             break if one_line
+            final_password += "\n"
           when '\u{7f}'
             # If we have a backspace
             # Move the cursor back 1 char
@@ -43,7 +46,6 @@ module Utils
             STDOUT << "*" if echo_stars
             final_password += char
           end
-
           STDOUT.flush
         end
       end

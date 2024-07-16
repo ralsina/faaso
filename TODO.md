@@ -54,7 +54,7 @@
 * ✅ Implement `faaso help command`
 * ✅ Switch from rucksack to something else because it's flaky
 * ✅ Nicer `faaso login`behaviour
-* Fix `faaso secret` input issues
+* ✅ Fix `faaso secret` input issues
 * Add --no-cache option for faaso build
 * Add options for --release or not in kemal runtime and add them to docs
 
