@@ -22,14 +22,16 @@ get "/" do |env|
   DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres") do |cursor|
     # Get the information for each name
     names.map do |name|
+      counter_per_year = {} of Int32 => Int32
       cursor.query("
       SELECT anio::integer, contador::integer
-        FROM nombres WHERE nombre = $1
-      ORDER BY anio", name) do |result_set|
+        FROM nombres WHERE nombre = $1", name) do |result_set|
         result_set.each do
-          anio, contador = {result_set.read(Int32), result_set.read(Int32)}
-          results[anio - 1921] << contador.to_s
+          counter_per_year[result_set.read(Int32)] = result_set.read(Int32)
         end
+      end
+      (1922..2015).each do |anio|
+        results[anio-1921] << counter_per_year.fetch(anio,0).to_s
       end
     end
   end
@@ -41,5 +43,6 @@ end
 # or whatever checks you think are important
 #
 get "/ping/" do
+  DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres").exec("SELECT 42")
   "OK"
 end

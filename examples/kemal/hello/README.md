@@ -1,11 +1,11 @@
-# Readme for Hello_crystal
+# Readme for Hello
 
 This is a funko using the Crystal runtime for [FaaSO](https://git.ralsina.me/ralsina/faaso)
 
-## What is Hello_crystal
+## What is Hello
 
 Write here what it is
 
-## How to use Hello_crystal
+## How to use Hello
 
 And so on.
