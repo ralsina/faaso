@@ -3,13 +3,13 @@ RUN apk add --no-cache \
     crystal \
     shards \
     openssl-dev \
-    zlib-dev {{ ship_packages | join(" ") }} {{ devel_packages | join(" ") }}
+    zlib-dev {{ options.ship_packages | join(" ") }} {{ options.devel_packages | join(" ") }}
 
 WORKDIR /home/app
 
 COPY ./ ./
 RUN shards install
-RUN shards build
+RUN shards build {{ options.shard_build_options }}
 RUN strip bin/*
 CMD ["./bin/funko"]
 
@@ -19,7 +19,7 @@ RUN apk add --no-cache \
     libgcc \
     gc \
     libevent \
-    curl {{ ship_packages | join " " }}
+    curl {{ options.ship_packages | join " " }}
 
 RUN addgroup -S app && adduser app -S -G app
 
@@ -30,4 +30,4 @@ RUN mv /home/app/public/funko /home/app/
 USER app
 
 CMD ["./funko"]
-HEALTHCHECK {{ healthcheck_options }}  CMD {{ healthcheck_command }}
+HEALTHCHECK {{ options.healthcheck_options }}  CMD {{ options.healthcheck_command }}

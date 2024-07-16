@@ -56,7 +56,7 @@
 * ✅ Nicer `faaso login`behaviour
 * ✅ Fix `faaso secret` input issues
 * ✅ Add --no-cache option for faaso build
-* Add options for --release or not in kemal runtime and add them to docs
+* ✅ Support generic runtime-defined options for templates
 
 ## Things to do for NEXT release
 

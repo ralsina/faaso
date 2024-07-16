@@ -30,11 +30,7 @@ module Funko
     # if Nil, it has no template whatsoever
     property runtime : (String | Nil)? = nil
 
-    # Extra operating system packages shipped with the runtime's Docker image
-    property ship_packages : Array(String) = [] of String
-
-    # Extra operating system packages used only when *building* the funko
-    property devel_packages : Array(String) = [] of String
+    property options : Hash(String, String | Array(String)) = {} of String => String | Array(String)
 
     # Where this is located in the filesystem
     @[YAML::Field(ignore: true)]
@@ -44,17 +40,11 @@ module Funko
     @[YAML::Field(ignore: true)]
     property scale = 0
 
-    # Healthcheck properties
-    property healthcheck_options : String = "--interval=1m --timeout=2s --start-period=2s --retries=3"
-    property healthcheck_command : String = "curl --fail http://localhost:3000/ping || exit 1"
-
     private def to_context
       {
-        "name"                => name,
-        "ship_packages"       => ship_packages,
-        "devel_packages"      => devel_packages,
-        "healthcheck_options" => healthcheck_options,
-        "healthcheck_command" => healthcheck_command,
+        "name"    => name,
+        "runtime" => runtime,
+        "options" => options,
       }
     end
 

@@ -1,6 +1,11 @@
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as build
 
-RUN apk update && apk upgrade && apk add python3 gcc musl-dev linux-headers python3-dev {{ ship_packages | join(" ") }} {{ devel_packages | join(" ") }} && apk cache clean
+RUN apk add --no-cache \
+    python3 \
+    gcc \
+    musl-dev \
+    linux-headers \
+    python3-dev {{ options.ship_packages | join(" ") }} {{ options.devel_packages | join(" ") }}
 
 WORKDIR /home/app
 
@@ -10,7 +15,11 @@ RUN venv/bin/pip install uwsgi
 RUN venv/bin/pip install -r requirements.txt
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
-RUN apk update && apk upgrade && apk add python3 uwsgi curl {{ ship_packages | join " " }} && apk cache clean
+RUN apk add --no-cache \
+    python3 \
+    uwsgi \
+    curl {{ options.ship_packages | join " " }}
+
 RUN addgroup -S app && adduser app -S -G app
 
 WORKDIR /home/app
@@ -19,4 +28,4 @@ USER app
 COPY --from=build /home/app/  .
 
 CMD ["venv/bin/uwsgi", "--http", "0.0.0.0:3000", "--master", "-p", "1", "-w", "funko:app"]
-HEALTHCHECK {{ healthcheck_options }}  CMD {{ healthcheck_command }}
+HEALTHCHECK {{ options.healthcheck_options }}  CMD {{ options.healthcheck_command }}
