@@ -11,17 +11,19 @@ FaaSO CLI tool, build command.
 Builds docker images out of funkos defined in one or more folders.
 
 Usage:
-  faaso build  FOLDER ...           [-v <level>] [-l] [--no-runtime]
+  faaso build  FOLDER ...           [-v <level>] [-l] [--no-runtime][--no-cache]
 
 Options:
   -h --help        Show this screen
   -l --local       Run commands locally instead of against a FaaSO server
   -v level         Control the logging verbosity, 0 to 6 [default: 4]
+  --no-cache       Don't use the docker cache when building the funko
   --no-runtime     Don't merge a runtime into the funko before building
 DOC
 
       def run : Int32
         folders = options["FOLDER"].as(Array(String))
+        no_cache = !options["--no-cache"].nil?
         funkos = Funko::Funko.from_paths(folders)
         # Create temporary build location
 
@@ -34,7 +36,7 @@ DOC
           funko.prepare_build(path: tmp_dir)
           if options["--local"]
             Log.info { "Building function... #{funko.name} in #{tmp_dir}" }
-            funko.build tmp_dir
+            funko.build tmp_dir, no_cache
             FileUtils.rm_rf(tmp_dir)
             next
           end

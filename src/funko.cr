@@ -147,7 +147,7 @@ module Funko
     end
 
     # Build image using docker in path previously prepared using `prepare_build`
-    def build(path : Path)
+    def build(path : Path, no_cache : Bool = false)
       Log.info { "Building image for #{name} in #{path}" }
       docker_api = Docr::API.new(Docr::Client.new)
       tags = ["faaso-#{name}:latest"]
@@ -156,7 +156,7 @@ module Funko
         context: path.to_s,
         tags: tags,
         version: "2",
-        no_cache: true) { |x| Log.info { x } }
+        no_cache: no_cache) { |x| Log.info { x } }
     end
 
     def images
