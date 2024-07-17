@@ -67,6 +67,7 @@
 * ✅ Make proxy start without explicit configuration
 * ✅ Make status better (add -a to show all, skip proxy)
 * Tag images with something like `faaso-hello:timestamp` besides latest
+* Spinoff multi-docopt code into a shard
 
 ## Things to do for NEXT release
 
