@@ -388,7 +388,7 @@ generating to show a chart:
 And yes, it does work, although of course in real life it would need
 to be much nicer:
 
-![Chart (No, I don't know what happened with Leonel in 1975)](chart.png)
+![Chart, No, I don't know what happened with Leonel in 1975](chart.png)
 
 ## Funko Options
 
