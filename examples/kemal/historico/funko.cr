@@ -31,7 +31,7 @@ get "/" do |env|
         end
       end
       (1922..2015).each do |anio|
-        results[anio-1921] << counter_per_year.fetch(anio,0).to_s
+        results[anio - 1921] << counter_per_year.fetch(anio, 0).to_s
       end
     end
   end

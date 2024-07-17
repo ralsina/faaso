@@ -64,7 +64,6 @@
 * Terminal not working on test server
 * Add button to close terminal / logs
 * Special case proxy in web UI
-* Deploy is broken
 * ✅ Make proxy start without explicit configuration
 
 ## Things to do for NEXT release
