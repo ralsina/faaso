@@ -58,10 +58,10 @@
 * ✅ Fix `faaso secret` input issues
 * ✅ Add --no-cache option for faaso build
 * ✅ Support generic runtime-defined options for templates
-* Check that Docr is not sending a broken context tarball for build
-* Check docker versions when using the server
 * ✅ Empty enumerable error in latest_image
-* Historico doesn't stay up in test server
+* Make Historico work well in test server
+* Make proxy be able to start without explicit
+  external configuration
 
 ## Things to do for NEXT release
 
