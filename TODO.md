@@ -59,6 +59,9 @@
 * ✅ Add --no-cache option for faaso build
 * ✅ Support generic runtime-defined options for templates
 * Check that Docr is not sending a broken context tarball for build
+* Check docker versions when using the server
+* ✅ Empty enumerable error in latest_image
+* Historico doesn't stay up in test server
 
 ## Things to do for NEXT release
 
@@ -78,3 +81,4 @@
 * Remove the docker dependency in the proxy image (saves about 250MB!)
 * Save state in the server
 * Docker registry support (needs design!)
+* Design gitops workflow
