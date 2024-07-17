@@ -1,3 +1,5 @@
+ARG BUILDPLATFORM
+FROM --platform=${BUILDPLATFORM:-foobar} alpine AS build
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as build
 
 RUN apk add --no-cache \
@@ -14,7 +16,7 @@ RUN python3 -m venv venv
 RUN venv/bin/pip install uwsgi
 RUN venv/bin/pip install -r requirements.txt
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
+FROM --platform=${BUILDPLATFORM:-foobar} alpine AS ship
 RUN apk add --no-cache \
     python3 \
     uwsgi \

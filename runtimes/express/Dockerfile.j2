@@ -1,4 +1,5 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as build
+ARG BUILDPLATFORM
+FROM --platform=${BUILDPLATFORM:-foobar} alpine AS build
 
 RUN apk add --no-cache \
     nodejs \
@@ -9,7 +10,7 @@ WORKDIR /home/app
 COPY ./ ./
 RUN npm i
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as ship
+FROM --platform=${BUILDPLATFORM:-foobar} alpine AS ship
 RUN apk add --no-cache \
     nodejs \
     curl {{ options.ship_packages | join " " }}
