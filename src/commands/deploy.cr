@@ -21,6 +21,9 @@ DOC
       def run : Int32
         funko_name = options["FUNKO"].as(String)
         Log.info { "Deploying #{funko_name}" }
+
+        return Faaso.rpc_call(ARGV) unless options["--local"]
+
         funko = Funko::Funko.from_names([funko_name])[0]
         # Get scale, check for out-of-date containers
         current_scale = funko.scale
