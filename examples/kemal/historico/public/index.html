@@ -1,9 +1,26 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script
       type="text/javascript"
       src="https://www.gstatic.com/charts/loader.js"
     ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap" rel="stylesheet">
     <script type="text/javascript">
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(drawChart);
@@ -29,11 +46,22 @@
             chart.draw(data, options);
           });
       }
+
     </script>
   </head>
   <body>
-    <input id="nombres"></input>
-    <input type="submit" onClick="drawChart()"></input>
+    <fieldset role="group">
+      <label for="nombres">Nombres:</label>
+        <input
+          type="search"
+          name="nombres"
+          id="nombres"
+          placeholder="Nombres"
+          aria-label="Search"
+        />
+      </label>
+      <input type="submit" onClick="drawChart()"></input>
+    </fieldset>
     <div id="curve_chart" style="width: 900px; height: 500px"></div>
   </body>
 </html>
