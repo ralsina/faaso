@@ -58,6 +58,7 @@
 * ✅ Fix `faaso secret` input issues
 * ✅ Add --no-cache option for faaso build
 * ✅ Support generic runtime-defined options for templates
+* Check that Docr is not sending a broken context tarball for build
 
 ## Things to do for NEXT release
 
