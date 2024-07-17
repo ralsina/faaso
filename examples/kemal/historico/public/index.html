@@ -9,12 +9,12 @@
       google.charts.setOnLoadCallback(drawChart);
 
       async function drawChart() {
-        fetch(`http://localhost:8888/faaso/historico/?names=${document.getElementById("nombres").value}`)
-          .then((response) => response.json())
+        fetch('/faaso/historico/?' + new URLSearchParams(
+          { names: document.getElementById("nombres").value}
+        )).then((response) => response.json())
           .then((json) => {
             var data = [json[0]]
             data.push(...json.slice(1).map((item) => item.map((value) => parseInt(value))));
-            console.log(data)
             data = google.visualization.arrayToDataTable(data)
             var options = {
               title: "Popularidad de los nombres",
