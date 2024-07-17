@@ -17,6 +17,7 @@
   * ✅ Nodejs + Express
 * ✅ Create a site
   * Document
+    * Review all server setup doc
     * Tutorial with a non-trivial app
       * ✅ Kemal
       * Express
@@ -59,12 +60,12 @@
 * ✅ Add --no-cache option for faaso build
 * ✅ Support generic runtime-defined options for templates
 * ✅ Empty enumerable error in latest_image
-* Make Historico work well in test server
-  * ✅ URL for query in index.html is wrong
-  * Add button to close terminal / logs
-  * Fix error about resolving source metadata for alpine
-* Make proxy be able to start without explicit
-  external configuration
+* ✅ Make Historico work well in test server
+* Terminal not working on test server
+* Add button to close terminal / logs
+* Special case proxy in web UI
+* Deploy is broken
+* ✅ Make proxy start without explicit configuration
 
 ## Things to do for NEXT release
 
