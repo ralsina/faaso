@@ -145,7 +145,8 @@ module Funko
       docker_api.images.build(
         context: path.to_s,
         tags: tags,
-        version: "2",
+        version: "1",
+        pull: true,
         no_cache: no_cache) { |x| Log.info { x } }
     end
 
@@ -171,7 +172,7 @@ module Funko
     end
 
     def latest_image
-      image_history.first unless image_history.empty?
+      return image_history.first unless image_history.empty?
       "Unknown"
     end
 
