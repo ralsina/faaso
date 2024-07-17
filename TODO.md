@@ -65,6 +65,8 @@
 * Add button to close terminal / logs
 * Special case proxy in web UI
 * ✅ Make proxy start without explicit configuration
+* ✅ Make status better (add -a to show all, skip proxy)
+* Tag images with something like `faaso-hello:timestamp` besides latest
 
 ## Things to do for NEXT release
 
