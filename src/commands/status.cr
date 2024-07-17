@@ -35,7 +35,7 @@ DOC
         latest = funko.latest_image
         Log.info { "Containers: #{status.containers.size}" }
         status.containers.each do |container|
-          out_of_date = container.@id == latest ? "(Current)" : "(Out of date)"
+          out_of_date = container.@image_id == latest ? "(Current)" : "(Out of date)"
           Log.info { "  #{container.@names[0]} #{container.status} #{out_of_date}" }
         end
 
