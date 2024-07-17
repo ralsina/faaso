@@ -60,6 +60,9 @@
 * ✅ Support generic runtime-defined options for templates
 * ✅ Empty enumerable error in latest_image
 * Make Historico work well in test server
+  * ✅ URL for query in index.html is wrong
+  * Add button to close terminal / logs
+  * Fix error about resolving source metadata for alpine
 * Make proxy be able to start without explicit
   external configuration
 
