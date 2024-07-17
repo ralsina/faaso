@@ -24,9 +24,8 @@ RUN apk add --no-cache \
 RUN addgroup -S app && adduser app -S -G app
 
 WORKDIR /home/app
-RUN mkdir /home/app/public/
-COPY --from=build /home/app/*.html /home/app/bin/funko  /home/app/public/
-RUN mv /home/app/public/funko /home/app/
+COPY --from=build /home/app/public/ /home/app/public/
+COPY --from=build /home/app/bin/funko /home/app/
 USER app
 
 CMD ["./funko"]

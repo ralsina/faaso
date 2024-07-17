@@ -14,7 +14,7 @@ RUN mkdir src/
 COPY src/ src/
 COPY runtimes/ runtimes/
 RUN make
-# RUN strip bin/*
+RUN strip bin/*
 
 FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.20 AS ship
 RUN apk add --no-cache \
@@ -33,7 +33,7 @@ RUN apk add --no-cache \
     ttyd
 # Mount points for persistent data
 RUN mkdir /secrets /config
-
+COPY config/Caddyfile config/faaso.yml /config/
 # Unprivileged user
 RUN addgroup -S app && adduser app -S -G app
 WORKDIR /home/app
@@ -42,7 +42,9 @@ WORKDIR /home/app
 RUN mkdir /home/app/tmp && chown app /home/app/tmp
 
 COPY public/ public/
-COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
+COPY config/ config/
+RUN touch config/funkos
 
+COPY --from=build /home/app/bin/faaso-daemon /home/app/bin/faaso /usr/bin/
 
 CMD ["/usr/bin/multirun", "-v", "faaso-daemon", "caddy run --config config/Caddyfile"]

@@ -34,7 +34,7 @@ shards:
 
   docr:
     git: https://github.com/ralsina/docr.git
-    version: 0.1.1+git.commit.a2f8f4e77fa0cc72a03f6828e814a32b375508ad
+    version: 0.1.1+git.commit.8ed5f738ce77f508f2287a66c82fb3f503a980c0
 
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
