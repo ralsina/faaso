@@ -171,7 +171,8 @@ module Funko
     end
 
     def latest_image
-      image_history.first
+      image_history.first unless image_history.empty?
+      "Unknown"
     end
 
     # Get all running containers related to this funko
