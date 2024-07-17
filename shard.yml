@@ -38,3 +38,5 @@ dependencies:
     github: kemalcr/kemal-basic-auth
   oplog:
     github: ralsina/oplog
+  uname:
+    github: djberg96/crystal-uname

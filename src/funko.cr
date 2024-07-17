@@ -1,6 +1,7 @@
 require "./runtime.cr"
 require "crinja"
 require "file_utils"
+require "uname"
 require "yaml"
 
 # A funko, built from its source metadata
@@ -144,9 +145,11 @@ module Funko
       Log.info { "   Tags: #{tags}" }
       docker_api.images.build(
         context: path.to_s,
+        build_args: {"BUILDPLATFORM" => System.machine},
         tags: tags,
         version: "1",
-        pull: true,
+        pull: false,
+        platform: System.machine,
         no_cache: no_cache) { |x| Log.info { x } }
     end
 
