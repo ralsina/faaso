@@ -24,8 +24,6 @@ class Config
     end
   end
 
-  @@already_warned = false
-
   def self.server : String
     url = ENV.fetch("FAASO_SERVER", nil)
     if url.nil?
