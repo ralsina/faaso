@@ -9,6 +9,8 @@
       <div style="margin-bottom: .75Rem;">
         <%- if c.image_id == f["latest_image"] -%>
           <span class="pico-color-jade-450"><i class="icono-check"></i>
+        <%- elsif f["latest_image"] == "Unknown" -%>
+          <span class="pico-color-slate-450"><i class="icono-meh"></i>
         <%- else -%>
           <span class="pico-color-orange-450"><i class="icono-clock"></i>
         <%- end -%>
