@@ -97,20 +97,18 @@ module Funko
   get "/funkos/terminal/logs/:instance/" do |env|
     instance = env.params.url["instance"]
     Terminal.start_terminal(["docker", "logs", "-f", instance])
-    %(
-      <strong style="font-size: 200%;">Logs for #{instance}</strong>
-    <iframe src='terminal/' width='100%' height='100%'></iframe>
-)
+    # ameba:disable Lint/UselessAssign
+    title = "Logs for #{instance}"
+    render "src/views/terminal.ecr"
   end
 
   # Get an iframe with a shell into the container
   get "/funkos/terminal/shell/:instance/" do |env|
     instance = env.params.url["instance"]
     Terminal.start_terminal(["docker", "exec", "-ti", instance, "/bin/sh"], readonly: false)
-    %(
-      <strong style="font-size: 200%;">Shell for #{instance}</strong>
-	<iframe src='terminal/' width='100%' height='100%'></iframe>
-)
+    # ameba:disable Lint/UselessAssign
+    title = "Terminal for #{instance}"
+    render "src/views/terminal.ecr"
   end
 
   post "/rpc/" do |env|

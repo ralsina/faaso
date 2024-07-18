@@ -62,12 +62,13 @@
 * ✅ Empty enumerable error in latest_image
 * ✅ Make Historico work well in test server
 * Terminal not working on test server
-* Add button to close terminal / logs
+* ✅ Add button to close terminal / logs
 * ✅ Special case proxy in web UI
-* ✅ Make proxy start without explicit configuration
+* Make proxy start without explicit configuration
 * ✅ Make status better (add -a to show all, skip proxy)
 * ✅ Tag images with something like `faaso-hello:timestamp` besides latest
 * Spinoff multi-docopt code into a shard
+* Display container health in web UI
 
 ## Things to do for NEXT release
 
