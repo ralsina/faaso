@@ -179,13 +179,22 @@ module Funko
       "Unknown"
     end
 
-    # Get all running containers related to this funko
     def containers : Array(Docr::Types::ContainerSummary)
+    end
+
+    # Get all containers related to this funko in the desired state
+    def containers(status : String | Nil = "running")
       docker_api = Docr::API.new(Docr::Client.new)
-      docker_api.containers.list(all: true).select { |container|
-        container.@names.any?(&.starts_with?("/faaso-#{name}-")) &&
-          container.@state == "running"
+      containers = docker_api.containers.list(all: true).select { |container|
+        container.@names.any?(&.starts_with?("/faaso-#{name}-"))
       } || [] of Docr::Types::ContainerSummary
+
+      if status
+        containers = containers.select { |container|
+          container.@state == status
+        }
+      end
+      containers
     end
 
     # A comprehensive status for the funko:

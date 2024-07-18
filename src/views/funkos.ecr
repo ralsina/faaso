@@ -8,11 +8,11 @@
     <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
       <div style="margin-bottom: .75Rem;">
         <%- if c.image_id == f["latest_image"] -%>
-          <span class="pico-color-jade-450"><i class="icono-check"></i>
+          <span class="pico-color-jade-300">✅
         <%- elsif f["latest_image"] == "Unknown" -%>
-          <span class="pico-color-slate-450"><i class="icono-meh"></i>
+          <span class="pico-color-slate-300">🤔
         <%- else -%>
-          <span class="pico-color-orange-450"><i class="icono-clock"></i>
+          <span class="pico-color-orange-300">⌛
         <%- end -%>
           <%= c.@names[0].split("-")[-1]%></span>
         <span role="button"
