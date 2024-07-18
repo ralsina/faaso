@@ -27,14 +27,13 @@ class Config
   @@already_warned = false
 
   def self.server : String
-    @@already_warned = true
     url = ENV.fetch("FAASO_SERVER", nil)
     if url.nil?
-      Log.warn { "FAASO_SERVER not set" } unless @@already_warned
-      url = "http://localhost:3000/"
+      Log.error { "FAASO_SERVER not set." }
+      exit 1
     end
     url += "/" unless url.ends_with? "/"
-    Log.info { "Using server #{url}" } unless @@already_warned
+    Log.info { "Using server #{url}" }
     url
   end
 
