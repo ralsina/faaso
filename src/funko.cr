@@ -141,7 +141,7 @@ module Funko
     def build(path : Path, no_cache : Bool = false)
       Log.info { "Building image for #{name} in #{path}" }
       docker_api = Docr::API.new(Docr::Client.new)
-      tags = ["faaso-#{name}:latest"]
+      tags = ["faaso-#{name}:latest", "faaso-#{name}:#{Time.utc.to_unix}"]
       Log.info { "   Tags: #{tags}" }
       docker_api.images.build(
         context: path.to_s,
