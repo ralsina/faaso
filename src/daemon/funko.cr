@@ -38,10 +38,9 @@ module Funko
   get "/funkos/" do |env|
     funkos = Funko.from_docker
     funkos.sort! { |i, j| i.name <=> j.name }
-    result = [] of Hash(String, String | Array(Docr::Types::ContainerSummary))
 
-    funkos.each do |funko|
-      result << {
+    result = funkos.map do |funko|
+      {
         "name"         => funko.name,
         "scale"        => funko.scale.to_s,
         "containers"   => funko.containers,

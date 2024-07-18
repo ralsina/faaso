@@ -67,7 +67,7 @@
 * ✅ Make status better (add -a to show all, skip proxy)
 * ✅ Tag images with something like `faaso-hello:timestamp` besides latest
 * Spinoff multi-docopt code into a shard
-* Display container health in web UI
+* ✅ Display container health in web UI
 * Fix the web UI's code for deleting a funko, generalize, make CLI
 * Make Caddy work with tailscale funnel (for my deployment)
 

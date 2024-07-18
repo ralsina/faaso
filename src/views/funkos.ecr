@@ -6,13 +6,20 @@
   </td>
   <td style="vertical-align: top;">
     <%- f["containers"].as(Array(Docr::Types::ContainerSummary)).each do |c| -%>
-      <div style="margin-bottom: .75Rem;">
-        <%- if c.image_id == f["latest_image"] -%>
-          <span class="pico-color-jade-300">✅
-        <%- elsif f["latest_image"] == "Unknown" -%>
-          <span class="pico-color-slate-300">🤔
+      <div>
+        <!-- Healthy/Sick -->
+        <%- if c.status.includes? "unhealthy" -%>
+          <span class="pico-color-orange-450" data-tooltip="Unhealthy">💊</span>
         <%- else -%>
-          <span class="pico-color-orange-300">⌛
+          <span class="pico-color-jade-450" data-tooltip="Healthy">✅</span>
+        <%- end -%>
+        <!-- Current/Old -->
+        <%- if c.image_id == f["latest_image"] -%>
+          <span class="pico-color-jade-300" data-tooltip="Current">✅</span>
+        <%- elsif f["latest_image"] == "Unknown" -%>
+          <span class="pico-color-slate-300" data-tooltip="No image available">🤔</span>
+        <%- else -%>
+          <span class="pico-color-orange-300" data-tooltip="Out of date">⌛</span>
         <%- end -%>
           <%= c.@names[0].split("-")[-1]%></span>
         <span role="button"
