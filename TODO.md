@@ -61,7 +61,6 @@
 * ✅ Support generic runtime-defined options for templates
 * ✅ Empty enumerable error in latest_image
 * ✅ Make Historico work well in test server
-* Terminal not working on test server
 * ✅ Add button to close terminal / logs
 * ✅ Special case proxy in web UI
 * Make proxy start without explicit configuration
