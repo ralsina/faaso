@@ -53,4 +53,22 @@ The CLI has the following commands:
 * secret
 * status
 
-For help on each one, run `faaso help <command>`.
+For help on each one, run `faaso help <command>`. For example:
+
+```text
+$ bin/faaso help status
+
+FaaSO CLI tool, status command.
+
+Prints a description of the current status for a funko and the instances
+it's running.
+
+Usage:
+  faaso status FUNKO...              [-v <level>] [-l]
+  faaso status                       [-v <level>] [-l]
+
+Options:
+  -h --help        Show this screen
+  -l --local       Run commands locally instead of against a FaaSO server
+  -v level         Control the logging verbosity, 0 to 6 [default: 4]
+```

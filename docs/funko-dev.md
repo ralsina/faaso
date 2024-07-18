@@ -23,7 +23,7 @@ Assuming you have a working FaaSO environment, we need to create a new
 funko, let's call it `historico` and you can create it based on any of the
 available runtimes which you can see running `faaso new -r list`
 
-```bash
+```text
 $ faaso new -r list
 
 FaaSO has some included runtimes:
@@ -37,7 +37,7 @@ Or if you have your own, use a folder name
 
 So, let's create a new funko using one of the runtimes:
 
-```bash
+```text
 $ faaso new -r kemal historico
 Using known runtime kemal
   Creating file historico/funko.yml from runtimes/kemal/template/funko.yml.j2
@@ -82,7 +82,7 @@ Build finished successfully.
 
 This has built the docker image for our funko, but that doesn't mean it's running:
 
-```bash
+```text
 $ faaso status historico
 2024-07-14T16:34:33.228869Z   INFO - Name: historico
 2024-07-14T16:34:33.228880Z   INFO - Scale: 0
@@ -93,7 +93,7 @@ $ faaso status historico
 
 To actually run it, we need to scale it to at least 1:
 
-```bash
+```text
 $ faaso scale historico 1
 2024-07-14T16:35:17.120410Z   INFO - Scaling historico from 0 to 1
 2024-07-14T16:35:17.120418Z   INFO - Adding instance
@@ -109,7 +109,7 @@ $ faaso status historico
 
 And we can now see if it works. The simplest way is to use `curl`:
 
-```bash
+```text
 $ curl 'http://localhost:8888/faaso/historico/'
 Hello World Crystal!⏎
 
@@ -165,7 +165,7 @@ If you **really** want to see this in action for yourself on your hardware,
 you can make this database accessible to your funko by running this command
 *in the same machine where you have the FaaSO server running*:
 
-```bash
+```text
 $ docker run -ti --rm -p 5432:5432 \
   --network faaso-net --name database \
   ghcr.io/ralsina/postgres-nombres:latest
@@ -201,7 +201,7 @@ What about the user/password for the database? Well, those are *secrets*.
 FaaSO has a very basic secrets management system. You can add secrets
 using the CLI and they are available to the funkos on runtime.
 
-```bash
+```text
 $ faaso secret -a historico pass
 Enter the secret, end with Ctrl-D
 [...]
@@ -268,7 +268,7 @@ end
 
 After updating the code we have to rebuild the funko and deploy it again:
 
-```bash
+```text
 $ faaso build .
 
 [ ... Lots of output]
@@ -305,7 +305,7 @@ The `faaso deploy` command looks for instances of the funko running old code
 and replaces them with new instances running the latest and greatest. So now we
 should be able to use it! The easiest way to test is using `curl`:
 
-```bash
+```text
 > curl 'http://localhost:8888/faaso/historico/?names=juan,pedro' | jq .
 [
   [
