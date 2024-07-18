@@ -9,10 +9,9 @@ it's running.
 
 Usage:
   faaso status FUNKO...              [-v <level>] [-l]
-  faaso status -a                    [-v <level>] [-l]
+  faaso status                       [-v <level>] [-l]
 
 Options:
-  -a --all         Show status for all funkos
   -h --help        Show this screen
   -l --local       Run commands locally instead of against a FaaSO server
   -v level         Control the logging verbosity, 0 to 6 [default: 4]
@@ -24,9 +23,11 @@ DOC
         end
 
         funkos = [] of Funko::Funko
-        if options["--all"]
+        if options["FUNKO"].as(Array(String)).empty?
+          Log.debug { "No funko specified, getting all funkos" }
           funkos = Funko::Funko.from_docker
         else
+          Log.debug { "Getting status for #{options["FUNKO"]}" }
           funkos = Funko::Funko.from_names(options["FUNKO"].as(Array(String)))
         end
 
