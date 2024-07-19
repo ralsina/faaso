@@ -2,10 +2,9 @@ module Faaso
   module Commands
     struct Status < Command
       @@doc : String = <<-DOC
-FaaSO CLI tool, status command.
+Shows status for one or more funkos.
 
-Prints a description of the current status for a funko and the instances
-it's running.
+If no funko name is given, then all the funkos' status are shown.
 
 Usage:
   faaso status FUNKO...              [-v <level>] [-l]

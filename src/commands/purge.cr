@@ -2,7 +2,7 @@ module Faaso
   module Commands
     struct Purge < Command
       @@doc : String = <<-DOC
-FaaSO CLI tool, purge command.
+Remove funkos completely.
 
 Stops and deletes all containers for the given funkos,
 and deletes all associated images.

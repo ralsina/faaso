@@ -2,7 +2,7 @@ module Faaso
   module Commands
     struct Logs < Command
       @@doc : String = <<-DOC
-      FaaSO CLI tool, logs command.
+      Show logs for all instances of a funko.
 
       Given a funko name, this command will tail the logs of all containers
       associated with that funko.

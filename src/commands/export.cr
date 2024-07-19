@@ -2,7 +2,7 @@ module Faaso
   module Commands
     struct Export < Command
       @@doc : String = <<-DOC
-      FaaSO CLI tool, export command.
+      Export a funko as a ready-to-build dockerized app.
 
       Takes a funko definition and exports it to a destination folder.
       As part of the export process, all information from the funko's

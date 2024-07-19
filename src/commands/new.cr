@@ -5,11 +5,11 @@ module Faaso
     # Creates a new empty funko out of a given runtime
     struct New < Command
       @@doc : String = <<-DOC
-FaaSO CLI tool, new command.
+Creates a new funko for a given runtime.
 
-Creates a new empty funko out of a given runtime. The runtime is
-the template for the new funko. For example the "express" runtime
-will create a new funko with a simple express server.
+The runtime is the template for the new funko. For example
+the "express" runtime will create a new funko with a
+simple express server in it.
 
 The runtime can be one of FaaSO's built-in runtimes or a custom
 one (a folder). To see a list of known runtimes, use '-r list'.

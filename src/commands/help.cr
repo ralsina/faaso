@@ -14,10 +14,10 @@ module Faaso
 
       def run : Int32
         if !options["COMMAND"]
-          Log.info { "Usage: faaso help COMMAND" }
-          Log.info { "  COMMAND is one of the following:" }
+          Log.info { "Usage: faaso help COMMAND where COMMAND is one of ..." }
+          Log.info { "" }
           Faaso::Commands::COMMANDS.keys.each { |name|
-            Log.info { "  #{name}" }
+            Log.info { "  #{name.ljust 12}" + Faaso::Commands::COMMANDS[name].doc.split("\n")[0] }
           }
           return 1
         end

@@ -22,7 +22,6 @@ get "/" do |env|
   DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres") do |cursor|
     # Get the information for each name
     names.map do |name|
-
       # Normalize: remove diacritics etc.
       name = name.unicode_normalize(:nfkd)
         .chars.reject! { |character|

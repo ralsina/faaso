@@ -4,7 +4,7 @@ module Faaso
   module Commands
     struct Login < Command
       @@doc : String = <<-DOC
-      FaaSO CLI tool, login command.
+      Login to a server.
 
       Logs into the FaaSO server declared in the FAASO_SERVER environment
       variable.

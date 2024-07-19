@@ -2,7 +2,7 @@ module Faaso
   module Commands
     struct Deploy < Command
       @@doc : String = <<-DOC
-FaaSO CLI tool, deploy command.
+Make funko instances up-to-date.
 
 Looks at the current number of running containers for a funko and if any
 are out of date (running an image that is not the latest) it will scale

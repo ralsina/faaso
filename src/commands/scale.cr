@@ -2,7 +2,7 @@ module Faaso
   module Commands
     struct Scale < Command
       @@doc : String = <<-DOC
-FaaSO CLI tool, scale command.
+Start or stop funko instances.
 
 A funko's scale is how many instances are running.
 

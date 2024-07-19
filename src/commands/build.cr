@@ -6,9 +6,10 @@ module Faaso
     # Build images for one or more funkos from source
     struct Build < Command
       @@doc : String = <<-DOC
-FaaSO CLI tool, build command.
+Builds docker images out of source folders.
 
-Builds docker images out of funkos defined in one or more folders.
+The source folders must contain a funko.yml that may reference
+a runtime to make the source buildable by providing extra files.
 
 Usage:
   faaso build  FOLDER ...           [-v <level>] [-l] [--no-runtime][--no-cache]

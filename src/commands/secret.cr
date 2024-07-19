@@ -4,11 +4,13 @@ module Faaso
   module Commands
     struct Secret < Command
       @@doc : String = <<-DOC
-FaaSO CLI tool, secret command.
+Manage server-side secrets.
 
-Sores a secret called SECRET for a funko called FUNKO. This secret
-is made available in runtime for the funko container in a file
+Secret called SECRET for a funko called FUNKO are
+made available in runtime for the FUNKO container in a file
 called /secrets/SECRET
+
+You can use this command to add/delete those secrets.
 
 Usage:
   faaso secret (-d|-a) FUNKO SECRET [-v <level>] [-l]
