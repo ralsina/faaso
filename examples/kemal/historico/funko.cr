@@ -11,7 +11,7 @@ PASS = File.read("/secrets/pass").strip
 # the requested names
 get "/" do |env|
   # Names are query parameters
-  names = env.params.query["names"].split(",").map &.strip
+  names = env.params.query["names"].split(",")
   # Connect using credentials provided
 
   results = [] of Array(String)
@@ -22,6 +22,13 @@ get "/" do |env|
   DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres") do |cursor|
     # Get the information for each name
     names.map do |name|
+
+      # Normalize: remove diacritics etc.
+      name = name.unicode_normalize(:nfkd)
+        .chars.reject! { |character|
+        !character.ascii_letter? && (character != ' ')
+      }.join("").downcase
+
       counter_per_year = {} of Int32 => Int32
       cursor.query("
       SELECT anio::integer, contador::integer

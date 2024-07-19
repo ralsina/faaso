@@ -7,9 +7,12 @@
       type="text/javascript"
       src="https://www.gstatic.com/charts/loader.js"
     ></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
@@ -18,29 +21,44 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap"
+      rel="stylesheet"
+    />
     <script type="text/javascript">
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(drawChart);
 
       async function drawChart() {
-        fetch('/faaso/historico/?' + new URLSearchParams(
-          { names: document.getElementById("nombres").value}
-        )).then((response) => response.json())
+        fetch(
+          "http://localhost:8888/faaso/historico/?" +
+            new URLSearchParams({
+              names: document.getElementById("nombres").value,
+            })
+        )
+          .then((response) => response.json())
           .then((json) => {
-            var data = [json[0]]
-            data.push(...json.slice(1).map((item) => item.map((value) => parseInt(value))));
-            data = google.visualization.arrayToDataTable(data)
+            var data = [json[0]];
+            data.push(
+              ...json
+                .slice(1)
+                .map((item) => item.map((value) => parseInt(value)))
+            );
+            data = google.visualization.arrayToDataTable(data);
             var options = {
-              title: "Popularidad de los nombres",
-              curveType: "function",
+              title: "",
+              animation: {
+                startup: true,
+                duration: 1000,
+                easing: "out",
+              },
               legend: { position: "bottom" },
             };
 
             var chart = new google.visualization.LineChart(
-              document.getElementById("curve_chart")
+              document.getElementById("chart")
             );
 
             chart.draw(data, options);
@@ -49,18 +67,28 @@
     </script>
   </head>
   <body>
-    <fieldset role="group">
-      <label for="nombres">Nombres:</label>
+    <main class="container" style="text-align:center;">
+      <header>
+        <h1>Poularidad de Nombres en Argentina</h1>
+      </header>
+      <div
+        id="chart"
+        style="width: 80vw; height: 50vh; margin: auto"
+      ></div>
+      <form
+        role="search"
+        onSubmit="return false;"
+          style="margin: auto; margin-top: 2em;width: 80%;"
+      >
         <input
           type="search"
           name="nombres"
           id="nombres"
-          placeholder="Nombres"
+          placeholder="Nombres separados con comas"
           aria-label="Search"
         />
-      </label>
-      <input type="submit" onClick="drawChart()"></input>
-    </fieldset>
-    <div id="curve_chart" style="width: 900px; height: 500px"></div>
+        <input type="submit" value="Buscar" onCLick="drawChart();" />
+      </form>
+    </main>
   </body>
 </html>
