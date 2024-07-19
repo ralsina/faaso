@@ -298,7 +298,11 @@ module Funko
         return false if image.@repo_tags.nil?
         true if image.@repo_tags.as(Array(String)).any?(&.starts_with?("faaso-#{name}:"))
       }.each { |image|
-        docker_api.images.delete(image.@id)
+        Log.debug { "Removing image #{image.@id}" }
+        (image.@repo_tags || [] of String).each { |tag|
+          Log.debug { "  #{tag}" }
+          docker_api.images.delete(tag)
+        }
       }
     end
 

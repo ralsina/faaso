@@ -25,6 +25,7 @@ class Config
   end
 
   @@already_reported = false
+
   def self.server : String
     url = ENV.fetch("FAASO_SERVER", nil)
     if url.nil?
