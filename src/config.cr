@@ -24,6 +24,7 @@ class Config
     end
   end
 
+  @@already_reported = false
   def self.server : String
     url = ENV.fetch("FAASO_SERVER", nil)
     if url.nil?
@@ -31,7 +32,8 @@ class Config
       exit 1
     end
     url += "/" unless url.ends_with? "/"
-    Log.info { "Using server #{url}" }
+    Log.info { "Using server #{url}" } unless @@already_reported
+    @@already_reported = true
     url
   end
 
