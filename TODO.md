@@ -70,7 +70,7 @@
 * ✅ Display container health in web UI
 * Fix the web UI's code for deleting a funko, generalize, make CLI
 * Make Caddy work with tailscale funnel (for my deployment)
-* Re-record video properly (claim it in asciinema, use doitlive)
+* ✅ Re-record video properly (claim it in asciinema, use doitlive)
 
 ## Things to do for NEXT release
 
