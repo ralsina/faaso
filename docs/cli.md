@@ -4,6 +4,11 @@ The FaaSO CLI is a tool that allows you to interact with the FaaSO
 platform from the command line. You can use the CLI to create,
 deploy, and manage your code.
 
+<script
+  src="https://asciinema.org/a/uky7wQxmcwOcvJcqiCsaGVY5o.js"
+  id="asciicast-uky7wQxmcwOcvJcqiCsaGVY5o"
+  async="true"></script>
+
 ## Local Versus Remote
 
 In some contexts, the CLI operates on your local machine. For example,

@@ -3,6 +3,11 @@
 This guide will help you set up a FaaSO server which you can use to
 deploy your applications.
 
+<script
+  src="https://asciinema.org/a/fwGx1rD9m2TzHPBXzHErarfoq.js"
+  id="asciicast-fwGx1rD9m2TzHPBXzHErarfoq"
+  async="true"></script>
+
 Since FaaSO is a container-based platform, you will need to have Docker
 installed on your server. This document assumes some basic familiarity
 with the command line and docker itself.
@@ -24,17 +29,18 @@ It's a normal docker container, so you can run it like this:
 
 ```bash
 $ docker network create faaso-net  # All faaso containers want this network
-$ docker run --name faaso-proxy-fadmin \
+$ docker run -d --name faaso-proxy-fadmin \
         --rm --network=faaso-net \
         -v /var/run/docker.sock:/var/run/docker.sock \
         -v ${PWD}/secrets:/home/app/secrets \
         -e FAASO_SECRET_PATH=${PWD}/secrets \
         -v ${PWD}/config:/home/app/config \
-        -p 8888:8888 faaso
+        -p 127.0.0.1:8888:8888 ghcr.io/ralsina/faaso
 ```
 
 Let's break down the command:
 
+* `-d` means the container will run in the background.
 * `--name faaso-proxy-fadmin` is the name of the container.
   You can use any name you want.
 * `--rm` means the container will be removed when it stops.
@@ -69,7 +75,7 @@ The user is always `admin`.
 ## Reverse Proxy Configuration
 
 * Caddy reads config from `config/Caddyfile` and this is the default, which
-  you can change as needed if you are famiiar with it. Usually you won't
+  you can change as needed if you are familiar with it. Usually you won't
   need to change anything:
 
 ```Caddyfile
