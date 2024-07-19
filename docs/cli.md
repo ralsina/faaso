@@ -49,6 +49,7 @@ The CLI has the following commands:
 * login
 * logs
 * new
+* purge
 * scale
 * secret
 * status
