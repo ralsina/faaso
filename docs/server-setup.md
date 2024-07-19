@@ -85,7 +85,7 @@ The user is always `admin`.
         local_certs
 }
 
-http://*:8888 {
+http://*:8888 http://127.0.0.1:8888 {
         forward_auth /admin/* http://127.0.0.1:3000 {
                 uri /auth
                 copy_headers {
@@ -99,6 +99,8 @@ http://*:8888 {
         handle_path /admin/* {
                 reverse_proxy /* http://127.0.0.1:3000
         }
+      header Access-Control-Allow-Origin "*"
+
       import funkos
 }
 ```
