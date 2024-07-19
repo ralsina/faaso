@@ -76,7 +76,7 @@ The user is always `admin`.
 
 * Caddy reads config from `config/Caddyfile` and this is the default, which
   you can change as needed if you are familiar with it. Usually you won't
-  need to change anything:
+  need to change anything, so just copy this into `config/Caddyfile`:
 
 ```Caddyfile
 {
@@ -106,7 +106,7 @@ http://*:8888 http://127.0.0.1:8888 {
 ```
 
 The `import funkos` line is important, because `config/funkos` is where FaaSO
-configures the reverse proxy for your applications.
+configures the reverse proxy for your applications. That file *must exist*.
 
 You can alternatively run the proxy using docker-compose with the
 following `docker-compose.yml` (adapt as needed):
