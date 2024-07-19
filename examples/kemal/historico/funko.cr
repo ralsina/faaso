@@ -11,7 +11,7 @@ PASS = File.read("/secrets/pass").strip
 # the requested names
 get "/" do |env|
   # Names are query parameters
-  names = env.params.query["names"].split(",")
+  names = env.params.query["names"].split(",").map(&.strip.capitalize)
   # Connect using credentials provided
 
   results = [] of Array(String)

@@ -54,7 +54,19 @@
                 duration: 1000,
                 easing: "out",
               },
-              legend: { position: "bottom" },
+              backgroundColor: "#1c212c",
+              vAxis: {
+                minValue: 0,
+                gridlines: { color: "#666" },
+                minorGridlines: { color: "#1c212c" },
+                textStyle: { color: "#aaa" }
+              },
+              hAxis: {
+                gridlines: { color: "#666" },
+                minorGridlines: { color: "#1c212c" },
+                textStyle: { color: "#aaa" }
+              },
+              legend: { position: "bottom", textStyle: { color: "#aaa" } },
             };
 
             var chart = new google.visualization.LineChart(
@@ -67,18 +79,15 @@
     </script>
   </head>
   <body>
-    <main class="container" style="text-align:center;">
+    <main class="container" style="text-align: center">
       <header>
         <h1>Poularidad de Nombres en Argentina</h1>
       </header>
-      <div
-        id="chart"
-        style="width: 80vw; height: 50vh; margin: auto"
-      ></div>
+      <div id="chart" style="width: 80vw; height: 50vh; margin: auto"></div>
       <form
         role="search"
         onSubmit="return false;"
-          style="margin: auto; margin-top: 2em;width: 80%;"
+        style="margin: auto; margin-top: 2em; width: 80%"
       >
         <input
           type="search"
