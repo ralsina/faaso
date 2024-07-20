@@ -9,9 +9,9 @@
       <div>
         <!-- Healthy/Sick -->
         <%- if c.status.includes? "unhealthy" -%>
-          <span class="pico-color-orange-450" data-tooltip="Unhealthy">💊</span>
+          <span class="pico-color-orange-300" data-tooltip="Unhealthy">💊</span>
         <%- else -%>
-          <span class="pico-color-jade-450" data-tooltip="Healthy">✅</span>
+          <span class="pico-color-jade-300" data-tooltip="Healthy">✅</span>
         <%- end -%>
         <!-- Current/Old -->
         <%- if c.image_id == f["latest_image"] -%>
