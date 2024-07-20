@@ -8,4 +8,6 @@ are some things that exist:
 * [CLI](cli.html)
 * [The Web Interface](web-frontend.html)
 * [Funko Development](funko-dev.html)
-* [Underlying technologies](technologies.html)
+* [Underlying Technologies](technologies.html)
+* [Runtime Creation (TBD)][runtime-creation.html]
+* [Adding Services (TBD)][adding-services.html]
