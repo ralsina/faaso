@@ -17,6 +17,9 @@ module Faaso
       DOC
 
       def run : Int32
+        if !options["--local"]
+          return Faaso.rpc_call(ARGV)
+        end
         funko_name = options["FUNKO"].as(String)
         funko = Funko::Funko.from_names([funko_name])[0]
         containers = funko.containers.map { |container|

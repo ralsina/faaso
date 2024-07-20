@@ -71,7 +71,8 @@
 * ✅ Display container health in web UI
 * ✅ Fix the web UI's code for deleting a funko, generalize, make CLI
 * ✅ Re-record video properly (claim it in asciinema, use doitlive)
-* faaso logs seems to always be local
+* ✅ faaso logs seems to always be local
+* Streaming responses from server are choppy
 
 ## Things to do for NEXT release
 
