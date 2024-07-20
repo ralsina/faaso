@@ -11,7 +11,9 @@ PASS = File.read("/secrets/pass").strip
 # the requested names
 get "/" do |env|
   # Names are query parameters
-  names = env.params.query["names"].split(",").map(&.strip.capitalize)[..4]
+  # Split by commas, capitalize and take the first 5
+  names = env.params.query["names"]
+    .split(",").map(&.strip.capitalize)[..4]
 
   # Prepare results table
   results = [] of Array(String)
