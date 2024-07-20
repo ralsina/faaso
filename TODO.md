@@ -70,7 +70,6 @@
 * Spinoff multi-docopt code into a shard
 * ✅ Display container health in web UI
 * ✅ Fix the web UI's code for deleting a funko, generalize, make CLI
-* Make Caddy work with tailscale funnel (for my deployment)
 * ✅ Re-record video properly (claim it in asciinema, use doitlive)
 * faaso logs seems to always be local
 

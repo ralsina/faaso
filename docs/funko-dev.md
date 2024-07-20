@@ -386,7 +386,7 @@ generating to show a chart:
 ```
 
 And yes, it does work, although of course in real life it would need
-some styling so it would look like this:
+some styling so it would look [like this](https://faaso-prod.ralsina.me/faaso/historico/index.html):
 
 ![Chart, No, I don't know what happened with Leonel in 1975](chart.png)
 
@@ -440,4 +440,4 @@ end
 
 And that's it! You have a funko that connects to a database, gets data, and
 creates a response and can be combined with a static frontend to display
-the data in a nice chart. You can see it working in **TODO** add URL.
+the data in a nice chart.
