@@ -29,7 +29,8 @@
     * ✅ FaaSO server setup
     * APIs
     * ✅ CLI
-    * Front End
+    * ✅ Front End
+    * Caddyfile hostname quirks
 * ✅ Sanitize inputs
 * ✅ Streaming responses in slow operations
 * ✅ Make more things configurable / remove hardcoded stuff
@@ -71,6 +72,7 @@
 * ✅ Fix the web UI's code for deleting a funko, generalize, make CLI
 * Make Caddy work with tailscale funnel (for my deployment)
 * ✅ Re-record video properly (claim it in asciinema, use doitlive)
+* faaso logs seems to always be local
 
 ## Things to do for NEXT release
 
