@@ -1,0 +1,7 @@
+name: hello
+runtime: express
+options:
+  ship_packages: []
+  devel_packages: []
+  healthcheck_options: "--interval=1m --timeout=2s --start-period=2s --retries=3"
+  healthcheck_command: "curl --fail http://localhost:3000/ping || exit 1"
