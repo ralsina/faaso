@@ -6,5 +6,6 @@ are some things that exist:
 * [Introduction](introduction.html)
 * [Server Setup](server-setup.html)
 * [CLI](cli.html)
+* [The Web Interface](web-frontend.html)
 * [Funko Development](funko-dev.html)
 * [Underlying technologies](technologies.html)
