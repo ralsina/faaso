@@ -33,7 +33,7 @@
 
       async function drawChart() {
         fetch(
-          "http://localhost:8888/faaso/historico/?" +
+          "/faaso/historico/?" +
             new URLSearchParams({
               names: document.getElementById("nombres").value,
             })
