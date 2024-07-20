@@ -105,8 +105,18 @@ http://*:8888 http://127.0.0.1:8888 {
 }
 ```
 
-The `import funkos` line is important, because `config/funkos` is where FaaSO
-configures the reverse proxy for your applications. That file *must exist*.
+The `import funkos` line has to be there, because `config/funkos` is
+where FaaSO configures the reverse proxy for your applications.
+That file *must exist*.
+
+
+>%note%
+>**IMPORTANT:** You need to declare all names the server
+>will respond to. SO, for example, if you want to use
+>`faaso.example.com` as its public URL, you need to add
+>`http://faaso.example.com:8888` to the list of addresses
+>in the Caddyfile, and you need to do this FOR EVERY
+>DOMAIN NAME YOU WANT TO USE.
 
 You can alternatively run the proxy using docker-compose with the
 following `docker-compose.yml` (adapt as needed):

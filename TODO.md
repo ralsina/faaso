@@ -30,7 +30,7 @@
     * APIs
     * ✅ CLI
     * ✅ Front End
-    * Caddyfile hostname quirks
+    * ✅ Caddyfile hostname quirks
 * ✅ Sanitize inputs
 * ✅ Streaming responses in slow operations
 * ✅ Make more things configurable / remove hardcoded stuff
