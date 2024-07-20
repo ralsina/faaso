@@ -17,7 +17,7 @@
   * ✅ Nodejs + Express
 * ✅ Create a site
   * Document
-    * Review all server setup doc
+    * ✅ Review all server setup doc
     * Tutorial with a non-trivial app
       * ✅ Kemal
       * Express
