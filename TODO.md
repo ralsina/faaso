@@ -25,9 +25,8 @@
       * ✅ Document static index.html in example
       * ✅ Fix problem with names missing rows (lionel)
       * ✅ Document runtime options
-    * FaaSO for runtime developers
+    * ✅ FaaSO for runtime developers
     * ✅ FaaSO server setup
-    * APIs
     * ✅ CLI
     * ✅ Front End
     * ✅ Caddyfile hostname quirks
@@ -93,3 +92,4 @@
 * Save state in the server
 * Docker registry support (needs design!)
 * Design gitops workflow
+* Document and/or redesign APIs
