@@ -4,6 +4,25 @@ This is a tutorial showing how to develop your own application
 for FaaSO. It's not a *large* application, but it uses many
 of the platform's capabilities.
 
+Choose your language:
+
+<span
+  id="crystal-button"
+  class="outline"
+  role=button
+  onCLick="switchTo('crystal');">Crystal
+</span>
+<span
+  id="python-button"
+  role=button
+  onCLick="switchTo('python');">Python
+</span>
+<span
+  id="nodejs-button"
+  role=button
+  onCLick="switchTo('nodejs');">NodeJS
+</span>
+
 ## The Application
 
 It's called "historico" and it creates data for a chart showing
@@ -37,6 +56,7 @@ Or if you have your own, use a folder name
 
 So, let's create a new funko using one of the runtimes:
 
+{{% tag div class="crystal" %}}
 ```text
 $ faaso new -r kemal historico
 Using known runtime kemal
@@ -45,6 +65,18 @@ Using known runtime kemal
   Creating file historico/README.md from runtimes/kemal/template/README.md.j2
   Creating file historico/funko.cr from runtimes/kemal/template/funko.cr
 ```
+{{% /tag %}}
+
+{{% tag div class="python" %}}
+```text
+$ faaso new -r flask historico
+Using known runtime flask
+  Creating file historico/requirements.txt from runtimes/flask/template/requirements.txt
+  Creating file historico/funko.py from runtimes/flask/template/funko.py.j2
+  Creating file historico/public/index.html from runtimes/flask/template/public/index.html
+  Creating file historico/funko.yml from runtimes/flask/template/funko.yml.j2
+```
+{{% /tag %}}
 
 Now you have a new folder called `historico` with the basic structure of a
 funko ready for editing. We can actually just deploy it now, to verify our
@@ -58,6 +90,10 @@ $ faaso login
 Enter password for <http://localhost:8888/admin/>
 [...]
 
+```
+
+{{% tag div class="crystal" %}}
+```text
 $ faaso build .
 
 Using known runtime kemal
@@ -79,6 +115,34 @@ Starting remote build:
 2024-07-14T16:33:24.038916Z   INFO - Successfully tagged faaso-historico:latest
 Build finished successfully.
 ```
+{{% /tag %}}
+
+{{% tag div class="python" %}}
+```text
+$ faaso build .
+Using known runtime flask
+  Creating file /tmp/EFJBXt12/main.py from runtimes/flask/main.py
+  Creating file /tmp/EFJBXt12/README.md from runtimes/flask/README.md
+  Creating file /tmp/EFJBXt12/Dockerfile from runtimes/flask/Dockerfile.j2
+Using server http://localhost:8888/admin/
+Uploading funko to http://localhost:8888/admin/
+Starting remote build:
+2024-07-22T18:39:51.055912Z   INFO - Building function... historico in /tmp/P2aA1vX5
+2024-07-22T18:39:51.055917Z   INFO - Building image for historico in /tmp/P2aA1vX5
+2024-07-22T18:39:51.055973Z   INFO -    Tags: ["faaso-historico:latest", "faaso-historico:1721673591"]
+2024-07-22T18:39:51.059349Z   INFO - Step 1/17 : ARG BUILDPLATFORM
+
+[Lots and lots of output]
+
+2024-07-22T18:42:40.054931Z   INFO - ---> Running in a7dec4123e2b
+2024-07-22T18:42:41.023699Z   INFO - ---> Removed intermediate container a7dec4123e2b
+2024-07-22T18:42:41.023722Z   INFO - ---> 1b58e426121e
+2024-07-22T18:42:41.024123Z   INFO - Successfully built 1b58e426121e
+2024-07-22T18:42:41.034989Z   INFO - Successfully tagged faaso-historico:latest
+2024-07-22T18:42:41.041069Z   INFO - Successfully tagged faaso-historico:1721673718
+Build finished successfully.
+```
+{{% /tag %}}
 
 This has built the docker image for our funko, but that doesn't mean it's running:
 
@@ -109,10 +173,22 @@ $ faaso status historico
 
 And we can now see if it works. The simplest way is to use `curl`:
 
+{{% tag div class="crystal" %}}
 ```text
 $ curl 'http://localhost:8888/faaso/historico/'
 Hello World Crystal!⏎
+```
+{{% /tag %}}
 
+
+{{% tag div class="python" %}}
+```text
+> curl 'http://localhost:8888/faaso/historico/'
+Hello World from Flask!⏎
+```
+{{% /tag %}}
+
+```text
 $ curl 'http://localhost:8888/faaso/historico/ping/'
 OK⏎
 ```
@@ -122,8 +198,9 @@ come with a secondary `/ping/` endpoint that should return `OK`.
 
 Where is the code that is *doing* that? It depends on the runtime, but
 usually it's called "funko" with the extension for the language of the
-runtime. In this case, it's `funko.cr`:
+runtime such as `.cr` for Crystal or `.py` for Python.
 
+{{% tag div class="crystal" %}}
 ```crystal
 require "kemal"
 
@@ -142,6 +219,25 @@ get "/ping/" do
   "OK"
 end
 ```
+{{% /tag %}}
+
+{{% tag div class="python" %}}
+```python
+from flask import Flask, request
+
+app = Flask("historico")
+
+@app.route('/')
+def handle():
+    return "Hello World from Flask!"
+
+@app.route('/ping')
+def ping():
+    return "OK"
+```
+{{% /tag %}}
+
+
 
 Now, that's not really a very interesting app. Let's make it do what we want
 it to do. What I want is to run some queries against my PostgreSQL database
@@ -156,7 +252,7 @@ Of course that involves a series of things:
 
 * Have a PostgreSQL database with the data
 * A user/password to connect to it
-* Install the PostgreSQL client library for Crystal
+* Install the PostgreSQL client library for the language
 * Get the name/names I want data on as a parameter
 * Writing the code to connect to the database and run the query
 * Formatting the output as JSON and returning it
@@ -175,9 +271,11 @@ $ docker run -ti --rm -p 5432:5432 \
 LOG:  database system is ready to accept connections
 ```
 
+{{%tag div class="crystal"%}}
 Since we now have a database, let's get the Crystal client library for
 PostgreSQL. In Crystal, you add dependencies to a `shard.yml` file,
 and your funko has one. Here, I added the `pg` shard:
+
 
 ```yaml
 name: historico
@@ -193,6 +291,20 @@ dependencies:
   pg:
     github: will/crystal-pg
 ```
+{{%/tag%}}
+
+{{%tag div class="python"%}}
+Since we now have a database, let's get the Python client library for
+PostgreSQL. In Python, you add dependencies to a `requirements.txt` file,
+and your funko has one. Here, I added the `psycopg2` library:
+
+
+```text
+flask
+psycopg2
+```
+{{%/tag%}}
+
 
 ## Connecting to the Database (Using Secrets!)
 
@@ -221,6 +333,7 @@ case, `/secrets/user` and `/secrets/pass`).
 The code to connect to the database and run the query is pretty simple
 but beyond the scope of this tutorial:
 
+{{% tag div class="crystal" %}}
 ```crystal
 require "json"
 require "kemal"
@@ -263,6 +376,41 @@ get "/" do |env|
 end
 
 ```
+{{% /tag %}}
+
+{{% tag div class="python" %}}
+```python
+import json
+
+import psycopg2
+from flask import Flask, request
+
+app = Flask("historico")
+
+USER = open("/secrets/user").read().strip()
+PASS = open("/secrets/pass").read().strip()
+conn = psycopg2.connect(dbname="nombres", user=USER, password=PASS, host="database")
+
+
+@app.route("/", methods=["GET"])
+def handle():
+    names = [n.strip() for n in request.args.get("names").split(",")][:4]
+    cursor = conn.cursor()
+    # Prepare results table
+    results = [["Año"] + names]
+    results += [[year] + [0 for _ in names] for year in range(1922, 2016)]
+    for i, name in enumerate(names):
+        # FIXME: normalize
+        cursor.execute(
+            "SELECT anio, contador FROM nombres WHERE nombre = %s",
+            (name,),
+        )
+        for anio, contador in cursor.fetchall():
+            results[anio - 1921][i + 1] = contador
+    cursor.close()
+    return json.dumps(results)
+```
+{{% /tag %}}
 
 ## Redeploying and Testing
 
@@ -441,3 +589,22 @@ end
 And that's it! You have a funko that connects to a database, gets data, and
 creates a response and can be combined with a static frontend to display
 the data in a nice chart.
+
+<script>
+  function switchTo(lang) {
+    ['crystal', 'python', 'nodejs'].forEach((l) => {
+      document.getElementById(`${l}-button`).className = "outline";
+      elems = document.getElementsByClassName(l);
+      for (var i = 0; i < elems.length; i++) {
+        if (l === lang) {
+          elems[i].style.display = 'block';
+        } else {
+          elems[i].style.display = 'none';
+        }
+      }
+      document.getElementById(`${lang}-button`).className = "primary";
+
+    });
+  }
+  switchTo('crystal');
+</script>
