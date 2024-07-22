@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <script type="text/javascript">
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      async function drawChart() {
+        fetch(
+          "/faaso/historico/?" +
+            new URLSearchParams({
+              names: document.getElementById("nombres").value,
+            })
+        )
+          .then((response) => response.json())
+          .then((json) => {
+            var data = [json[0]];
+            data.push(
+              ...json
+                .slice(1)
+                .map((item) => item.map((value) => parseInt(value)))
+            );
+            data = google.visualization.arrayToDataTable(data);
+            var options = {
+              title: "",
+              animation: {
+                startup: true,
+                duration: 1000,
+                easing: "out",
+              },
+              backgroundColor: "#1c212c",
+              vAxis: {
+                minValue: 0,
+                gridlines: { color: "#666" },
+                minorGridlines: { color: "#1c212c" },
+                textStyle: { color: "#aaa" }
+              },
+              hAxis: {
+                gridlines: { color: "#666" },
+                minorGridlines: { color: "#1c212c" },
+                textStyle: { color: "#aaa" }
+              },
+              legend: { position: "bottom", textStyle: { color: "#aaa" } },
+            };
+
+            var chart = new google.visualization.LineChart(
+              document.getElementById("chart")
+            );
+
+            chart.draw(data, options);
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <main class="container" style="text-align: center">
+      <header>
+        <h1>Poularidad de Nombres en Argentina</h1>
+      </header>
+      <div id="chart" style="width: 80vw; height: 50vh; margin: auto"></div>
+      <form
+        role="search"
+        onSubmit="return false;"
+        style="margin: auto; margin-top: 2em; width: 80%"
+      >
+        <input
+          type="search"
+          name="nombres"
+          id="nombres"
+          placeholder="Nombres separados con comas"
+          aria-label="Search"
+        />
+        <input type="submit" value="Buscar" onCLick="drawChart();" />
+      </form>
+    </main>
+  </body>
+</html>

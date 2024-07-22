@@ -1,6 +1,5 @@
 ARG BUILDPLATFORM
 FROM --platform=${BUILDPLATFORM:-foobar} alpine AS build
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine as build
 
 RUN apk add --no-cache \
     python3 \
