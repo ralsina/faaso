@@ -72,6 +72,7 @@
 * ✅ Re-record video properly (claim it in asciinema, use doitlive)
 * ✅ faaso logs seems to always be local
 * Streaming responses from server are choppy
+* Use https://github.com/ysbaddaden/pool in the kemal historico example
 
 ## Things to do for NEXT release
 
