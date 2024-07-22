@@ -237,14 +237,12 @@ def ping():
 ```
 {{% /tag %}}
 
-
-
 Now, that's not really a very interesting app. Let's make it do what we want
 it to do. What I want is to run some queries against my PostgreSQL database
 and do some aggregations to create a data table I can use to draw a chart.
 
 ```sql
-SELECT anio::integer, contador::integer
+SELECT anio, contador
   FROM nombres WHERE nombre = 'juan'
 ```
 
@@ -301,7 +299,7 @@ and your funko has one. Here, I added the `psycopg2` library:
 
 ```text
 flask
-psycopg2
+psycopg2-binary
 ```
 {{%/tag%}}
 
@@ -544,6 +542,7 @@ FaaSO funkos can have a few options that can be set in the `funko.yml` file.
 These options vary depending on your runtime, and should be already set
 to their default values. Here is the `funko.yml` file for this funko:
 
+{{% tag div class="crystal" %}}
 ```yaml
 name: historico
 runtime: kemal
@@ -554,6 +553,19 @@ options:
   healthcheck_options: "--interval=1m --timeout=2s --start-period=2s --retries=3"
   healthcheck_command: "curl --fail http://localhost:3000/ping || exit 1"
 ```
+{{% /tag %}}
+
+{{% tag div class="python" %}}
+```yaml
+name: historico
+runtime: flask
+options:
+  ship_packages: []
+  devel_packages: []
+  healthcheck_options: "--interval=1m --timeout=2s --start-period=2s --retries=3"
+  healthcheck_command: "curl --fail http://localhost:3000/ping || exit 1"
+```
+{{% /tag %}}
 
 They should be explained in the documentation for each runtime, but the gist
 should be more or less clear, here are some details:
@@ -562,9 +574,11 @@ The funkos are shipped in docker containers. Sometimes your code needs special
 packages either to build itself (the `devel_packages` option) or to run
 (the `ship_packages` option).
 
+{{% tag div class="crystal" %}}
 The `shard_build_options` is specific to Crystal and is used to pass options
 to the `shards` command that compiles the code. For example `--release` will
 create a smaller, faster binary ... but takes longer to compile.
+{{% /tag %}}
 
 ## The Healthcheck
 
@@ -576,6 +590,7 @@ While the default `/ping` endpoint is very simple, you can make it more
 useful by doing meaningful healthchecks. For example in historico we could
 check that the database is responding:
 
+{{% tag div class="flask" %}}
 ```crystal
 get "/ping/" do
   DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres")
@@ -583,6 +598,19 @@ get "/ping/" do
   "OK"
 end
 ```
+{{% /tag %}}
+{{% tag div class="python" %}}
+```python
+@app.route("/ping")
+def ping():
+    cursor = conn.cursor()
+    cursot.execute("SELECT 42")
+    cursor.fetchall()
+    cursor.close()
+    return "OK"
+```
+{{% /tag %}}
+
 
 ## Conclusion
 

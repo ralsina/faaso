@@ -31,4 +31,8 @@ def handle():
 
 @app.route("/ping")
 def ping():
+    cursor = conn.cursor()
+    cursot.execute("SELECT 42")
+    cursor.fetchall()
+    cursor.close()
     return "OK"
