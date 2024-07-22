@@ -21,7 +21,7 @@
     * Tutorial with a non-trivial app
       * ✅ Kemal
       * Express
-      * Flask
+      * ✅ Flask
       * ✅ Document static index.html in example
       * ✅ Fix problem with names missing rows (lionel)
       * ✅ Document runtime options
@@ -63,7 +63,6 @@
 * ✅ Make Historico work well in test server
 * ✅ Add button to close terminal / logs
 * ✅ Special case proxy in web UI
-* Make proxy start without explicit configuration
 * ✅ Make status better (add -a to show all, skip proxy)
 * ✅ Tag images with something like `faaso-hello:timestamp` besides latest
 * Spinoff multi-docopt code into a shard
@@ -71,7 +70,9 @@
 * ✅ Fix the web UI's code for deleting a funko, generalize, make CLI
 * ✅ Re-record video properly (claim it in asciinema, use doitlive)
 * ✅ faaso logs seems to always be local
-* Streaming responses from server are choppy
+* ✅ Streaming responses from server are choppy
+* Make proxy start without explicit configuration
+* Get rid of multirun
 
 ## Things to do for NEXT release
 
