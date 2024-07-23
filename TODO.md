@@ -73,6 +73,9 @@
 * ✅ Streaming responses from server are choppy
 * Make proxy start without explicit configuration
 * Get rid of multirun
+* Fix flask static serving
+* Do db conn pooling in kemal
+* Update flask Dockerfile for options
 
 ## Things to do for NEXT release
 
