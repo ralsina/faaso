@@ -77,7 +77,7 @@
 * Fix flask static serving
 * Do db conn pooling in kemal
 * Update flask Dockerfile for options
-* Migrate to polydocopt
+* ✅ Migrate to polydocopt
 
 ## Things to do for NEXT release
 
