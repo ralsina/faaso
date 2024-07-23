@@ -1,4 +1,12 @@
-# Writing your First Funko for FaaSO
+{{% tag div class="python" %}}
+# Writing your First Funko for FaaSO using Python and Flask
+{{% /tag %}}
+{{% tag div class="crystal" %}}
+# Writing your First Funko for FaaSO using Crystal and Kemal
+{{% /tag %}}
+{{% tag div class="nodejs" %}}
+# Writing your First Funko for FaaSO using NodeJS and Express
+{{% /tag %}}
 
 This is a tutorial showing how to develop your own application
 for FaaSO. It's not a *large* application, but it uses many
