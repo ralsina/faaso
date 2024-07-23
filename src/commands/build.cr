@@ -92,4 +92,4 @@ DOC
   end
 end
 
-Faaso::Commands::Build.register()
+Faaso::Commands::Build.register

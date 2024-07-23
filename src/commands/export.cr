@@ -39,4 +39,4 @@ module Faaso
   end
 end
 
-Faaso::Commands::Export.register()
+Faaso::Commands::Export.register

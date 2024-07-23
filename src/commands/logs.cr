@@ -53,4 +53,4 @@ module Faaso
   end
 end
 
-Faaso::Commands::Logs.register()
+Faaso::Commands::Logs.register

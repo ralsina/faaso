@@ -16,18 +16,6 @@ module Faaso
     end
   end
 
-  # Ensure the faaso-net network exists
-  def self.setup_network
-    docker_api = Docr::API.new(Docr::Client.new)
-    docker_api.networks.create(Docr::Types::NetworkConfig.new(
-      name: "faaso-net",
-      check_duplicate: false,
-      driver: "bridge"
-    ))
-  rescue ex : Docr::Errors::DockerAPIError
-    raise ex if ex.status_code != 409 # Network already exists
-  end
-
   # Compare version with server's
   def self.check_version
     user, password = Config.auth

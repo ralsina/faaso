@@ -47,4 +47,4 @@ DOC
   end
 end
 
-Faaso::Commands::Purge.register()
+Faaso::Commands::Purge.register

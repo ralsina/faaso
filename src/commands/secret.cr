@@ -81,4 +81,4 @@ DOC
   end
 end
 
-Faaso::Commands::Secret.register()
+Faaso::Commands::Secret.register

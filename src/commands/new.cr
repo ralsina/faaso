@@ -56,4 +56,4 @@ DOC
   end
 end
 
-Faaso::Commands::New.register()
+Faaso::Commands::New.register

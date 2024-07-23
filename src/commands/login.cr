@@ -71,4 +71,4 @@ module Faaso
   end
 end
 
-Faaso::Commands::Login.register()
+Faaso::Commands::Login.register

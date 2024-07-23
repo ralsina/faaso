@@ -66,4 +66,4 @@ DOC
   end
 end
 
-Faaso::Commands::Deploy.register()
+Faaso::Commands::Deploy.register

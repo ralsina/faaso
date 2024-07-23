@@ -63,4 +63,4 @@ DOC
   end
 end
 
-Faaso::Commands::Status.register()
+Faaso::Commands::Status.register

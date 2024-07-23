@@ -179,9 +179,6 @@ module Funko
       "Unknown"
     end
 
-    def containers : Array(Docr::Types::ContainerSummary)
-    end
-
     # Get all containers related to this funko in the desired state
     def containers(status : String | Nil = "running")
       docker_api = Docr::API.new(Docr::Client.new)

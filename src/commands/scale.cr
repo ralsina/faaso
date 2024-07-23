@@ -44,4 +44,4 @@ DOC
   end
 end
 
-Faaso::Commands::Scale.register()
+Faaso::Commands::Scale.register
