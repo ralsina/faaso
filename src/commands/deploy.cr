@@ -1,6 +1,7 @@
 module Faaso
   module Commands
     struct Deploy < Command
+      @@name = "deploy"
       @@doc : String = <<-DOC
 Make funko instances up-to-date.
 
@@ -65,4 +66,4 @@ DOC
   end
 end
 
-Faaso::Commands::COMMANDS["deploy"] = Faaso::Commands::Deploy
+Faaso::Commands::Deploy.register()

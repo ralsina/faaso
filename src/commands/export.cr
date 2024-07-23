@@ -1,6 +1,7 @@
 module Faaso
   module Commands
     struct Export < Command
+      @@name = "export"
       @@doc : String = <<-DOC
       Export a funko as a ready-to-build dockerized app.
 
@@ -38,4 +39,4 @@ module Faaso
   end
 end
 
-Faaso::Commands::COMMANDS["export"] = Faaso::Commands::Export
+Faaso::Commands::Export.register()

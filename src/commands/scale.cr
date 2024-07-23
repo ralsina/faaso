@@ -1,6 +1,7 @@
 module Faaso
   module Commands
     struct Scale < Command
+      @@name = "scale"
       @@doc : String = <<-DOC
 Start or stop funko instances.
 
@@ -43,4 +44,4 @@ DOC
   end
 end
 
-Faaso::Commands::COMMANDS["scale"] = Faaso::Commands::Scale
+Faaso::Commands::Scale.register()

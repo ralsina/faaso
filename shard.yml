@@ -38,5 +38,7 @@ dependencies:
     github: kemalcr/kemal-basic-auth
   oplog:
     github: ralsina/oplog
+  polydocopt:
+    github: ralsina/polydocopt
   uname:
     github: djberg96/crystal-uname

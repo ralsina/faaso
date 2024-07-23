@@ -5,6 +5,7 @@ module Faaso
   module Commands
     # Build images for one or more funkos from source
     struct Build < Command
+      @@name = "build"
       @@doc : String = <<-DOC
 Builds docker images out of source folders.
 
@@ -91,4 +92,4 @@ DOC
   end
 end
 
-Faaso::Commands::COMMANDS["build"] = Faaso::Commands::Build
+Faaso::Commands::Build.register()

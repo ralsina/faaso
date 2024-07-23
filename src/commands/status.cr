@@ -1,6 +1,7 @@
 module Faaso
   module Commands
     struct Status < Command
+      @@name = "status"
       @@doc : String = <<-DOC
 Shows status for one or more funkos.
 
@@ -37,7 +38,7 @@ DOC
           status = funko.docker_status
 
           if status.images.size == 0
-            Log.error { "Unkown funko: #{name}" }
+            Log.error { "Unkown funko: #{funko.name}" }
             return 1
           end
 
@@ -62,4 +63,4 @@ DOC
   end
 end
 
-Faaso::Commands::COMMANDS["status"] = Faaso::Commands::Status
+Faaso::Commands::Status.register()

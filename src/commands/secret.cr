@@ -3,6 +3,7 @@ require "../utils.cr"
 module Faaso
   module Commands
     struct Secret < Command
+      @@name = "secret"
       @@doc : String = <<-DOC
 Manage server-side secrets.
 
@@ -80,4 +81,4 @@ DOC
   end
 end
 
-Faaso::Commands::COMMANDS["secret"] = Faaso::Commands::Secret
+Faaso::Commands::Secret.register()

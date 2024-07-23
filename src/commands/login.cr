@@ -3,6 +3,7 @@ require "../utils.cr"
 module Faaso
   module Commands
     struct Login < Command
+      @@name = "login"
       @@doc : String = <<-DOC
       Login to a server.
 
@@ -70,4 +71,4 @@ module Faaso
   end
 end
 
-Faaso::Commands::COMMANDS["login"] = Faaso::Commands::Login
+Faaso::Commands::Login.register()

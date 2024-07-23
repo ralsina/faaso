@@ -4,6 +4,7 @@ module Faaso
   module Commands
     # Creates a new empty funko out of a given runtime
     struct New < Command
+      @@name = "new"
       @@doc : String = <<-DOC
 Creates a new funko for a given runtime.
 
@@ -55,4 +56,4 @@ DOC
   end
 end
 
-Faaso::Commands::COMMANDS["new"] = Faaso::Commands::New
+Faaso::Commands::New.register()

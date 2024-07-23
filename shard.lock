@@ -60,6 +60,10 @@ shards:
     git: https://github.com/ralsina/oplog.git
     version: 0.1.0+git.commit.6419ac30e4a8cfc7beb57b2b01d9d6f5efc7b389
 
+  polydocopt:
+    git: https://github.com/ralsina/polydocopt.git
+    version: 0.1.0+git.commit.dd5c96707e38681d0f562f27ce413be5ccb88bc9
+
   radix:
     git: https://github.com/luislavena/radix.git
     version: 0.4.1

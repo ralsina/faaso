@@ -1,6 +1,7 @@
 module Faaso
   module Commands
     struct Purge < Command
+      @@name = "purge"
       @@doc : String = <<-DOC
 Remove funkos completely.
 
@@ -46,4 +47,4 @@ DOC
   end
 end
 
-Faaso::Commands::COMMANDS["purge"] = Faaso::Commands::Purge
+Faaso::Commands::Purge.register()

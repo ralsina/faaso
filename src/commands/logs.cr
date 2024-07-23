@@ -1,6 +1,7 @@
 module Faaso
   module Commands
     struct Logs < Command
+      @@name = "logs"
       @@doc : String = <<-DOC
       Show logs for all instances of a funko.
 
@@ -52,4 +53,4 @@ module Faaso
   end
 end
 
-Faaso::Commands::COMMANDS["logs"] = Faaso::Commands::Logs
+Faaso::Commands::Logs.register()
