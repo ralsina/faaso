@@ -18,9 +18,9 @@
 * ✅ Create a site
   * Document
     * ✅ Review all server setup doc
-    * Tutorial with a non-trivial app
+    * ✅ Tutorial with a non-trivial app
       * ✅ Kemal
-      * Express
+      * ✅ Express
       * ✅ Flask
       * ✅ Document static index.html in example
       * ✅ Fix problem with names missing rows (lionel)
@@ -74,14 +74,14 @@
 * ✅ Streaming responses from server are choppy
 * ✅ Add "copy_from_build" option in funko.yml
 * ✅ Migrate to polydocopt
-* Make proxy start without explicit configuration
-* Get rid of multirun
 * ✅ Fix flask static serving
 * ✅ Update flask/express Dockerfile to match kemal
 * ✅ Add --name option to faaso build
 
 ## Things to do for NEXT release
 
+* Make proxy start without explicit configuration
+* Get rid of multirun
 * Propagate errors from `run_faaso` to the remote client
 * Setting up hostname for Caddy's automatic HTTPS
 * Config UI in frontend?
