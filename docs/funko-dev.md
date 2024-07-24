@@ -233,7 +233,7 @@ end
 ```python
 from flask import Flask, request
 
-app = Flask("historico")
+app = Flask("hello")
 
 @app.route('/')
 def handle():
@@ -387,6 +387,7 @@ end
 {{% tag div class="python" %}}
 ```python
 import json
+import unicodedata
 
 import psycopg2
 from flask import Flask, request
@@ -406,7 +407,8 @@ def handle():
     results = [["Año"] + names]
     results += [[year] + [0 for _ in names] for year in range(1922, 2016)]
     for i, name in enumerate(names):
-        # FIXME: normalize
+        nfkd_form = unicodedata.normalize("NFKD", name)
+        name = "".join([c for c in nfkd_form if not unicodedata.combining(c)])
         cursor.execute(
             "SELECT anio, contador FROM nombres WHERE nombre = %s",
             (name,),
@@ -490,9 +492,18 @@ should be able to use it! The easiest way to test is using `curl`:
 
 Now, what can we do with the data? We can make a webpage!
 
-FaaSO includes for convenience a very limited static file server. You can
+{{% tag div class="crystal" %}}
+Kemal includes for convenience a static file server. You can
 serve `/index.html` from your funko by putting that file in a folder called
 'public/' in your funko's root.
+{{% /tag %}}
+
+{{% tag div class="python" %
+Flask includes for convenience a static file server. You can
+serve `/static/index.html` from your funko by putting that file in a folder called
+'static/' in your funko's root.
+{{% /tag %}}
+
 
 Here is some *very* basic HTML and JS fragments that uses the data we are
 generating to show a chart:
@@ -542,7 +553,7 @@ generating to show a chart:
 And yes, it does work, although of course in real life it would need
 some styling so it would look [like this](https://faaso-prod.ralsina.me/faaso/historico/index.html):
 
-![Chart, No, I don't know what happened with Leonel in 1975](chart.png)
+![Chart showing results](chart.png)
 
 ## Funko Options
 
@@ -560,6 +571,9 @@ options:
   devel_packages: []
   healthcheck_options: "--interval=1m --timeout=2s --start-period=2s --retries=3"
   healthcheck_command: "curl --fail http://localhost:3000/ping || exit 1"
+  copy_from_build:
+    - "public public"
+    - "bin/funko ."
 ```
 {{% /tag %}}
 
@@ -572,6 +586,11 @@ options:
   devel_packages: []
   healthcheck_options: "--interval=1m --timeout=2s --start-period=2s --retries=3"
   healthcheck_command: "curl --fail http://localhost:3000/ping || exit 1"
+  copy_from_build:
+    - "static static"
+    - "venv venv"
+    - "run.sh ."
+    - "funko.py ."
 ```
 {{% /tag %}}
 
@@ -587,6 +606,11 @@ The `shard_build_options` is specific to Crystal and is used to pass options
 to the `shards` command that compiles the code. For example `--release` will
 create a smaller, faster binary ... but takes longer to compile.
 {{% /tag %}}
+
+The `copy_from_build` option is used to list the files and directories you
+want in the shipped image. For example, in the Crystal/Kemal version, we copy the
+compiled binary and the `public` directory, while in Python/Flask we copy
+a virtual environment and the `static` directory.
 
 ## The Healthcheck
 
@@ -612,8 +636,7 @@ end
 @app.route("/ping")
 def ping():
     cursor = conn.cursor()
-    cursot.execute("SELECT 42")
-    cursor.fetchall()
+    cursor.execute("SELECT 42")
     cursor.close()
     return "OK"
 ```

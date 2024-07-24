@@ -1,4 +1,5 @@
 import json
+import unicodedata
 
 import psycopg2
 from flask import Flask, request
@@ -18,7 +19,8 @@ def handle():
     results = [["Año"] + names]
     results += [[year] + [0 for _ in names] for year in range(1922, 2016)]
     for i, name in enumerate(names):
-        # FIXME: normalize
+        nfkd_form = unicodedata.normalize("NFKD", name)
+        name = "".join([c for c in nfkd_form if not unicodedata.combining(c)])
         cursor.execute(
             "SELECT anio, contador FROM nombres WHERE nombre = %s",
             (name,),
@@ -32,7 +34,7 @@ def handle():
 @app.route("/ping")
 def ping():
     cursor = conn.cursor()
-    cursot.execute("SELECT 42")
+    cursor.execute("SELECT 42")
     cursor.fetchall()
     cursor.close()
     return "OK"
