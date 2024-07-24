@@ -86,6 +86,18 @@ Using known runtime flask
 ```
 {{% /tag %}}
 
+{{% tag div class="nodejs" %}}
+```text
+$ faaso new -r express historico
+Using known runtime express
+  Creating file historico/package.json from runtimes/express/template/package.json.j2
+  Creating file historico/funko.js from runtimes/express/template/funko.js
+  Creating file historico/public/index.html from runtimes/express/template/public/index.html
+  Creating file historico/funko.yml from runtimes/express/template/funko.yml.j2
+```
+{{% /tag %}}
+
+
 Now you have a new folder called `historico` with the basic structure of a
 funko ready for editing. We can actually just deploy it now, to verify our
 whole setup works.
@@ -152,6 +164,33 @@ Build finished successfully.
 ```
 {{% /tag %}}
 
+{{% tag div class="nodejs" %}}
+```text
+> faaso build historico/
+Using known runtime express
+  Creating file /tmp/a6P25eVR/README.md from runtimes/express/README.md
+  Creating file /tmp/a6P25eVR/Dockerfile from runtimes/express/Dockerfile.j2
+Using server http://localhost:8888/admin/
+Uploading funko to http://localhost:8888/admin/
+Starting remote build:
+2024-07-24T17:08:13.111932Z   INFO - Building function... historico in /tmp/L9mNuikY
+2024-07-24T17:08:13.111938Z   INFO - Building image for historico in /tmp/L9mNuikY
+2024-07-24T17:08:13.111998Z   INFO -    Tags: ["faaso-historico:latest", "faaso-historico:1721840893"]
+2024-07-24T17:08:13.115294Z   INFO - Step 1/13 : ARG BUILDPLATFORM
+
+[Lots and lots of output]
+
+2024-07-24T17:08:18.383022Z   INFO -
+2024-07-24T17:08:18.383420Z   INFO - ---> Using cache
+2024-07-24T17:08:18.383427Z   INFO - ---> 855bcd652ba6
+2024-07-24T17:08:18.383629Z   INFO - Successfully built 855bcd652ba6
+2024-07-24T17:08:18.390235Z   INFO - Successfully tagged faaso-historico:latest
+2024-07-24T17:08:18.396084Z   INFO - Successfully tagged faaso-historico:1721840893
+Build finished successfully.
+```
+{{% /tag %}}
+
+
 This has built the docker image for our funko, but that doesn't mean it's running:
 
 ```text
@@ -193,6 +232,13 @@ Hello World Crystal!⏎
 ```text
 > curl 'http://localhost:8888/faaso/historico/'
 Hello World from Flask!⏎
+```
+{{% /tag %}}
+
+{{% tag div class="nodejs" %}}
+```text
+> curl 'http://localhost:8888/faaso/historico/'
+Hello World!⏎
 ```
 {{% /tag %}}
 
@@ -244,6 +290,29 @@ def ping():
     return "OK"
 ```
 {{% /tag %}}
+
+{{% tag div class="nodejs" %}}
+```javascript
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+})
+
+app.get('/ping', (req, res) => {
+    res.send('OK')
+})
+
+app.use(express.static("public"));
+
+app.listen(port, () => {
+    console.log(`Example funko listening on port ${port}`)
+})
+```
+{{% /tag %}}
+
 
 Now, that's not really a very interesting app. Let's make it do what we want
 it to do. What I want is to run some queries against my PostgreSQL database
@@ -310,6 +379,30 @@ flask
 psycopg2-binary
 ```
 {{%/tag%}}
+
+{{%tag div class="nodejs"%}}
+Since we now have a database, let's get the NodeJS client library for
+PostgreSQL. In NodeJS, you add dependencies to your `package.json`
+using npm. I added `pg` and `express-async-handler`, this is the result:
+
+
+```javascript
+{
+  "name": "historico",
+  "version": "1.0.0",
+  "main": "funko.js",
+  "author": "",
+  "license": "MIT",
+  "description": "Example Funko",
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-async-handler": "^1.2.0",
+    "pg": "^8.12.0"
+  }
+}
+```
+{{%/tag%}}
+
 
 
 ## Connecting to the Database (Using Secrets!)
@@ -418,7 +511,66 @@ def handle():
     cursor.close()
     return json.dumps(results)
 ```
+
 {{% /tag %}}
+
+{{% tag div class="nodejs" %}}
+
+```javascript
+const asyncHandler = require("express-async-handler");
+const express = require("express");
+const { Client } = require("pg");
+const fs = require("node:fs");
+const app = express();
+const port = 3000;
+
+USER = fs.readFileSync("/secrets/user", "utf8").trim(),
+PASS = fs.readFileSync("/secrets/pass", "utf8").trim(),
+
+app.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    names = req.query.names;
+    if (!names) {
+      res.send("No names provided");
+      return;
+    }
+    names = names.split(",").map((n) => n.trim());
+
+    const client = new Client({
+      user: USER,
+      password: PASS,
+      host: "database",
+      database: "nombres",
+    });
+
+    var response = [];
+    response.push(["Año", ...names]);
+    for (year = 1922; year < 2016; year++) {
+      row = [year, ...names.map((n) => 0)];
+      response.push(row);
+    }
+
+    await client.connect();
+    for (const [i, name] of names.entries()) {
+      console.log(i, name)
+      const result = await client.query(
+        "SELECT anio,contador FROM nombres where nombre = $1",
+        [name]
+      );
+      console.log("filling response");
+      for (row of result.rows) {
+        response[row.anio - 1921][i + 1] = row.contador;
+      }
+    }
+    console.log("responding");
+    res.json(response);
+  })
+);
+```
+
+{{% /tag %}}
+
 
 ## Redeploying and Testing
 
@@ -504,6 +656,12 @@ serve `/static/index.html` from your funko by putting that file in a folder call
 'static/' in your funko's root.
 {{% /tag %}}
 
+{{% tag div class="python" %
+Express includes for convenience a static file server. You can
+serve `/static/index.html` from your funko by putting that file in a folder called
+'static/' in your funko's root.
+{{% /tag %}}
+
 
 Here is some *very* basic HTML and JS fragments that uses the data we are
 generating to show a chart:
@@ -562,6 +720,7 @@ These options vary depending on your runtime, and should be already set
 to their default values. Here is the `funko.yml` file for this funko:
 
 {{% tag div class="crystal" %}}
+
 ```yaml
 name: historico
 runtime: kemal
@@ -575,9 +734,11 @@ options:
     - "public public"
     - "bin/funko ."
 ```
+
 {{% /tag %}}
 
 {{% tag div class="python" %}}
+
 ```yaml
 name: historico
 runtime: flask
@@ -592,7 +753,27 @@ options:
     - "run.sh ."
     - "funko.py ."
 ```
+
 {{% /tag %}}
+
+{{% tag div class="nodejs" %}}
+
+```yaml
+name: historico
+runtime: express
+options:
+  ship_packages: []
+  devel_packages: []
+  healthcheck_options: "--interval=1m --timeout=2s --start-period=2s --retries=3"
+  healthcheck_command: "curl --fail http://localhost:3000/ping || exit 1"
+  copy_from_build:
+    - "public public"
+    - "node_modules node_modules"
+    - "funko.js ."
+```
+
+{{% /tag %}}
+
 
 They should be explained in the documentation for each runtime, but the gist
 should be more or less clear, here are some details:
