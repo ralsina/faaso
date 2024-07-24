@@ -1,5 +1,5 @@
 ARG BUILDPLATFORM
-FROM --platform=${BUILDPLATFORM:-foobar} alpine AS build
+FROM --platform=${BUILDPLATFORM:-amd64} alpine AS build
 
 RUN apk add --no-cache \
     nodejs \
@@ -10,16 +10,18 @@ WORKDIR /home/app
 COPY ./ ./
 RUN npm i
 
-FROM --platform=${BUILDPLATFORM:-foobar} alpine AS ship
+FROM --platform=${BUILDPLATFORM:-amd64} alpine AS ship
 RUN apk add --no-cache \
     nodejs \
     curl {{ options.ship_packages | join " " }}
 RUN addgroup -S app && adduser app -S -G app
 
 WORKDIR /home/app
+{% for item in options.copy_from_build %}
+COPY --from=build /home/app/{{item}}
+{% endfor %}
 USER app
 
-COPY --from=build /home/app/  .
 
 CMD ["node", "funko.js"]
 HEALTHCHECK {{ options.healthcheck_options }}  CMD {{ options.healthcheck_command }}
