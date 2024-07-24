@@ -58,7 +58,7 @@ shards:
 
   oplog:
     git: https://github.com/ralsina/oplog.git
-    version: 0.1.0+git.commit.6419ac30e4a8cfc7beb57b2b01d9d6f5efc7b389
+    version: 0.1.0
 
   polydocopt:
     git: https://github.com/ralsina/polydocopt.git

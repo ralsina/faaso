@@ -10,3 +10,5 @@ dependencies:
     github: kemalcr/kemal
   pg:
     github: will/crystal-pg
+  pool:
+    github: ysbaddaden/pool

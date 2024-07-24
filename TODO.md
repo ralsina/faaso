@@ -70,13 +70,13 @@
 * ✅ Fix the web UI's code for deleting a funko, generalize, make CLI
 * ✅ Re-record video properly (claim it in asciinema, use doitlive)
 * ✅ faaso logs seems to always be local
-* Use <https://github.com/ysbaddaden/pool> in the kemal historico example
+* ✅ Use <https://github.com/ysbaddaden/pool> in the kemal historico example
 * ✅ Streaming responses from server are choppy
 * Make proxy start without explicit configuration
 * Get rid of multirun
 * Fix flask static serving
-* Do db conn pooling in \kemal
 * Update flask Dockerfile for options
+* Add "copy_files" option in funko.yml
 * ✅ Migrate to polydocopt
 
 ## Things to do for NEXT release

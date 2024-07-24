@@ -1,11 +1,17 @@
 require "json"
 require "kemal"
 require "pg"
+require "pool/connection"
 
 # get credentials from secrets
 
 USER = File.read("/secrets/user").strip
 PASS = File.read("/secrets/pass").strip
+
+# Create a connection pool to the database
+pg = ConnectionPool.new(capacity: 5, timeout: 0.01.seconds) do
+  PG.connect("postgres://#{USER}:#{PASS}@database:5432/nombres")
+end
 
 # Connect to the database and get information about
 # the requested names
@@ -22,7 +28,7 @@ get "/" do |env|
     results << [anio.to_s]
   end
   # Connect using credentials provided
-  DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres") do |cursor|
+  pg.connection do |cursor|
     # Get the information for each name
     names.map do |name|
       # Normalize: remove diacritics etc.
@@ -52,6 +58,6 @@ end
 # or whatever checks you think are important
 #
 get "/ping/" do
-  DB.open("postgres://#{USER}:#{PASS}@database:5432/nombres").exec("SELECT 42")
+  pg.connection.exec("SELECT 42")
   "OK"
 end
