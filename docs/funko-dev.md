@@ -650,13 +650,13 @@ serve `/index.html` from your funko by putting that file in a folder called
 'public/' in your funko's root.
 {{% /tag %}}
 
-{{% tag div class="python" %
+{{% tag div class="python" %}}
 Flask includes for convenience a static file server. You can
 serve `/static/index.html` from your funko by putting that file in a folder called
 'static/' in your funko's root.
 {{% /tag %}}
 
-{{% tag div class="python" %
+{{% tag div class="python" %}}
 Express includes for convenience a static file server. You can
 serve `/static/index.html` from your funko by putting that file in a folder called
 'static/' in your funko's root.
