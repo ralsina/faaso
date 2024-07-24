@@ -9,10 +9,11 @@
     ></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap"
+    rel="stylesheet">
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
@@ -77,11 +78,16 @@
           });
       }
     </script>
+  <style>
+    html * {
+      font-family: 'Quicksand', sans-serif;
+    }
+  </style>
   </head>
   <body>
     <main class="container" style="text-align: center">
       <header>
-        <h1>Poularidad de Nombres en Argentina</h1>
+        <h1>Popularidad de Nombres en Argentina</h1>
       </header>
       <div id="chart" style="width: 80vw; height: 50vh; margin: auto"></div>
       <form
