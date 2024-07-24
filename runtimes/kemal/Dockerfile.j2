@@ -12,9 +12,8 @@ COPY ./ ./
 RUN shards install
 RUN shards build {{ options.shard_build_options }}
 RUN strip bin/*
-CMD ["./bin/funko"]
 
-FROM --platform=${BUILDPLATFORM:-foobar} alpine AS ship
+FROM --platform=${BUILDPLATFORM:-amd64} alpine AS ship
 RUN apk add --no-cache \
     pcre2 \
     libgcc \
