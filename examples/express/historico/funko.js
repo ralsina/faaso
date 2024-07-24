@@ -5,8 +5,8 @@ const fs = require("node:fs");
 const app = express();
 const port = 3000;
 
-USER = fs.readFileSync("/secrets/user"),
-PASS = fs.readFileSync("/secrets/pass"),
+USER = fs.readFileSync("/secrets/user", "utf8").trim(),
+PASS = fs.readFileSync("/secrets/pass", "utf8").trim(),
 
 app.get(
   "/",
@@ -21,19 +21,20 @@ app.get(
     const client = new Client({
       user: USER,
       password: PASS,
-      host: "localhost",
+      host: "database",
       database: "nombres",
     });
 
     var response = [];
     response.push(["Año", ...names]);
     for (year = 1922; year < 2016; year++) {
-      row = [year, 0, 0];
+      row = [year, ...names.map((n) => 0)];
       response.push(row);
     }
 
     await client.connect();
     for (const [i, name] of names.entries()) {
+      console.log(i, name)
       const result = await client.query(
         "SELECT anio,contador FROM nombres where nombre = $1",
         [name]
