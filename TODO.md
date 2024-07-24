@@ -72,12 +72,13 @@
 * ✅ faaso logs seems to always be local
 * ✅ Use <https://github.com/ysbaddaden/pool> in the kemal historico example
 * ✅ Streaming responses from server are choppy
+* ✅ Add "copy_from_build" option in funko.yml
+* ✅ Migrate to polydocopt
 * Make proxy start without explicit configuration
 * Get rid of multirun
 * Fix flask static serving
-* Update flask Dockerfile for options
-* Add "copy_files" option in funko.yml
-* ✅ Migrate to polydocopt
+* Update flask/express Dockerfile to match kemal
+* Add --name option to faaso build
 
 ## Things to do for NEXT release
 

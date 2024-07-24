@@ -1,5 +1,5 @@
 ARG BUILDPLATFORM
-FROM --platform=${BUILDPLATFORM:-foobar} alpine AS build
+FROM --platform=${BUILDPLATFORM:-amd64} alpine AS build
 RUN apk add --no-cache \
     crystal \
     shards \
@@ -25,8 +25,9 @@ RUN apk add --no-cache \
 RUN addgroup -S app && adduser app -S -G app
 
 WORKDIR /home/app
-COPY --from=build /home/app/public/ /home/app/public/
-COPY --from=build /home/app/bin/funko /home/app/
+{% for item in options.copy_from_build %}
+COPY --from=build /home/app/{{item}}
+{% endfor %}
 USER app
 
 CMD ["./funko"]

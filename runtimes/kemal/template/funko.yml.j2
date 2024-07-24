@@ -6,3 +6,6 @@ options:
   devel_packages: []
   healthcheck_options: "--interval=1m --timeout=2s --start-period=2s --retries=3"
   healthcheck_command: "curl --fail http://localhost:3000/ping || exit 1"
+  copy_from_build:
+    - "public public"
+    - "bin/funko ."
