@@ -78,7 +78,7 @@
 * Get rid of multirun
 * ✅ Fix flask static serving
 * ✅ Update flask/express Dockerfile to match kemal
-* Add --name option to faaso build
+* ✅ Add --name option to faaso build
 
 ## Things to do for NEXT release
 

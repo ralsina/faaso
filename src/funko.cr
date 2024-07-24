@@ -138,10 +138,11 @@ module Funko
     end
 
     # Build image using docker in path previously prepared using `prepare_build`
-    def build(path : Path, no_cache : Bool = false)
-      Log.info { "Building image for #{name} in #{path}" }
+    def build(path : Path, no_cache : Bool = false, _name : String? = nil)
+      _name = _name || name
+      Log.info { "Building image for #{_name} in #{path}" }
       docker_api = Docr::API.new(Docr::Client.new)
-      tags = ["faaso-#{name}:latest", "faaso-#{name}:#{Time.utc.to_unix}"]
+      tags = ["faaso-#{_name}:latest", "faaso-#{_name}:#{Time.utc.to_unix}"]
       Log.info { "   Tags: #{tags}" }
       docker_api.images.build(
         context: path.to_s,

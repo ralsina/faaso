@@ -13,7 +13,12 @@ The source folders must contain a funko.yml that may reference
 a runtime to make the source buildable by providing extra files.
 
 Usage:
-  faaso build  FOLDER ...           [-v <level>] [-l] [--no-runtime][--no-cache]
+  faaso build  FOLDER ...           [--no-runtime][--no-cache]
+                                    [-v <level>][-l]
+  faaso build FOLDER                [--name <name>][--no-runtime][--no-cache]
+                                    [-v <level>][-l]
+  faaso build  -h | --help
+
 
 Options:
   -h --help        Show this screen
@@ -21,6 +26,7 @@ Options:
   -v level         Control the logging verbosity, 0 to 6 [default: 4]
   --no-cache       Don't use the docker cache when building the funko
   --no-runtime     Don't merge a runtime into the funko before building
+  --name <name>    Build using a name different from what's in funko.yml
 DOC
 
       def run : Int32
@@ -38,7 +44,8 @@ DOC
           funko.prepare_build(path: tmp_dir)
           if options["--local"]
             Log.info { "Building function... #{funko.name} in #{tmp_dir}" }
-            funko.build tmp_dir, no_cache
+            _name = (options.fetch("--name", nil) || funko.name).to_s
+            funko.build tmp_dir, no_cache, _name
             FileUtils.rm_rf(tmp_dir)
             next
           end
