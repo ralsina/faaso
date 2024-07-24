@@ -76,8 +76,8 @@
 * ✅ Migrate to polydocopt
 * Make proxy start without explicit configuration
 * Get rid of multirun
-* Fix flask static serving
-* Update flask/express Dockerfile to match kemal
+* ✅ Fix flask static serving
+* ✅ Update flask/express Dockerfile to match kemal
 * Add --name option to faaso build
 
 ## Things to do for NEXT release
