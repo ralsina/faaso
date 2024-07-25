@@ -88,5 +88,5 @@ There is not much more to FaaSO. It's not meant to be a replacement for
 AWS Lambda or Google Cloud Functions. It's meant to be a simple way to
 run your own code on your own hardware.
 
-Your next steps are probably to [set up a faaso proxy](server-setup.md),
-and learn how to [write code to run on it](funko-dev.md).
+Your next steps are probably to [set up a faaso proxy](server-setup.html),
+and learn how to [write code to run on it](funko-dev.html).
