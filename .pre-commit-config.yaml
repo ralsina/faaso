@@ -36,3 +36,11 @@ repos:
       hooks:
         - id: hadolint-docker
           exclude: 'j2$'
+    - repo: https://github.com/commitizen-tools/commitizen
+      rev: v3.29.0 # automatically updated by Commitizen
+      hooks:
+        - id: commitizen
+        - id: commitizen-branch
+          stages:
+            - post-commit
+            - push

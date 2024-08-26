@@ -10,7 +10,7 @@ shards:
 
   base58:
     git: https://github.com/crystal-china/base58.cr.git
-    version: 0.1.0+git.commit.4c521350c6358b6c04f64dc625e26a8f782a699d
+    version: 0.1.0+git.commit.2b0564a975171f4507c33251e0c0ab7990459e23
 
   cr-config:
     git: https://github.com/crystal-community/cr-config.git
@@ -18,7 +18,7 @@ shards:
 
   crest:
     git: https://github.com/mamantoha/crest.git
-    version: 1.3.13
+    version: 1.4.1
 
   crinja:
     git: https://github.com/straight-shoota/crinja.git
@@ -46,7 +46,7 @@ shards:
 
   http_proxy:
     git: https://github.com/mamantoha/http_proxy.git
-    version: 0.10.3
+    version: 0.12.0
 
   kemal:
     git: https://github.com/kemalcr/kemal.git
