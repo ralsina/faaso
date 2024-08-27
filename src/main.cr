@@ -9,6 +9,7 @@ end
 
 Oplog.setup(4) unless ENV.fetch("FAASO_SERVER_SIDE", nil)
 
+exit Polydocopt.main("faaso", ["--help"]) if ARGV.empty?
 cmdname = ARGV[0]
 
 if cmdname == "version"
