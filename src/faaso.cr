@@ -8,7 +8,7 @@ require "uuid"
 
 # Functions as a Service, Ops!
 module Faaso
-  VERSION = "0.1.0"
+  VERSION = {{ `shards version #{__DIR__}`.chomp.stringify }}
 
   module Commands
     # Base for command structs
