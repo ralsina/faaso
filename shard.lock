@@ -33,7 +33,7 @@ shards:
     version: 0.2.0+git.commit.620fce4f334ff15d7321e5ecb6665ad258fe9297
 
   docr:
-    git: https://github.com/ralsina/docr.git
+    git: https://github.com/marghidanu/docr.git
     version: 0.1.1+git.commit.8ed5f738ce77f508f2287a66c82fb3f503a980c0
 
   exception_page:

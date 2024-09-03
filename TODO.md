@@ -1,5 +1,30 @@
 # TODO LIST
 
+## Things that need doing before next release
+
+* Persistence of scaling
+* Pulling from a configurable registry for missing image names
+* A "local run" mode for debugging/development
+* Make proxy start without explicit configuration
+* Get rid of multirun
+* Propagate errors from `run_faaso` to the remote client
+* Setting up hostname for Caddy's automatic HTTPS
+* Config UI in frontend?
+* Add multi-container logs to web frontend. It's close but
+  haven't figured out how to make HTMX append the log into
+  an element and show newlines correctly.
+* Polish secret dialog to show correct wording in title and buttons,
+  maybe disable funko/name inputs when editing?
+* Metrics from Caddy using Prometheus (or something)
+* Implement static site vhost proxying
+* Add UI for scaling funkos rather than "play/stop"
+* Explore swarm integration for horizontal scaling
+* Check compatibility with podman
+* Remove the docker dependency in the proxy image (saves about 250MB!)
+* Design gitops workflow
+* Document and/or redesign APIs
+* Update tooling to my current preference (Hacé + release script + git cliff)
+
 ## Things that need doing before first release
 
 * ✅ User flow for initial proxy setup
@@ -77,26 +102,3 @@
 * ✅ Fix flask static serving
 * ✅ Update flask/express Dockerfile to match kemal
 * ✅ Add --name option to faaso build
-
-## Things to do for NEXT release
-
-* Make proxy start without explicit configuration
-* Get rid of multirun
-* Propagate errors from `run_faaso` to the remote client
-* Setting up hostname for Caddy's automatic HTTPS
-* Config UI in frontend?
-* Add multi-container logs to web frontend. It's close but
-  haven't figured out how to make HTMX append the log into
-  an element and show newlines correctly.
-* Polish secret dialog to show correct wording in title and buttons,
-  maybe disable funko/name inputs when editing?
-* Metrics from Caddy using Prometheus (or something)
-* Implement static site vhost proxying
-* Add UI for scaling funkos rather than "play/stop"
-* Explore swarm integration for horizontal scaling
-* Check compatibility with podman
-* Remove the docker dependency in the proxy image (saves about 250MB!)
-* Save state in the server
-* Docker registry support (needs design!)
-* Design gitops workflow
-* Document and/or redesign APIs

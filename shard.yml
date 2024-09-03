@@ -30,8 +30,8 @@ dependencies:
   docopt:
     github: chenkovsky/docopt.cr
   docr:
-    github: ralsina/docr
-    branch: add_exposed_ports
+    github: marghidanu/docr
+    branch: master
   kemal:
     github: kemalcr/kemal
   kemal-basic-auth:
