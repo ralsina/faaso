@@ -1,22 +1,29 @@
-require "cr-config"
 require "kemal-basic-auth"
+require "yaml"
+require "../funko"
 
 class Config
-  include CrConfig
+  include YAML::Serializable
 
-  # ameba:disable Lint/UselessAssign
-  option password : String, default: "admin"
+  @@instance : Config = Config.from_yaml(File.read("config/faaso.yml"))
 
-  def self.load
-    builder = Config.new_builder
-    builder.providers do
-      [
-        CrConfig::Providers::SimpleFileProvider.new("config/faaso.yml"),
-        CrConfig::Providers::EnvVarProvider.new,
-      ]
+  property password : String = "admin"
+  property scale : Hash(String, Int32) = {} of String => Int32
+
+  def self.instance : Config
+    @@instance
+  end
+
+  def self.reload
+    @@instance = Config.from_yaml(File.read("config/faaso.yml"))
+    Funko::Funko.from_docker.each do |funko|
+      next if funko.name == "proxy"
+      self.instance.scale[funko.name] = funko.scale
     end
-    config = builder.build
-    Config.set_instance config
+  end
+
+  def save
+    File.write("config/faaso.yml", to_yaml)
   end
 end
 

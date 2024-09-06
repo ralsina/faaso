@@ -2,7 +2,7 @@
 
 ## Things that need doing before next release
 
-* Persistence of scaling
+* ✅ Persistence of scaling
 * Pulling from a configurable registry for missing image names
 * A "local run" mode for debugging/development
 * Make proxy start without explicit configuration

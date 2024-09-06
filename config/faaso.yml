@@ -1,1 +1,9 @@
+---
 password: adminfoo
+scale:
+  builder: 0
+  busqueda: 0
+  foo: 0
+  fufu: 0
+  historico: 3
+  tapas: 0

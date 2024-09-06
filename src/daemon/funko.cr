@@ -54,12 +54,15 @@ module Funko
       result.to_json
     end
   end
+
   # Stop => scale to 0
   get "/funkos/:name/stop" do |env|
     name = env.params.url["name"]
     funko = Funko.from_names([name])[0]
     funko.scale(0)
     funko.wait_for(0, 1)
+    Config.instance.scale[name] = 0
+    Config.instance.save
   end
 
   # Start => scale to 1
@@ -70,16 +73,20 @@ module Funko
       funko.scale(1)
       funko.wait_for(1, 1)
     end
+    Config.instance.scale[name] = 1
+    Config.instance.save
   end
 
-  # Restart => scale to 0, then 1
+  # Restart => scale to 0, then back
   get "/funkos/:name/restart" do |env|
     name = env.params.url["name"]
     funko = Funko.from_names([name])[0]
+    scale = funko.scale
     funko.scale(0)
-    funko.wait_for(0, 1)
-    funko.scale(1)
-    funko.wait_for(1, 1)
+    funko.wait_for(0, 10)
+    funko.scale(scale)
+    # wait 1 second per instance, just in case
+    funko.wait_for(scale, scale)
   end
 
   # Delete => scale to 0, remove all containers and images
@@ -87,9 +94,11 @@ module Funko
     name = env.params.url["name"]
     funko = Funko.from_names([name])[0]
     funko.scale(0)
-    funko.wait_for(0, 1)
+    funko.wait_for(0, 10)
     funko.remove_all_containers
     funko.remove_all_images
+    Config.instance.scale[name] = 0
+    Config.instance.save
   end
 
   # Return an iframe that shows the container's logs
@@ -113,6 +122,8 @@ module Funko
   post "/rpc/" do |env|
     args = env.params.json["args"].as(Array).map &.to_s
     run_faaso(args, env)
+    Config.reload
+    Config.instance.save
   end
 
   # Helper to run faaso locally and respond via env

@@ -5,7 +5,7 @@ proxy:
 
 all: build proxy
 
-start-proxy:
+start-proxy: proxy-image
 	docker network create faaso-net || true
 	docker stop faaso-proxy-fadmin || true
 	docker rm faaso-proxy-fadmin || true
@@ -26,5 +26,8 @@ clean:
 static:
 	shards build faaso --static --release --no-debug -Dstrict_multi_assign -Dno_number_autocast
 	strip bin/faaso
+
+proxy-image:
+	docker build . -t faaso
 
 .PHONY: all build proxy-image start-proxy test clean static

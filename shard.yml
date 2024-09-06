@@ -23,8 +23,6 @@ dependencies:
     github: mamantoha/crest
   crinja:
     github: straight-shoota/crinja
-  cr-config:
-    github: crystal-community/cr-config
   crystar:
     github: naqvis/crystar
   docopt:

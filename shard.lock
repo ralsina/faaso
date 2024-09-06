@@ -40,6 +40,10 @@ shards:
     git: https://github.com/crystal-loot/exception_page.git
     version: 0.4.1
 
+  future:
+    git: https://github.com/crystal-community/future.cr.git
+    version: 1.0.0
+
   http-client-digest_auth:
     git: https://github.com/mamantoha/http-client-digest_auth.git
     version: 0.6.0
@@ -67,6 +71,10 @@ shards:
   radix:
     git: https://github.com/luislavena/radix.git
     version: 0.4.1
+
+  schedule:
+    git: https://github.com/hugoabonizio/schedule.cr.git
+    version: 0.2.2
 
   uname:
     git: https://github.com/djberg96/crystal-uname.git
