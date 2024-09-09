@@ -2,7 +2,7 @@
 password: adminfoo
 scale:
   builder: 0
-  busqueda: 0
+  busqueda: 2
   foo: 0
   fufu: 0
   historico: 3
