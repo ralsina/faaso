@@ -130,7 +130,7 @@ module Funko
   def run_faaso(args : Array(String), env)
     args << "-l" # Always local in the server
     Log.info { "Running faaso [#{args}" }
-    Process.run(
+    x = Process.run(
       command: "faaso",
       args: args,
       env: {"FAASO_SERVER_SIDE" => "true"},
@@ -143,6 +143,8 @@ module Funko
         break if process.terminated?
       end
     end
+
+    pp! " ===>", x, $?
     # FIXME: find a way to raise an exception on failure
     # of the faaso process
   end
