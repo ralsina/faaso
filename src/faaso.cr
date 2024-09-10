@@ -32,13 +32,21 @@ module Faaso
 
   def self.rpc_call(args : Array(String)) : Int32
     user, password = Config.auth
+    buf = IO::Memory.new
     Crest.post(
       "#{Config.server}rpc/",
       {"args" => args},
       user: user, password: password,
       json: true) do |response|
-      IO.copy(response.body_io, STDOUT)
+      IO.copy(response.body_io, buf)
+      buf.seek(0)
+      IO.copy(buf, STDOUT)
     end
-    0
+    if buf.to_s.ends_with? "\n##--##--##--##ERROR"
+      Log.error { "\nServer returned an error" }
+      1
+    else
+      0
+    end
   end
 end

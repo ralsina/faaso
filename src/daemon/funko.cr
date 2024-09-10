@@ -121,7 +121,11 @@ module Funko
 
   post "/rpc/" do |env|
     args = env.params.json["args"].as(Array).map &.to_s
-    run_faaso(args, env)
+    begin
+      run_faaso(args, env)
+    rescue ex : Exception
+      halt env, status_code: 500, response: "Error"
+    end
     Config.reload
     Config.instance.save
   end
@@ -130,7 +134,7 @@ module Funko
   def run_faaso(args : Array(String), env)
     args << "-l" # Always local in the server
     Log.info { "Running faaso [#{args}" }
-    x = Process.run(
+    Process.run(
       command: "faaso",
       args: args,
       env: {"FAASO_SERVER_SIDE" => "true"},
@@ -143,9 +147,9 @@ module Funko
         break if process.terminated?
       end
     end
-
-    pp! " ===>", x, $?
-    # FIXME: find a way to raise an exception on failure
-    # of the faaso process
+    # Because headers are already sent we need to send the
+    # error condition in-band
+    env.response.print("\n##--##--##--##ERROR") if $?.exit_code != 0
+    env.response.flush
   end
 end

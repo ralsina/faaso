@@ -7,7 +7,7 @@
 * A "local run" mode for debugging/development
 * Make proxy start without explicit configuration
 * Get rid of multirun
-* Propagate errors from `run_faaso` to the remote client
+* ✅ Propagate errors from `run_faaso` to the remote client
 * Setting up hostname for Caddy's automatic HTTPS
 * Config UI in frontend?
 * Add multi-container logs to web frontend. It's close but
