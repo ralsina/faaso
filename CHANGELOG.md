@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2025-04-14
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix static build in release script
+
 ## [0.2.0] - 2025-04-14
 
 ### 🚀 Features
