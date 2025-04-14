@@ -67,4 +67,3 @@ shards:
   uname:
     git: https://github.com/djberg96/crystal-uname.git
     version: 0.2.0
-
