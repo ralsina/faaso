@@ -1,8 +1,8 @@
 #!/bin/bash
 set e
 
-PKGNAME=$(basename "$PWD")
-VERSION=$(git cliff --bumped-version --unreleased |cut -dv -f2)
+export PKGNAME=$(basename "$PWD")
+export VERSION=$(git cliff --bumped-version --unreleased |cut -dv -f2)
 
 sed "s/^version:.*$/version: $VERSION/g" -i shard.yml
 git add shard.yml
