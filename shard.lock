@@ -1,0 +1,70 @@
+version: 2.0
+shards:
+  backtracer:
+    git: https://github.com/sija/backtracer.cr.git
+    version: 1.2.4
+
+  baked_file_system:
+    git: https://github.com/schovi/baked_file_system.git
+    version: 0.10.0
+
+  base58:
+    git: https://github.com/crystal-china/base58.cr.git
+    version: 0.1.0+git.commit.2b0564a975171f4507c33251e0c0ab7990459e23
+
+  crest:
+    git: https://github.com/mamantoha/crest.git
+    version: 1.5.1
+
+  crinja:
+    git: https://github.com/straight-shoota/crinja.git
+    version: 0.8.1
+
+  crystar:
+    git: https://github.com/naqvis/crystar.git
+    version: 0.4.0
+
+  docopt:
+    git: https://github.com/ralsina/docopt.cr.git
+    version: 0.2.1
+
+  docr:
+    git: https://github.com/marghidanu/docr.git
+    version: 0.1.2+git.commit.f72c164ab319eb109438c25de31642d1f0908e95
+
+  exception_page:
+    git: https://github.com/crystal-loot/exception_page.git
+    version: 0.5.0
+
+  http-client-digest_auth:
+    git: https://github.com/mamantoha/http-client-digest_auth.git
+    version: 0.6.0
+
+  http_proxy:
+    git: https://github.com/mamantoha/http_proxy.git
+    version: 0.13.0
+
+  kemal:
+    git: https://github.com/kemalcr/kemal.git
+    version: 1.7.1
+
+  kemal-basic-auth:
+    git: https://github.com/kemalcr/kemal-basic-auth.git
+    version: 1.0.0
+
+  oplog:
+    git: https://github.com/ralsina/oplog.git
+    version: 0.1.1
+
+  polydocopt:
+    git: https://github.com/ralsina/polydocopt.git
+    version: 0.1.1
+
+  radix:
+    git: https://github.com/luislavena/radix.git
+    version: 0.4.1
+
+  uname:
+    git: https://github.com/djberg96/crystal-uname.git
+    version: 0.2.0
+
