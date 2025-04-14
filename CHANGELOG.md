@@ -21,6 +21,36 @@ All notable changes to this project will be documented in this file.
 - Added pre-commit hooks and git-cliff
 - Updated hooks
 - Include lockfile in repo
+- Lint
+
+### Build
+
+- Switched back to the original docr repo after my PR got merged
+
+### Bump
+
+- Release v0.2.0
+- Release v0.2.0
+
+## [0.2.0] - 2025-04-14
+
+### 🚀 Features
+
+- Save/restore funko scale between runs
+
+### 🐛 Bug Fixes
+
+- Handle being called without any arguments
+- Automatic version in code
+- Make faaso CLI exit with error when server returns error
+- Use own fork of docopt
+- Use newer alpine to get newer crystal
+
+### ⚙️ Miscellaneous Tasks
+
+- Added pre-commit hooks and git-cliff
+- Updated hooks
+- Include lockfile in repo
 
 ### Build
 
