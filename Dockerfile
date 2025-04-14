@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.20 AS build
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.21 AS build
 RUN apk add --no-cache \
     crystal \
     shards \
@@ -16,7 +16,7 @@ COPY runtimes/ runtimes/
 RUN make
 RUN strip bin/*
 
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.20 AS ship
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.21 AS ship
 RUN apk add --no-cache \
     caddy \
     nss-tools \
