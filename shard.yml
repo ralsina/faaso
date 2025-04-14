@@ -26,7 +26,7 @@ dependencies:
   crystar:
     github: naqvis/crystar
   docopt:
-    github: chenkovsky/docopt.cr
+    github: ralsina/docopt.cr
   docr:
     github: marghidanu/docr
     branch: master
