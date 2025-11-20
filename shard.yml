@@ -16,7 +16,7 @@ license: MIT
 
 dependencies:
   baked_file_system:
-    github: schovi/baked_file_system
+    github: ralsina/baked_file_system
   base58:
     github: crystal-china/base58.cr
   crest:
